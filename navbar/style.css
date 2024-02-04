@@ -1,7 +1,7 @@
-:root{
+:root {
   --blue-90: #eaf8ff;
-  --blue-100:#D9D9D9;
-  --blue-110:#A6A6A6;
+  --blue-100: #d9d9d9;
+  --blue-110: #a6a6a6;
   --blue-200: #c1e2ff;
   --blue-300: #9ecaff;
   --blue-400: #759eff;
@@ -13,10 +13,10 @@
   --blue-950: #201650;
   --black: #000;
   --white: #fff;
-  --shadow:0px 0px 5px #00000075;
+  --shadow: 0px 0px 5px #00000075;
 }
 
-.navigation{
+.navigation {
   display: flex;
   justify-content: space-between;
   background-color: var(--blue-500);
@@ -25,27 +25,27 @@
   margin: 0;
 }
 
-a{
+a {
   text-decoration: none;
   color: var(--blue-90);
   padding: 0;
   margin: 0;
 }
 
-a:hover{
+a:hover {
   color: var(--blue-600);
 }
 
-ul{
+ul {
   display: flex;
   list-style: none;
 }
 
-li{
+li {
   margin: 0 10px;
 }
 
-.button-navbar{
+.button-navbar {
   background-color: var(--blue-100);
   border-radius: 5ex;
   color: var(--blue-600);
@@ -53,11 +53,11 @@ li{
   text-shadow: var(--shadow);
 }
 
-.button-navbar:hover{
+.button-navbar:hover {
   outline: 1px solid var(--blue-100);
   color: var(--white);
 }
 
-header{
+header {
   border-radius: 22px;
 }

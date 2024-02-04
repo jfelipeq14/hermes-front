@@ -17,7 +17,7 @@ btnReserva.addEventListener('click', (e) => {
   const Dirección = formReserva.Dirección.checked
   const ciudad = formReserva.ciudad.checked
 
-  if (nombre !== '' && apellidos !== '' && tipoDocumento !== '' && documento !== '' && fechaNacimiento !== ''  && sexo !== '' && contacto !== '' && email !== '' && Dirección !== '' && ciudad !== '' ) {
+  if (nombre !== '' && apellidos !== '' && tipoDocumento !== '' && documento !== '' && fechaNacimiento !== '' && sexo !== '' && contacto !== '' && email !== '' && Dirección !== '' && ciudad !== '') {
     // add data in object
     const reserva = {
       nombre,
