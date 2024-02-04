@@ -3,22 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reserva - Isabella</title>
+    <title>booking</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="container">
-      <form class="container" id="formReserva">
+      <form class="container" id="formBooking">
         <!-- personal -->
         <fieldset class="container-personal">
           <legend class="subtitle">Información Personal</legend>
           <label>
             <input
               type="text"
-              id="nombre"
-              placeholder="Nombre completo"
+              id="fullname"
               class="input"
-              pattern="[a-zA-Z]"
+              placeholder="Nombre completo"
               minlength="2"
               required
             />
@@ -26,26 +25,25 @@
           <label>
             <input
               type="text"
-              id="apellidos"
-              placeholder="Apellidos"
+              id="lastname"
               class="input"
-              pattern="[a-zA-Z]"
+              placeholder="Apellidos"
               minlength="2"
               required
             />
           </label>
           <label>
-            <select id="tipoDocumento" class="input" required>
+            <select  class="input" id="documentType" required>
               <option selected>Tipo de de documento</option>
-              <option value="cc">Cedula de ciudadania</option>
+              <option value="cc">Cedula</option>
             </select>
           </label>
           <label>
             <input
               type="text"
-              id="documento"
-              placeholder="Numero de documento"
+              id="documentNumber"
               class="input"
+              placeholder="Numero de documento"
               minlength="10"
               maxlength="12"
               required
@@ -54,20 +52,21 @@
           <label>
             <input
               type="date"
-              id="fechaNacimiento"
+              id="birthdate"
               class="input"
+              placeholder="Fecha de nacimiento"
               max="2006-01-31"
               required
             />
           </label>
           <div class="check-group">
             <label class="switch socket">
-              <input type="radio" class="switch" name="sex" checked />
+              <input type="radio" class="switch" name="sex" value="hombre" checked />
               <span class="switch slider" />
               Hombre
             </label>
             <label class="switch socket">
-              <input type="radio" class="switch" name="sex" />
+              <input type="radio" class="switch" name="sex" value="mujer" />
               <span class="switch slider" />
               Mujer
             </label>
@@ -79,44 +78,44 @@
           <label>
             <input
               type="tel"
-              id="contact"
-              placeholder="Número de teléfono"
+              id="phoneNumber"
               class="input"
-              required
+              placeholder="Número de teléfono"
               pattern="[0-9]{10}"
               minlength="10"
+              required
             />
           </label>
           <label>
             <input
               type="email"
               id="email"
-              placeholder="Correo electrónico"
               class="input"
-              required
+              placeholder="Correo electrónico"
               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}"
               minlength="11"
               maxlength="50"
+              required
             />
           </label>
           <label>
             <input
               type="text"
               id="address"
-              placeholder="Dirección"
               class="input"
-              required
+              placeholder="Dirección"
               minlength="6"
+              required
             />
           </label>
           <label>
-            <select name="city" id="ciudad" class="input" required>
+            <select class="input" id="city" required>
               <option selected>Ciudad</option>
-              <option value="Medellín ">Medellín</option>
+              <option value="Medellín">Medellín</option>
             </select>
           </label>
         </fieldset>
-        <button id="btnReserva" type="submit" class="btn">CONTINUAR</button>
+        <button type="submit" id="btnBooking" class="btn">CONTINUAR</button>
       </form>
     </main>
     <script src="./reserva.js"></script>

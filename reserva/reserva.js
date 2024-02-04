@@ -1,39 +1,39 @@
-const btnReserva = document.getElementById('btnReserva')
+const btnBooking = document.getElementById('btnBooking')
 
-const reservas = []
+const bookings = []
+let booking = {}
 
-btnReserva.addEventListener('click', (e) => {
+btnBooking.addEventListener('click', (e) => {
   e.preventDefault()// Evitar que el formulario se envie de forma automatica
-  const formReserva = document.getElementById('formReserva')
+  const formBooking = document.getElementById('formBooking')
   // campos del formulario
-  const nombre = formReserva.nombre.value
-  const apellidos = formReserva.apellidos.value
-  const tipoDocumento = formReserva.tipoDocumento.value
-  const documento = formReserva.documento.value
-  const fechaNacimiento = formReserva.fechaNacimiento.value
-  const sexo = formReserva.sexo.checked
-  const contacto = formReserva.contacto.checked
-  const email = formReserva.email.checked
-  const Dirección = formReserva.Dirección.checked
-  const ciudad = formReserva.ciudad.checked
+  const fullname = formBooking.fullname.value
+  const lastname = formBooking.lastname.value
+  const documentType = formBooking.documentType.value
+  const documentNumber = formBooking.documentNumber.value
+  const birthdate = formBooking.birthdate.value
+  const sex = formBooking.sex.value
+  const phoneNumber = formBooking.phoneNumber.value
+  const email = formBooking.email.value
+  const address = formBooking.address.value
+  const city = formBooking.city.value
 
-  if (nombre !== '' && apellidos !== '' && tipoDocumento !== '' && documento !== '' && fechaNacimiento !== ''  && sexo !== '' && contacto !== '' && email !== '' && Dirección !== '' && ciudad !== '' ) {
+  if (fullname !== '' && lastname !== '' && documentType !== '' && documentNumber !== '' && birthdate !== '' && sex !== '' && phoneNumber !== '' && email !== '' && address !== '' && city !== '') {
     // add data in object
-    const reserva = {
-      nombre,
-      apellidos,
-      tipoDocumento,
-      documento,
-      fechaNacimiento,
-      sexo,
-      contacto,
+    booking = {
+      fullname,
+      lastname,
+      documentType,
+      documentNumber,
+      birthdate,
+      sex,
+      phoneNumber,
       email,
-      Dirección,
-      ciudad
+      address,
+      city
     }
-
-    // Agregar la reserva al array de reservaciones
-    if (reserva) reservas.push(reserva)
-    console.log(reservas)
+    // Agregar la booking al array de bookingciones
+    if (booking) bookings.push(booking)
   }
+  console.log(bookings)
 })
