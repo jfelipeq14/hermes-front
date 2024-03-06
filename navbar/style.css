@@ -32,6 +32,12 @@ a {
   margin: 0;
 }
 
+a img {
+  width: 30px;
+  margin: 20px;
+  border-radius: 5.5ex;
+}
+
 a:hover {
   color: var(--blue-600);
 }
