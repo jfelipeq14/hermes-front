@@ -1,5 +1,5 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
@@ -41,8 +41,6 @@ export class ServicesPage implements OnInit {
   service: ServiceModel = new ServiceModel();
   services: ServiceModel[] = [];
   loading = false;
-
-  @ViewChild('dt') dt!: Table;
 
   constructor(
     private serviceService: ServiceService,
