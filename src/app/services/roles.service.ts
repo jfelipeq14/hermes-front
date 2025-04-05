@@ -26,7 +26,7 @@ export class RolesService {
     return this.http.put<RoleModel>(this.url + roles.id, roles);
   }
 
-  delete(id: number): Observable<RoleModel> {
-    return this.http.delete<RoleModel>(this.url + id);
+  changeStatus(id: number): Observable<RoleModel> {
+    return this.http.patch<RoleModel>(this.url + id, {});
   }
 }

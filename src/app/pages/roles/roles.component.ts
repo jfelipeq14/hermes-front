@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
@@ -15,17 +14,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RoleModel } from '../../models';
 import { RolesService } from '../../services';
 import { DialogModule } from 'primeng/dialog';
-
-interface Column {
-  field: string;
-  header: string;
-  customExportHeader?: string;
-}
-
-interface ExportColumn {
-  title: string;
-  dataKey: string;
-}
 
 @Component({
   selector: 'app-roles',
@@ -55,23 +43,11 @@ export class RolesPage implements OnInit {
 
   submitted = false;
 
-  statuses!: any[];
-
-  @ViewChild('dt') dt!: Table;
-
-  exportColumns!: ExportColumn[];
-
-  cols!: Column[];
-
   constructor(
     private roleService: RolesService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
-
-  exportCSV() {
-    this.dt.exportCSV();
-  }
 
   ngOnInit() {
     this.loadData();
@@ -108,31 +84,30 @@ export class RolesPage implements OnInit {
     this.submitted = !this.submitted;
   }
 
-  deleteRole(role: RoleModel) {
+  changeStatusRole(role: RoleModel) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + role.name + '?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.roleService.delete(role.id).subscribe({
-          next: () => {
+        this.roleService.changeStatus(role.id).subscribe({
+          next: (r) => {
             this.messageService.add({
               severity: 'success',
-              summary: 'Successful',
-              detail: `${role.name} Deleted`,
+              summary: 'Exitoso',
+              detail: `${r.name} cambio su estado`,
+              life: 3000,
+            });
+            this.loadData();
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.message,
               life: 3000,
             });
           },
-          error: (e) => {
-            console.error(e);
-          },
-        });
-        this.role = new RoleModel();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'role Deleted',
-          life: 3000,
         });
       },
     });
