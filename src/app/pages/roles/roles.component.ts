@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -59,13 +61,13 @@ interface ExportColumn {
   providers: [RolesService, MessageService, ConfirmationService],
 })
 export class RolesPage implements OnInit {
-  roleDialog: boolean = false;
+  roleDialog = false;
 
   roles: RoleModel[] = [];
 
   role: RoleModel = new RoleModel();
 
-  submitted: boolean = false;
+  submitted = false;
 
   statuses!: any[];
 
@@ -127,7 +129,7 @@ export class RolesPage implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.roleService.delete(role.id).subscribe({
-          next: (r) => {
+          next: () => {
             this.messageService.add({
               severity: 'success',
               summary: 'Successful',

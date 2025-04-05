@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+/* eslint-disable @angular-eslint/component-class-suffix */
+import { Component, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
@@ -70,7 +71,7 @@ export class CategoriesPage implements OnInit {
         this.categories = categories;
         this.loading = false;
       },
-      error: (e) => {
+      error: () => {
         this.loading = false;
         this.messageService.add({
           severity: 'error',
@@ -96,7 +97,7 @@ export class CategoriesPage implements OnInit {
           this.closePopup();
           this.loading = false;
         },
-        error: (e) => {
+        error: () => {
           this.loading = false;
           this.messageService.add({
             severity: 'error',
@@ -117,7 +118,7 @@ export class CategoriesPage implements OnInit {
           this.closePopup();
           this.loading = false;
         },
-        error: (e) => {
+        error: () => {
           this.loading = false;
           this.messageService.add({
             severity: 'error',
@@ -157,7 +158,7 @@ export class CategoriesPage implements OnInit {
           }`,
         });
       },
-      error: (e) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
