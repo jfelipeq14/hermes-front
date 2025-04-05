@@ -38,10 +38,10 @@ import { UserService } from '../../services';
   ],
 })
 export class UsersPage implements OnInit {
+  users: UserModel[] = [];
+  user: UserModel = new UserModel();
   userDialog = false;
   submitted = false;
-  user: UserModel = new UserModel();
-  users: UserModel[] = [];
   loading = false;
 
   constructor(
@@ -58,46 +58,6 @@ export class UsersPage implements OnInit {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  openNew() {
-    this.user = new UserModel();
-    this.submitted = false;
-    this.userDialog = true;
-  }
-
-  editUser(user: UserModel) {
-    this.user = { ...user };
-    this.userDialog = true;
-  }
-
-  deleteUser(user: UserModel) {
-    this.confirmationService.confirm({
-      message:
-        '¿Está seguro de que desea cambiar el estado de ' + user.name + '?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        user.status = !user.status;
-        this.userService.update(user).subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Estado del servicio actualizado',
-            });
-            this.getAllUsers();
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudo actualizar el estado del servicio',
-            });
-          },
-        });
-      },
-    });
-  }
-
   getAllUsers() {
     this.loading = true;
     this.userService.getAll().subscribe({
@@ -105,61 +65,111 @@ export class UsersPage implements OnInit {
         this.users = users;
         this.loading = false;
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudieron cargar los servicios',
+          detail: e.error.message || 'No se pudieron cargar los usuarios',
+          life: 3000,
         });
       },
     });
   }
 
+  showPopup() {
+    this.user = new UserModel();
+    this.submitted = false;
+    this.userDialog = true;
+  }
+
+  closePopup() {
+    this.userDialog = false;
+    this.submitted = false;
+  }
+
+  refresh() {
+    this.getAllUsers();
+  }
+
   saveUser() {
     this.submitted = true;
 
-    if (this.user.name.trim()) {
-      if (this.user.id) {
-        this.userService.update(this.user).subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Servicio actualizado',
-            });
-            this.getAllUsers();
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudo actualizar el servicio',
-            });
-          },
-        });
-      } else {
-        this.userService.create(this.user).subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Servicio creado',
-            });
-            this.getAllUsers();
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudo crear el servicio',
-            });
-          },
-        });
-      }
-
-      this.userDialog = false;
-      this.user = new UserModel();
+    if (this.user.id) {
+      this.userService.update(this.user).subscribe({
+        next: (u) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: `${u.name} actualizado`,
+            life: 3000,
+          });
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message || 'No se pudo actualizar el usuario',
+            life: 3000,
+          });
+        },
+      });
+    } else {
+      this.userService.create(this.user).subscribe({
+        next: (u) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: `${u.name} creado`,
+            life: 3000,
+          });
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message || 'No se pudo crear el usuario',
+            life: 3000,
+          });
+        },
+      });
     }
+    this.refresh();
+    this.closePopup();
+  }
+
+  editUser(user: UserModel) {
+    this.user = { ...user };
+    this.userDialog = true;
+  }
+
+  changeStatusUser(user: UserModel) {
+    this.confirmationService.confirm({
+      message: `¿Está seguro de que desea cambiar el estado de ${user.name}?`,
+      header: 'Confirmar',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.userService.changeStatus(user.id).subscribe({
+          next: (u) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: `${u.name} ${u.status ? 'activado' : 'desactivado'}`,
+              life: 3000,
+            });
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail:
+                e.error.message || 'No se pudo cambiar el estado del usuario',
+              life: 3000,
+            });
+          },
+        });
+        this.refresh();
+      },
+    });
   }
 }
