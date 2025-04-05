@@ -81,7 +81,7 @@ export class ActivitiesPage implements OnInit {
         next: (a) => {
           this.messageService.add({
             severity: 'success',
-            summary: 'Exitoso',
+            summary: 'Éxito',
             detail: `${a.name} creado`,
             life: 3000,
           });
@@ -95,6 +95,7 @@ export class ActivitiesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     } else {
       this.activityService.update(this.activity).subscribe({
         next: (a) => {
@@ -114,8 +115,8 @@ export class ActivitiesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     }
-    this.getAllActivities();
     this.closePopup();
   }
 
@@ -139,7 +140,6 @@ export class ActivitiesPage implements OnInit {
               detail: `${a.name} ${a.status ? 'activado' : 'desactivado'}`,
               life: 3000,
             });
-            this.getAllActivities();
           },
           error: (e) => {
             this.messageService.add({
@@ -150,6 +150,7 @@ export class ActivitiesPage implements OnInit {
             });
           },
         });
+        this.refresh();
       },
     });
   }
@@ -163,5 +164,9 @@ export class ActivitiesPage implements OnInit {
   closePopup() {
     this.activityDialog = false;
     this.submitted = false;
+  }
+
+  refresh() {
+    this.getAllActivities();
   }
 }
