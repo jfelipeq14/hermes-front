@@ -12,7 +12,7 @@
   [rowsPerPageOptions]="[10, 20, 30]"
 >
   <ng-template #caption>
-    <div class="flex">
+    <div class="flex flex-row items-center justify-between w-full">
       <h3 class="m-0 p-0">Roles</h3>
       <p-iconfield class="m-0">
         <p-inputicon styleClass="pi pi-search" />
@@ -20,14 +20,14 @@
           pInputText
           type="text"
           (input)="onGlobalFilter(dt, $event)"
-          placeholder="Search..."
+          placeholder="Buscar..."
         />
       </p-iconfield>
       <p-button
         label="Crear"
         icon="pi pi-plus"
         severity="secondary"
-        (onClick)="openNew()"
+        (onClick)="showPopup()"
       />
     </div>
   </ng-template>
@@ -58,14 +58,13 @@
       <td>
         <p-button
           icon="pi pi-pencil"
-          class="mr-2"
           [rounded]="true"
           [outlined]="true"
           (click)="editRole(role)"
         />
         <p-button
-          icon="pi pi-trash"
-          severity="danger"
+          icon="pi pi-sync"
+          severity="info"
           [rounded]="true"
           [outlined]="true"
           (click)="changeStatusRole(role)"
@@ -75,5 +74,48 @@
   </ng-template>
 </p-table>
 
+<p-dialog
+  [(visible)]="roleDialog"
+  [style]="{ width: '450px' }"
+  header="Rol"
+  [modal]="true"
+  class="p-fluid"
+>
+  <ng-template #content>
+    <div class="field">
+      <label for="name">Nombre *</label>
+      <input
+        type="text"
+        pInputText
+        id="name"
+        [(ngModel)]="role.name"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !role.name"
+        >El nombre es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="status">Estado</label>
+      <p-inputSwitch id="status" [(ngModel)]="role.status" />
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      styleClass="p-button-text"
+      (click)="closePopup()"
+    ></p-button>
+    <p-button
+      label="Guardar"
+      icon="pi pi-check"
+      (click)="saveRole()"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
 <p-toast></p-toast>
-<p-confirmdialog [style]="{ width: '450px' }" />
+<p-confirmdialog [style]="{ width: '450px' }"></p-confirmdialog>
