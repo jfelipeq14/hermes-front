@@ -5,15 +5,15 @@ export class UserModel {
   document = '';
   name = '';
   surName = '';
-  dateBirth = new Date();
+  dateBirth: Date | null = null;
   email = '';
   password = '';
   idMunicipality = 0;
-  address = '';
+  address: string | null = null;
   phone = '';
-  emergency = '';
-  sex = '';
-  bloodType = '';
-  eps = '';
+  emergency: string | null = null;
+  sex: string | null = null;
+  bloodType: string | null = null;
+  eps: string | null = null;
   status = true;
 }
