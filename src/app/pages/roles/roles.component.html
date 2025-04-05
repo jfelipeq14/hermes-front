@@ -1,129 +1,80 @@
-<p-toolbar styleClass="mb-6">
-    <ng-template #start>
-        <p-button label="Crear" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
-    </ng-template>
-
-    <ng-template #end>
-        <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
-    </ng-template>
-</p-toolbar>
-
 <p-table
-    #dt
-    [value]="roles"
-    [rows]="10"
-    [columns]="cols"
-    [paginator]="true"
-    [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-    [tableStyle]="{ 'min-width': '75rem' }"
-    [rowHover]="true"
-    dataKey="id"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} roles"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+  #dt
+  [value]="roles"
+  [rows]="10"
+  [paginator]="true"
+  [globalFilterFields]="['name', 'status']"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [rowHover]="true"
+  dataKey="id"
+  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} roles"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 20, 30]"
 >
-    <ng-template #caption>
-        <div class="flex items-center justify-between">
-            <h5 class="m-0">Roles</h5>
-            <p-iconfield>
-                <p-inputicon styleClass="pi pi-search" />
-                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
-            </p-iconfield>
-        </div>
-    </ng-template>
-    <ng-template #header>
-        <tr>
-            <th style="width: 3rem">
-                <p-tableHeaderCheckbox />
-            </th>
-            <th pSortableColumn="id" style="min-width:16rem">
-                Identificación
-                <p-sortIcon field="id" />
-            </th>
-            <th pSortableColumn="name" style="min-width:16rem">
-                Nombre
-                <p-sortIcon field="name" />
-            </th>
-            <th pSortableColumn="status" style="min-width: 12rem">
-                Estado
-                <p-sortIcon field="status" />
-            </th>
-            <th style="min-width: 12rem"></th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-role>
-        <tr>
-            <td style="min-width: 12rem">{{ role.id }}</td>
-            <td style="min-width: 16rem">{{ role.name }}</td>
-            <td>
-                {{role.status}}
-            </td>
-            <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)" />
-                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteRole(role)" />
-            </td>
-        </tr>
-    </ng-template>
+  <ng-template #caption>
+    <div class="flex">
+      <h3 class="m-0 p-0">Roles</h3>
+      <p-iconfield class="m-0">
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          pInputText
+          type="text"
+          (input)="onGlobalFilter(dt, $event)"
+          placeholder="Search..."
+        />
+      </p-iconfield>
+      <p-button
+        label="Crear"
+        icon="pi pi-plus"
+        severity="secondary"
+        (onClick)="openNew()"
+      />
+    </div>
+  </ng-template>
+  <ng-template #header>
+    <tr>
+      <th style="width: 3rem">
+        <p-tableHeaderCheckbox />
+      </th>
+      <th pSortableColumn="id" style="min-width: 16rem">
+        Identificación
+        <p-sortIcon field="id" />
+      </th>
+      <th pSortableColumn="name" style="min-width: 16rem">
+        Nombre
+        <p-sortIcon field="name" />
+      </th>
+      <th pSortableColumn="status" style="min-width: 12rem">
+        Estado
+        <p-sortIcon field="status" />
+      </th>
+      <th style="min-width: 12rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-role>
+    <tr>
+      <td style="min-width: 12rem">{{ role.id }}</td>
+      <td style="min-width: 16rem">{{ role.name }}</td>
+      <td>
+        {{ role.status }}
+      </td>
+      <td>
+        <p-button
+          icon="pi pi-pencil"
+          class="mr-2"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="editRole(role)"
+        />
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="deleteRole(role)"
+        />
+      </td>
+    </tr>
+  </ng-template>
 </p-table>
-
-<!-- <p-dialog [(visible)]="roleDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true">
-    <ng-template #content>
-        <div class="flex flex-col gap-6">
-            <img [src]="'https://primefaces.org/cdn/primeng/images/demo/role/' + role.image" [alt]="role.image" class="block m-auto pb-4" *ngIf="role.image" />
-            <div>
-                <label for="name" class="block font-bold mb-3">Name</label>
-                <input type="text" pInputText id="name" [(ngModel)]="role.name" required autofocus fluid />
-                <small class="text-red-500" *ngIf="submitted && !role.name">Name is required.</small>
-            </div>
-            <div>
-                <label for="description" class="block font-bold mb-3">Description</label>
-                <textarea id="description" pTextarea [(ngModel)]="role.description" required rows="3" cols="20" fluid></textarea>
-            </div>
-
-            <div>
-                <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-                <p-select [(ngModel)]="role.inventoryStatus" inputId="inventoryStatus" [options]="statuses" optionLabel="label" optionValue="label" placeholder="Select a Status" fluid />
-            </div>
-
-            <div>
-                <span class="block font-bold mb-4">Category</span>
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category1" name="category" value="Accessories" [(ngModel)]="role.category" />
-                        <label for="category1">Accessories</label>
-                    </div>
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category2" name="category" value="Clothing" [(ngModel)]="role.category" />
-                        <label for="category2">Clothing</label>
-                    </div>
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category3" name="category" value="Electronics" [(ngModel)]="role.category" />
-                        <label for="category3">Electronics</label>
-                    </div>
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category4" name="category" value="Fitness" [(ngModel)]="role.category" />
-                        <label for="category4">Fitness</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-6">
-                    <label for="price" class="block font-bold mb-3">Price</label>
-                    <p-inputnumber id="price" [(ngModel)]="role.price" mode="currency" currency="USD" locale="en-US" fluid />
-                </div>
-                <div class="col-span-6">
-                    <label for="quantity" class="block font-bold mb-3">Quantity</label>
-                    <p-inputnumber id="quantity" [(ngModel)]="role.quantity" fluid />
-                </div>
-            </div>
-        </div>
-    </ng-template>
-
-    <ng-template #footer>
-        <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
-        <p-button label="Save" icon="pi pi-check" (click)="saveProduct()" />
-    </ng-template>
-</p-dialog> -->
-
 <p-confirmdialog [style]="{ width: '450px' }" />
