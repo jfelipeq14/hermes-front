@@ -27,7 +27,7 @@
         label="Crear"
         icon="pi pi-plus"
         severity="secondary"
-        (onClick)="openNew()"
+        (onClick)="showPopup()"
       />
     </div>
   </ng-template>
@@ -129,7 +129,7 @@
     <p-button
       label="Cancelar"
       icon="pi pi-times"
-      (click)="serviceDialog = false"
+      (click)="closePopup()"
       [text]="true"
     ></p-button>
     <p-button

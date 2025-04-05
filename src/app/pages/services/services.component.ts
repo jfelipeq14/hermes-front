@@ -16,11 +16,11 @@ import { ServiceModel } from '../../models';
 import { ServiceService } from '../../services';
 
 @Component({
+  standalone: true,
   selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css'],
   providers: [MessageService, ConfirmationService, ServiceService],
-  standalone: true,
   imports: [
     CommonModule,
     TableModule,
