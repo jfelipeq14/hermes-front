@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 export class ServiceService {
   constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + '/services/';
+  private url = environment.SERVER_URL + 'services/';
 
   getAll(): Observable<ServiceModel[]> {
     return this.http.get<ServiceModel[]>(this.url);

@@ -1,1 +1,145 @@
-<p>services works!</p>
+<p-table
+  #dt
+  [value]="services"
+  [rows]="10"
+  [paginator]="true"
+  [globalFilterFields]="['name', 'price', 'status']"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [rowHover]="true"
+  dataKey="id"
+  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} servicios"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 20, 30]"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex flex-row items-center justify-between w-full">
+      <h3 class="m-0 p-0">Servicios</h3>
+      <p-iconfield class="m-0">
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          pInputText
+          type="text"
+          (input)="onGlobalFilter(dt, $event)"
+          placeholder="Search..."
+        />
+      </p-iconfield>
+      <p-button
+        label="Crear"
+        icon="pi pi-plus"
+        severity="secondary"
+        (onClick)="openNew()"
+      />
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id" style="min-width: 12rem">
+        Identificación
+        <p-sortIcon field="id" />
+      </th>
+      <th pSortableColumn="name" style="min-width: 16rem">
+        Nombre
+        <p-sortIcon field="name" />
+      </th>
+      <th pSortableColumn="price" style="min-width: 12rem">
+        Precio
+        <p-sortIcon field="price" />
+      </th>
+      <th pSortableColumn="status" style="min-width: 12rem">
+        Estado
+        <p-sortIcon field="status" />
+      </th>
+      <th style="min-width: 12rem"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-service>
+    <tr>
+      <td>{{ service.id }}</td>
+      <td>{{ service.name }}</td>
+      <td>{{ service.price }}</td>
+      <td>{{ service.status ? "Activo" : "Inactivo" }}</td>
+      <td>
+        <p-button
+          icon="pi pi-pencil"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="editService(service)"
+        />
+        <p-button
+          icon="pi pi-sync"
+          severity="info"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="deleteService(service)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  [(visible)]="serviceDialog"
+  [style]="{ width: '450px' }"
+  header="Detalles del Servicio"
+  [modal]="true"
+  class="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="name">Nombre</label>
+      <input
+        type="text"
+        pInputText
+        id="name"
+        [(ngModel)]="service.name"
+        required
+        autofocus
+      />
+      <small class="p-error" *ngIf="submitted && !service.name"
+        >El nombre es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="price">Precio</label>
+      <input
+        type="number"
+        pInputText
+        id="price"
+        [(ngModel)]="service.price"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !service.price"
+        >El precio es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="status">Estado</label>
+      <p-toggleButton
+        [(ngModel)]="service.status"
+        onLabel="Activo"
+        offLabel="Inactivo"
+      ></p-toggleButton>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      (click)="serviceDialog = false"
+      [text]="true"
+    ></p-button>
+    <p-button
+      label="Guardar"
+      icon="pi pi-check"
+      (click)="saveService()"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

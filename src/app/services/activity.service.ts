@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ActivityService {
   constructor(private http: HttpClient) {}
-  private url = environment.SERVER_URL + '/activities/';
+  private url = environment.SERVER_URL + 'activities/';
 
   getAll(): Observable<ActivityModel[]> {
     return this.http.get<ActivityModel[]>(this.url);
@@ -17,15 +17,15 @@ export class ActivityService {
     return this.http.get<ActivityModel>(this.url + id);
   }
 
-  create(activity: ActivityModel): Observable<ActivityModel[]> {
-    return this.http.post<ActivityModel[]>(this.url, activity);
+  create(activity: ActivityModel): Observable<ActivityModel> {
+    return this.http.post<ActivityModel>(this.url, activity);
   }
 
-  update(activity: ActivityModel): Observable<ActivityModel[]> {
-    return this.http.put<ActivityModel[]>(this.url + activity.id, activity);
+  update(activity: ActivityModel): Observable<ActivityModel> {
+    return this.http.put<ActivityModel>(this.url + activity.id, activity);
   }
 
-  changeStatus(id: number): Observable<ActivityModel[]> {
-    return this.http.patch<ActivityModel[]>(this.url + id, {});
+  changeStatus(id: number): Observable<ActivityModel> {
+    return this.http.patch<ActivityModel>(this.url + id, {});
   }
 }

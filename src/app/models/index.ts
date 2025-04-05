@@ -1,5 +1,5 @@
 export * from './activity';
-export * from './category-service';
+export * from './category';
 export * from './country';
 export * from './date';
 export * from './departament';

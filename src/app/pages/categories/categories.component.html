@@ -1,1 +1,127 @@
-<p>categories works!</p>
+<p-table
+  #dt
+  [value]="categories"
+  [rows]="10"
+  [paginator]="true"
+  [globalFilterFields]="['name', 'status']"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [rowHover]="true"
+  dataKey="id"
+  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 20, 30]"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <h3 class="m-0 p-0">Categorias</h3>
+      <p-iconfield class="m-0">
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          pInputText
+          type="text"
+          (input)="onGlobalFilter(dt, $event)"
+          placeholder="Search..."
+        />
+      </p-iconfield>
+      <p-button
+        label="Crear"
+        icon="pi pi-plus"
+        severity="secondary"
+        (onClick)="showPopup()"
+      />
+    </div>
+  </ng-template>
+
+  <ng-template #header>
+    <tr>
+      <th pSortableColumn="id" style="min-width: 12rem">
+        Identificación
+        <p-sortIcon field="id" />
+      </th>
+      <th pSortableColumn="name" style="min-width: 16rem">
+        Nombre
+        <p-sortIcon field="name" />
+      </th>
+      <th pSortableColumn="status" style="min-width: 12rem">
+        Estado
+        <p-sortIcon field="status" />
+      </th>
+      <th style="min-width: 12rem"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-category>
+    <tr>
+      <td>{{ category.id }}</td>
+      <td>{{ category.name }}</td>
+      <td>{{ category.status ? "Activo" : "Inactivo" }}</td>
+      <td>
+        <p-button
+          icon="pi pi-pencil"
+          class="mr-2"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="editCategoryService(category)"
+        />
+        <p-button
+          icon="pi pi-sync"
+          severity="info"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="changeStatusCategoryService(category)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  [(visible)]="popupVisible"
+  [style]="{ width: '450px' }"
+  header="Detalles de Categoría"
+  [modal]="true"
+  class="p-fluid"
+>
+  <ng-template #content>
+    <div class="field">
+      <label for="name">Nombre</label>
+      <input
+        type="text"
+        pInputText
+        id="name"
+        [(ngModel)]="category.name"
+        required
+        autofocus
+      />
+      <small class="p-error" *ngIf="submitted && !category.name"
+        >El nombre es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="status">Estado</label>
+      <p-toggleButton
+        [(ngModel)]="category.status"
+        onLabel="Activo"
+        offLabel="Inactivo"
+        [style]="{ width: '150px' }"
+      ></p-toggleButton>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      styleClass="p-button-text"
+      (click)="closePopup()"
+    ></p-button>
+    <p-button
+      label="Guardar"
+      icon="pi pi-check"
+      (click)="saveCategoryService(category)"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

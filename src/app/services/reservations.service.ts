@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 export class ReservationsService {
   constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + '/reservations/';
+  private url = environment.SERVER_URL + 'reservations/';
 
   // Obtener todas las reservas
   getAll(): Observable<ReservationModel[]> {
