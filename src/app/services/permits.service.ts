@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class PermitsService {
-  private url = environment.SERVER_URL + '/permits/';
+  private url = environment.SERVER_URL + 'permits/';
 
   constructor(private http: HttpClient) {}
 

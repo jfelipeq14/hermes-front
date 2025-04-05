@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class MunicipalityService {
   constructor(private http: HttpClient) {}
-  private url = environment.SERVER_URL + '/municipalities/';
+  private url = environment.SERVER_URL + 'municipalities/';
 
   getAll(): Observable<MunicipalityModel[]> {
     return this.http.get<MunicipalityModel[]>(this.url);

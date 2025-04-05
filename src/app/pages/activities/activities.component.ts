@@ -4,17 +4,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import { RatingModule } from 'primeng/rating';
 import { InputTextModule } from 'primeng/inputtext';
-import { TextareaModule } from 'primeng/textarea';
-import { SelectModule } from 'primeng/select';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
-import { TagModule } from 'primeng/tag';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -41,17 +34,10 @@ interface ExportColumn {
     TableModule,
     FormsModule,
     ButtonModule,
-    RippleModule,
     ToastModule,
     ToolbarModule,
-    RatingModule,
     InputTextModule,
-    TextareaModule,
-    SelectModule,
-    RadioButtonModule,
-    InputNumberModule,
     DialogModule,
-    TagModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
@@ -65,7 +51,7 @@ export class ActivitiesPage implements OnInit {
   submitted: boolean = false;
   statuses: any[] = [
     { label: 'Activo', value: true },
-    { label: 'Inactivo', value: false }
+    { label: 'Inactivo', value: false },
   ];
 
   @ViewChild('dt') dt!: Table;
@@ -83,7 +69,7 @@ export class ActivitiesPage implements OnInit {
     this.cols = [
       { field: 'id', header: 'ID' },
       { field: 'name', header: 'Nombre' },
-      { field: 'status', header: 'Estado' }
+      { field: 'status', header: 'Estado' },
     ];
   }
 
@@ -119,7 +105,8 @@ export class ActivitiesPage implements OnInit {
 
   deleteActivity(activity: ActivityModel) {
     this.confirmationService.confirm({
-      message: '¿Está seguro de que desea cambiar el estado de ' + activity.name + '?',
+      message:
+        '¿Está seguro de que desea cambiar el estado de ' + activity.name + '?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
@@ -162,7 +149,7 @@ export class ActivitiesPage implements OnInit {
 
   saveActivity() {
     this.submitted = true;
-    
+
     if (this.activity.name.trim()) {
       if (!this.activity.id) {
         this.activityService.create(this.activity).subscribe({
@@ -195,7 +182,7 @@ export class ActivitiesPage implements OnInit {
           },
         });
       }
-      
+
       this.activityDialog = false;
       this.activity = new ActivityModel();
     }

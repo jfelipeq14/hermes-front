@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ActivityService {
   constructor(private http: HttpClient) {}
-  private url = environment.SERVER_URL + '/activities/';
+  private url = environment.SERVER_URL + 'activities/';
 
   getAll(): Observable<ActivityModel[]> {
     return this.http.get<ActivityModel[]>(this.url);

@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 export class RolesService {
   constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + '/roles/';
+  private url = environment.SERVER_URL + 'roles/';
 
   getAll(): Observable<RoleModel[]> {
     return this.http.get<RoleModel[]>(this.url);
