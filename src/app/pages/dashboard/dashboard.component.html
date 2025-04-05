@@ -1,1 +1,52 @@
-<p>dashboard works!</p>
+<div class="grid grid-cols-4 gap-8">
+  <div class="col-span-4">
+    <div class="card mb-0">
+      <div class="flex justify-between mb-4">
+        <div>
+          <span class="block text-muted-color font-medium mb-4">Revenue</span>
+          <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">
+            $2.100
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-border"
+          style="width: 2.5rem; height: 2.5rem"
+        >
+          <i class="pi pi-dollar text-orange-500 !text-xl"></i>
+        </div>
+      </div>
+      <span class="text-primary font-medium">%52+ </span>
+      <span class="text-muted-color">since last week</span>
+    </div>
+  </div>
+  <div class="col-span-2 w-auto">
+    <div class="card !mb-8">
+      <div class="font-semibold text-xl mb-4">Top Clientes</div>
+      <p-table
+        [value]="topClients"
+        [paginator]="true"
+        [rows]="5"
+        responsiveLayout="scroll"
+      >
+        <ng-template #header>
+          <tr>
+            <th>Nombre</th>
+            <th>Reservas</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-client>
+          <tr>
+            <td>{{ client.name }} {{ client.surname }}</td>
+            <td>{{ client.reservations }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <div class="col-span-2 w-auto">
+    <div class="card !mb-8">
+      <div class="font-semibold text-xl mb-4">Paquetes Mas Vendidos</div>
+      <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
+    </div>
+  </div>
+</div>
