@@ -1,1 +1,210 @@
-<p>users works!</p>
+<p-table
+  #dt
+  [value]="users"
+  [rows]="10"
+  [paginator]="true"
+  [globalFilterFields]="['name', 'surName', 'email', 'document']"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [rowHover]="true"
+  dataKey="id"
+  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} servicios"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 20, 30]"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex flex-row items-center justify-between w-full">
+      <h3 class="m-0 p-0">Usuarios</h3>
+      <p-iconfield class="m-0">
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          pInputText
+          type="text"
+          (input)="onGlobalFilter(dt, $event)"
+          placeholder="Search..."
+        />
+      </p-iconfield>
+      <p-button
+        label="Crear"
+        icon="pi pi-plus"
+        severity="secondary"
+        (onClick)="openNew()"
+      />
+    </div>
+  </ng-template>
+
+  <ng-template #header>
+    <tr>
+      <th pSortableColumn="id" style="min-width: 12rem">
+        ID
+        <p-sortIcon field="id" />
+      </th>
+      <th pSortableColumn="document" style="min-width: 12rem">
+        Documento
+        <p-sortIcon field="document" />
+      </th>
+      <th pSortableColumn="name" style="min-width: 16rem">
+        Nombre
+        <p-sortIcon field="name" />
+      </th>
+      <th pSortableColumn="surName" style="min-width: 16rem">
+        Apellido
+        <p-sortIcon field="surName" />
+      </th>
+      <th pSortableColumn="email" style="min-width: 16rem">
+        Email
+        <p-sortIcon field="email" />
+      </th>
+      <th style="min-width: 12rem"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-user>
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.document }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.surName }}</td>
+      <td>{{ user.email }}</td>
+      <td>
+        <p-button
+          icon="pi pi-pencil"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="editUser(user)"
+        />
+        <p-button
+          icon="pi pi-sync"
+          severity="info"
+          [rounded]="true"
+          [outlined]="true"
+          (click)="deleteUser(user)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  [(visible)]="userDialog"
+  [style]="{ width: '450px' }"
+  header="Detalles del Usuario"
+  [modal]="true"
+  class="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="typeDocument">Tipo de Documento</label>
+      <input
+        type="text"
+        pInputText
+        id="typeDocument"
+        [(ngModel)]="user.typeDocument"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !user.typeDocument"
+        >El tipo de documento es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="document">Documento</label>
+      <input
+        type="text"
+        pInputText
+        id="document"
+        [(ngModel)]="user.document"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !user.document"
+        >El documento es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="name">Nombre</label>
+      <input
+        type="text"
+        pInputText
+        id="name"
+        [(ngModel)]="user.name"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !user.name"
+        >El nombre es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="surName">Apellido</label>
+      <input
+        type="text"
+        pInputText
+        id="surName"
+        [(ngModel)]="user.surName"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !user.surName"
+        >El apellido es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        pInputText
+        id="email"
+        [(ngModel)]="user.email"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !user.email"
+        >El email es obligatorio.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="password">Contraseña</label>
+      <input
+        type="password"
+        pInputText
+        id="password"
+        [(ngModel)]="user.password"
+        [required]="!user.id"
+      />
+      <small class="p-error" *ngIf="submitted && !user.password && !user.id"
+        >La contraseña es obligatoria para nuevos usuarios.</small
+      >
+    </div>
+
+    <div class="field">
+      <label for="dateBirth">Fecha de Nacimiento</label>
+      <p-calendar
+        id="dateBirth"
+        [(ngModel)]="user.dateBirth"
+        [showIcon]="true"
+        dateFormat="dd/mm/yy"
+        required
+      ></p-calendar>
+      <small class="p-error" *ngIf="submitted && !user.dateBirth"
+        >La fecha de nacimiento es obligatoria.</small
+      >
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      (click)="userDialog = false"
+      [text]="true"
+    ></p-button>
+    <p-button
+      label="Guardar"
+      icon="pi pi-check"
+      (click)="saveUser()"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
