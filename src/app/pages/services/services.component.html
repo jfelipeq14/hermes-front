@@ -72,7 +72,7 @@
           severity="info"
           [rounded]="true"
           [outlined]="true"
-          (click)="deleteService(service)"
+          (click)="changeStatusService(service)"
         />
       </td>
     </tr>
@@ -95,7 +95,6 @@
         id="name"
         [(ngModel)]="service.name"
         required
-       
       />
       <small class="p-error" *ngIf="submitted && !service.name"
         >El nombre es obligatorio.</small

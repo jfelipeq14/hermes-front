@@ -67,15 +67,14 @@ export class ServicesPage implements OnInit {
     this.serviceDialog = true;
   }
 
-  deleteService(service: ServiceModel) {
+  changeStatusService(service: ServiceModel) {
     this.confirmationService.confirm({
       message:
         '¿Está seguro de que desea cambiar el estado de ' + service.name + '?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        service.status = !service.status;
-        this.serviceService.update(service).subscribe({
+        this.serviceService.changeStatus(service.id).subscribe({
           next: () => {
             this.messageService.add({
               severity: 'success',

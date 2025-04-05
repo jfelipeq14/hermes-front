@@ -58,12 +58,6 @@ export class CategoriesPage implements OnInit {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  exportCSV() {
-    if (this.dt) {
-      this.dt.exportCSV();
-    }
-  }
-
   getAllCategories() {
     this.loading = true;
     this.categoryService.getAll().subscribe({
@@ -130,25 +124,13 @@ export class CategoriesPage implements OnInit {
     }
   }
 
-  showPopup() {
-    this.category = new CategoryModel();
-    this.popupVisible = true;
-    this.submitted = false;
-  }
-
-  closePopup() {
-    this.popupVisible = false;
-    this.category = new CategoryModel();
-  }
-
   editCategoryService(category: CategoryModel) {
     this.category = { ...category };
     this.popupVisible = true;
   }
 
   changeStatusCategoryService(category: CategoryModel) {
-    category.status = !category.status;
-    this.categoryService.update(category).subscribe({
+    this.categoryService.changeStatus(category.id).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
@@ -168,7 +150,14 @@ export class CategoriesPage implements OnInit {
     });
   }
 
-  refresh() {
-    this.getAllCategories();
+  showPopup() {
+    this.category = new CategoryModel();
+    this.popupVisible = true;
+    this.submitted = false;
+  }
+
+  closePopup() {
+    this.popupVisible = false;
+    this.category = new CategoryModel();
   }
 }

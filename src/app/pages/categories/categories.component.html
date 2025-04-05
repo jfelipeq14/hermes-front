@@ -91,7 +91,6 @@
         id="name"
         [(ngModel)]="category.name"
         required
-       
       />
       <small class="p-error" *ngIf="submitted && !category.name"
         >El nombre es obligatorio.</small
@@ -124,4 +123,5 @@
   </ng-template>
 </p-dialog>
 
+<p-toast></p-toast>
 <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
