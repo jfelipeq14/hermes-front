@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint --fix",
     "test": "ng test",
-    "changes": "git fetch origin develop && git pull origin develop && npm i && npm run lint"
+    "changes": "git fetch origin develop && git pull origin develop && npm i && npm run lint && npm run build"
   },
   "private": true,
   "dependencies": {
