@@ -96,6 +96,7 @@ export class CategoriesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     } else {
       this.categoryService.update(this.category).subscribe({
         next: (c) => {
@@ -115,8 +116,8 @@ export class CategoriesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     }
-    this.getAllCategories();
     this.closePopup();
   }
 
@@ -140,7 +141,6 @@ export class CategoriesPage implements OnInit {
               detail: `${c.name} ${c.status ? 'activado' : 'desactivado'}`,
               life: 3000,
             });
-            this.getAllCategories();
           },
           error: (e) => {
             this.messageService.add({
@@ -151,6 +151,7 @@ export class CategoriesPage implements OnInit {
             });
           },
         });
+        this.refresh();
       },
     });
   }
@@ -164,5 +165,9 @@ export class CategoriesPage implements OnInit {
   closePopup() {
     this.categoryDialog = false;
     this.category = new CategoryModel();
+  }
+
+  refresh() {
+    this.getAllCategories();
   }
 }
