@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -35,11 +36,11 @@ import { ServiceService } from '../../services';
   ],
 })
 export class ServicesPage implements OnInit {
-  serviceDialog: boolean = false;
-  submitted: boolean = false;
+  serviceDialog = false;
+  submitted = false;
   service: ServiceModel = new ServiceModel();
   services: ServiceModel[] = [];
-  loading: boolean = false;
+  loading = false;
 
   @ViewChild('dt') dt!: Table;
 

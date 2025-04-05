@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -45,10 +47,10 @@ interface ExportColumn {
   providers: [ActivityService, MessageService, ConfirmationService],
 })
 export class ActivitiesPage implements OnInit {
-  activityDialog: boolean = false;
+  activityDialog = false;
   activities: ActivityModel[] = [];
   activity: ActivityModel = new ActivityModel();
-  submitted: boolean = false;
+  submitted = false;
   statuses: any[] = [
     { label: 'Activo', value: true },
     { label: 'Inactivo', value: false },
@@ -129,7 +131,7 @@ export class ActivitiesPage implements OnInit {
               life: 3000,
             });
           },
-          error: (e) => {
+          error: () => {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
