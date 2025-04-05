@@ -16,11 +16,11 @@ import { ServiceModel } from '../../models';
 import { ServiceService } from '../../services';
 
 @Component({
+  standalone: true,
   selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css'],
   providers: [MessageService, ConfirmationService, ServiceService],
-  standalone: true,
   imports: [
     CommonModule,
     TableModule,
@@ -36,11 +36,14 @@ import { ServiceService } from '../../services';
   ],
 })
 export class ServicesPage implements OnInit {
-  serviceDialog = false;
-  submitted = false;
   service: ServiceModel = new ServiceModel();
   services: ServiceModel[] = [];
-  loading = false;
+  serviceDialog = false;
+  submitted = false;
+  statuses = [
+    { label: 'Activo', value: true },
+    { label: 'Inactivo', value: false },
+  ];
 
   constructor(
     private serviceService: ServiceService,
@@ -56,59 +59,17 @@ export class ServicesPage implements OnInit {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  openNew() {
-    this.service = new ServiceModel();
-    this.submitted = false;
-    this.serviceDialog = true;
-  }
-
-  editService(service: ServiceModel) {
-    this.service = { ...service };
-    this.serviceDialog = true;
-  }
-
-  deleteService(service: ServiceModel) {
-    this.confirmationService.confirm({
-      message:
-        '¿Está seguro de que desea cambiar el estado de ' + service.name + '?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        service.status = !service.status;
-        this.serviceService.update(service).subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Estado del servicio actualizado',
-            });
-            this.getAllServices();
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudo actualizar el estado del servicio',
-            });
-          },
-        });
-      },
-    });
-  }
-
   getAllServices() {
-    this.loading = true;
     this.serviceService.getAll().subscribe({
       next: (services) => {
         this.services = services;
-        this.loading = false;
       },
-      error: () => {
-        this.loading = false;
+      error: (e) => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudieron cargar los servicios',
+          detail: e.error.message,
+          life: 3000,
         });
       },
     });
@@ -117,47 +78,91 @@ export class ServicesPage implements OnInit {
   saveService() {
     this.submitted = true;
 
-    if (this.service.name.trim()) {
-      if (this.service.id) {
-        this.serviceService.update(this.service).subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Servicio actualizado',
-            });
-            this.getAllServices();
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudo actualizar el servicio',
-            });
-          },
-        });
-      } else {
-        this.serviceService.create(this.service).subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Servicio creado',
-            });
-            this.getAllServices();
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudo crear el servicio',
-            });
-          },
-        });
-      }
-
-      this.serviceDialog = false;
-      this.service = new ServiceModel();
+    if (!this.service.id) {
+      this.serviceService.create(this.service).subscribe({
+        next: (s) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: `${s.name} creado`,
+            life: 3000,
+          });
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
+      });
+    } else {
+      this.serviceService.update(this.service).subscribe({
+        next: (s) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: `${s.name} actualizado`,
+            life: 3000,
+          });
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
+      });
     }
+    this.getAllServices();
+    this.closePopup();
+  }
+
+  editService(service: ServiceModel) {
+    this.service = { ...service };
+    this.serviceDialog = true;
+  }
+
+  changeStatusService(service: ServiceModel) {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro de que desea cambiar el estado de ' + service.name + '?',
+      header: 'Confirmar',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.serviceService.changeStatus(service.id).subscribe({
+          next: (s) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: `${s.name} ${s.status ? 'activado' : 'desactivado'}`,
+              life: 3000,
+            });
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
+        });
+      },
+    });
+  }
+
+  showPopup() {
+    this.service = new ServiceModel();
+    this.serviceDialog = true;
+    this.submitted = false;
+  }
+
+  closePopup() {
+    this.serviceDialog = false;
+    this.service = new ServiceModel();
   }
 }

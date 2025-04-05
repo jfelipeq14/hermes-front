@@ -36,18 +36,19 @@ import { CategoryModel } from '../../models';
   ],
 })
 export class CategoriesPage implements OnInit {
-  // Variables
-  popupVisible = false;
-  submitted = false;
   category: CategoryModel = new CategoryModel();
   categories: CategoryModel[] = [];
-  loading = false;
-  // Agregar estas propiedades
-  dt: Table | undefined;
+  categoryDialog = false;
+  submitted = false;
+  statuses = [
+    { label: 'Activo', value: true },
+    { label: 'Inactivo', value: false },
+  ];
 
   constructor(
     private categoryService: CategoryService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -58,117 +59,110 @@ export class CategoriesPage implements OnInit {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  exportCSV() {
-    if (this.dt) {
-      this.dt.exportCSV();
-    }
-  }
-
   getAllCategories() {
-    this.loading = true;
     this.categoryService.getAll().subscribe({
       next: (categories) => {
         this.categories = categories;
-        this.loading = false;
       },
-      error: () => {
-        this.loading = false;
+      error: (e) => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'No se pudieron cargar las categorías',
+          detail: e.error.message,
+          life: 3000,
         });
       },
     });
   }
 
-  saveCategoryService(category: CategoryModel) {
-    this.loading = true;
+  saveCategory() {
     this.submitted = true;
-    if (category.id) {
-      this.categoryService.update(category).subscribe({
-        next: () => {
+    if (!this.category.id) {
+      this.categoryService.create(this.category).subscribe({
+        next: (c) => {
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
-            detail: 'Categoría actualizada',
+            detail: `${c.name} creado`,
+            life: 3000,
           });
-          this.getAllCategories();
-          this.closePopup();
-          this.loading = false;
         },
-        error: () => {
-          this.loading = false;
+        error: (e) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'No se pudo actualizar la categoría',
+            detail: e.error.message,
+            life: 3000,
           });
         },
       });
     } else {
-      this.categoryService.create(category).subscribe({
-        next: () => {
+      this.categoryService.update(this.category).subscribe({
+        next: (c) => {
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',
-            detail: 'Categoría creada',
+            detail: `${c.name} actualizado`,
+            life: 3000,
           });
-          this.getAllCategories();
-          this.closePopup();
-          this.loading = false;
         },
-        error: () => {
-          this.loading = false;
+        error: (e) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'No se pudo crear la categoría',
+            detail: e.error.message,
+            life: 3000,
           });
         },
       });
     }
+    this.getAllCategories();
+    this.closePopup();
   }
 
-  showPopup() {
-    this.category = new CategoryModel();
-    this.popupVisible = true;
-    this.submitted = false;
-  }
-
-  closePopup() {
-    this.popupVisible = false;
-    this.category = new CategoryModel();
-  }
-
-  editCategoryService(category: CategoryModel) {
+  editCategory(category: CategoryModel) {
     this.category = { ...category };
-    this.popupVisible = true;
+    this.categoryDialog = true;
   }
 
-  changeStatusCategoryService(category: CategoryModel) {
-    category.status = !category.status;
-    this.categoryService.update(category).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: `Estado de la categoría ${
-            category.status ? 'activado' : 'desactivado'
-          }`,
-        });
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudo cambiar el estado de la categoría',
+  changeStatusCategory(category: CategoryModel) {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro de que desea cambiar el estado de ' + category.name + '?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.categoryService.changeStatus(category.id).subscribe({
+          next: (c) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: `${c.name} ${c.status ? 'activado' : 'desactivado'}`,
+              life: 3000,
+            });
+            this.getAllCategories();
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
         });
       },
     });
   }
 
-  refresh() {
-    this.getAllCategories();
+  showPopup() {
+    this.category = new CategoryModel();
+    this.categoryDialog = true;
+    this.submitted = false;
+  }
+
+  closePopup() {
+    this.categoryDialog = false;
+    this.category = new CategoryModel();
   }
 }

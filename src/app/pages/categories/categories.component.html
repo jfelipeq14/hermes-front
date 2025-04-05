@@ -61,14 +61,14 @@
           class="mr-2"
           [rounded]="true"
           [outlined]="true"
-          (click)="editCategoryService(category)"
+          (click)="editCategory(category)"
         />
         <p-button
           icon="pi pi-sync"
           severity="info"
           [rounded]="true"
           [outlined]="true"
-          (click)="changeStatusCategoryService(category)"
+          (click)="changeStatusCategory(category)"
         />
       </td>
     </tr>
@@ -76,7 +76,7 @@
 </p-table>
 
 <p-dialog
-  [(visible)]="popupVisible"
+  [(visible)]="categoryDialog"
   [style]="{ width: '450px' }"
   header="Detalles de Categoría"
   [modal]="true"
@@ -91,7 +91,6 @@
         id="name"
         [(ngModel)]="category.name"
         required
-       
       />
       <small class="p-error" *ngIf="submitted && !category.name"
         >El nombre es obligatorio.</small
@@ -119,9 +118,10 @@
     <p-button
       label="Guardar"
       icon="pi pi-check"
-      (click)="saveCategoryService(category)"
+      (click)="saveCategory()"
     ></p-button>
   </ng-template>
 </p-dialog>
 
+<p-toast></p-toast>
 <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

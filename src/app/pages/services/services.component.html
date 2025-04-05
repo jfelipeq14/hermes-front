@@ -27,7 +27,7 @@
         label="Crear"
         icon="pi pi-plus"
         severity="secondary"
-        (onClick)="openNew()"
+        (onClick)="showPopup()"
       />
     </div>
   </ng-template>
@@ -72,7 +72,7 @@
           severity="info"
           [rounded]="true"
           [outlined]="true"
-          (click)="deleteService(service)"
+          (click)="changeStatusService(service)"
         />
       </td>
     </tr>
@@ -95,7 +95,6 @@
         id="name"
         [(ngModel)]="service.name"
         required
-       
       />
       <small class="p-error" *ngIf="submitted && !service.name"
         >El nombre es obligatorio.</small
@@ -130,7 +129,7 @@
     <p-button
       label="Cancelar"
       icon="pi pi-times"
-      (click)="serviceDialog = false"
+      (click)="closePopup()"
       [text]="true"
     ></p-button>
     <p-button

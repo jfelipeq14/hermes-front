@@ -18,8 +18,7 @@ import { LayoutService } from '../service/layout.service';
         <i class="pi pi-bars"></i>
       </button>
       <a class="layout-topbar-logo" routerLink="/">
-        <img src="./assets/img/hermes.png" alt="Hermes" />
-        <span>Hermes</span>
+        <img src="/hermes.png" width="30" alt="Hermes" />
       </a>
     </div>
 

@@ -27,7 +27,7 @@
         label="Crear"
         icon="pi pi-plus"
         severity="secondary"
-        (onClick)="openNew()"
+        (onClick)="showPopup()"
       />
     </div>
   </ng-template>
@@ -65,7 +65,7 @@
           severity="info"
           [rounded]="true"
           [outlined]="true"
-          (click)="deleteActivity(activity)"
+          (click)="changeStatusActivity(activity)"
         />
       </td>
     </tr>
@@ -88,7 +88,6 @@
         id="name"
         [(ngModel)]="activity.name"
         required
-       
       />
       <small class="p-error" *ngIf="submitted && !activity.name"
         >El nombre es obligatorio.</small
@@ -101,7 +100,7 @@
       label="Cancel"
       icon="pi pi-times"
       styleClass="p-button-text"
-      (click)="hideDialog()"
+      (click)="closePopup()"
     ></p-button>
     <p-button
       label="Save"
@@ -111,4 +110,5 @@
   </ng-template>
 </p-dialog>
 
+<p-toast></p-toast>
 <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
