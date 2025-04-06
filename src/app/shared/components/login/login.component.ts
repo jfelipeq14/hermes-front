@@ -18,13 +18,13 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
 
-  email: string = '';
+  email = '';
 
-  password: string = '';
+  password = '';
 
-  checked: boolean = false;
+  checked = false;
 
-  submitted: boolean = false;
+  submitted = false;
 
   closePopup() {
     this.submitted = false;

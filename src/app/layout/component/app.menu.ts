@@ -29,7 +29,11 @@ export class AppMenu implements OnInit {
     this.model = [
       {
         items: [
-          { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+          {
+            label: 'Dashboard',
+            icon: 'pi pi-fw pi-home',
+            routerLink: ['dashboard'],
+          },
         ],
       },
       {
