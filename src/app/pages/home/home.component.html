@@ -1,0 +1,21 @@
+<p-button label="Sign out" icon="pi pi-sign-out" (click)="login()"></p-button>
+
+<p-button
+  label="Login"
+  icon="pi pi-user"
+  (click)="openLoginDialog()"
+></p-button>
+
+<p-dialog
+  [(visible)]="loginDialog"
+  [style]="{ width: '450px' }"
+  header="Login"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  class="p-fluid"
+>
+  <ng-template #content>
+    <app-login></app-login>
+  </ng-template>
+</p-dialog>

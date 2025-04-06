@@ -1,27 +1,16 @@
 <div class="grid grid-cols-4 gap-8">
+  <!-- Gráfico de ingresos diarios -->
   <div class="col-span-4">
     <div class="card mb-0">
-      <div class="flex justify-between mb-4">
-        <div>
-          <span class="block text-muted-color font-medium mb-4">Revenue</span>
-          <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">
-            $2.100
-          </div>
-        </div>
-        <div
-          class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-border"
-          style="width: 2.5rem; height: 2.5rem"
-        >
-          <i class="pi pi-dollar text-orange-500 !text-xl"></i>
-        </div>
-      </div>
-      <span class="text-primary font-medium">%52+ </span>
-      <span class="text-muted-color">since last week</span>
+      <div class="font-semibold text-xl mb-4">Ingresos Diarios</div>
+      <p-chart type="line" [data]="dailyRevenueData" [options]="dailyRevenueOptions"></p-chart>
     </div>
   </div>
+
+  <!-- Tabla de clientes que más compran -->
   <div class="col-span-2 w-auto">
     <div class="card !mb-8">
-      <div class="font-semibold text-xl mb-4">Top Clientes</div>
+      <div class="font-semibold text-xl mb-4">Clientes que Más Compran</div>
       <p-table
         [value]="topClients"
         [paginator]="true"
@@ -31,22 +20,24 @@
         <ng-template #header>
           <tr>
             <th>Nombre</th>
-            <th>Reservas</th>
+            <th>Compras</th>
           </tr>
         </ng-template>
         <ng-template #body let-client>
           <tr>
             <td>{{ client.name }} {{ client.surname }}</td>
-            <td>{{ client.reservations }}</td>
+            <td>{{ client.purchases }}</td>
           </tr>
         </ng-template>
       </p-table>
     </div>
   </div>
+
+  <!-- Gráfico de paquetes más vendidos -->
   <div class="col-span-2 w-auto">
     <div class="card !mb-8">
-      <div class="font-semibold text-xl mb-4">Paquetes Mas Vendidos</div>
-      <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
+      <div class="font-semibold text-xl mb-4">Paquetes Más Vendidos</div>
+      <p-chart type="bar" [data]="topSellingPackagesData" [options]="topSellingPackagesOptions"></p-chart>
     </div>
   </div>
 </div>
