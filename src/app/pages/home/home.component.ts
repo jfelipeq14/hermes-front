@@ -26,7 +26,7 @@ import { UserModel } from '../../models';
 })
 export class HomePage {
   activity: UserModel = new UserModel();
-  loginDialog: boolean = false;
+  loginDialog = false;
 
   openLoginDialog() {
     this.loginDialog = true;
