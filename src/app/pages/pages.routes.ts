@@ -3,6 +3,6 @@ import { Routes } from '@angular/router';
 export default [
   {
     path: '**',
-    redirectTo: '/notfound',
+    redirectTo: '/',
   },
 ] as Routes;

@@ -1,21 +1,34 @@
-<p-button label="Sign out" icon="pi pi-sign-out" (click)="login()"></p-button>
+<div class="bg-surface-0 dark:bg-surface-900">
+  <div id="home" class="landing-wrapper overflow-hidden">
+    <div class="flex w-full justify-content-end p-2 gap-4 fixed top-0 right-0">
+      <p-button
+        label="Login"
+        icon="pi pi-user"
+        (click)="openLoginDialog()"
+      ></p-button>
 
-<p-button
-  label="Login"
-  icon="pi pi-user"
-  (click)="openLoginDialog()"
-></p-button>
+      <p-button
+        label="Sign out"
+        icon="pi pi-sign-out"
+        (click)="login()"
+      ></p-button>
+    </div>
 
-<p-dialog
-  [(visible)]="loginDialog"
-  [style]="{ width: '450px' }"
-  header="Login"
-  [modal]="true"
-  [closable]="true"
-  [dismissableMask]="true"
-  class="p-fluid"
->
-  <ng-template #content>
-    <app-login></app-login>
-  </ng-template>
-</p-dialog>
+    <hero-widget />
+    <features-widget />
+    <footer-widget />
+  </div>
+  <p-dialog
+    [(visible)]="loginDialog"
+    [style]="{ width: '450px' }"
+    header="Login"
+    [modal]="true"
+    [closable]="true"
+    [dismissableMask]="true"
+    class="p-fluid"
+  >
+    <ng-template #content>
+      <app-login></app-login>
+    </ng-template>
+  </p-dialog>
+</div>
