@@ -6,3 +6,8 @@ export * from './roles.service';
 export * from './reservations.service';
 export * from './service.service';
 export * from './user.service';
+export * from './dashboard.service';
+export * from './home.service';
+export * from './login.service';
+export * from './register.service';
+export * from './auth.service';

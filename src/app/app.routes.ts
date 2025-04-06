@@ -8,16 +8,19 @@ import { ServicesPage } from './pages/services/services.component';
 import { ActivitiesPage } from './pages/activities/activities.component';
 import { PackagesPage } from './pages/packages/packages.component';
 import { ProgrammingPage } from './pages/programming/programming.component';
+import { HomePage } from './pages/home/home.component';
 
 export const routes: Routes = [
   {
     path: '',
+
+    component: HomePage,
+  },
+  {
+    path: 'app',
     component: AppLayout,
     children: [
-      {
-        path: '',
-        component: DashboardPage,
-      },
+      { path: 'dashboard', component: DashboardPage },
       { path: 'roles', component: RolesPage },
       { path: 'users', component: UsersPage },
       { path: 'categories', component: CategoriesPage },
