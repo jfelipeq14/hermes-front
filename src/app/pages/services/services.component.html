@@ -12,9 +12,15 @@
   [rowsPerPageOptions]="[10, 20, 30]"
 >
   <ng-template pTemplate="caption">
-    <div class="flex flex-row items-center justify-between w-full">
-      <h3 class="m-0 p-0">Servicios</h3>
-      <p-iconfield class="m-0">
+    <h3 class="m-0 p-0 text-center">Servicios</h3>
+    <div class="flex justify-content-between align-items-center">
+      <p-button
+        label="Crear"
+        icon="pi pi-plus"
+        severity="secondary"
+        (onClick)="showPopup()"
+      />
+      <p-iconfield>
         <p-inputicon styleClass="pi pi-search" />
         <input
           pInputText
@@ -23,12 +29,6 @@
           placeholder="Search..."
         />
       </p-iconfield>
-      <p-button
-        label="Crear"
-        icon="pi pi-plus"
-        severity="secondary"
-        (onClick)="showPopup()"
-      />
     </div>
   </ng-template>
 

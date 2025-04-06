@@ -12,13 +12,13 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ServiceModel } from '../../models';
 import { ServiceService } from '../../services';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   standalone: true,
   selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css'],
-  providers: [MessageService, ConfirmationService, ServiceService],
   imports: [
     CommonModule,
     TableModule,
@@ -26,10 +26,12 @@ import { ServiceService } from '../../services';
     ButtonModule,
     ToastModule,
     DialogModule,
+    InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
   ],
+  providers: [ServiceService, MessageService, ConfirmationService],
 })
 export class ServicesPage implements OnInit {
   service: ServiceModel = new ServiceModel();

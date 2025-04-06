@@ -12,12 +12,12 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CategoryService } from '../../services';
 import { CategoryModel } from '../../models';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
-  providers: [MessageService, ConfirmationService, CategoryService],
   imports: [
     CommonModule,
     TableModule,
@@ -25,10 +25,12 @@ import { CategoryModel } from '../../models';
     ButtonModule,
     ToastModule,
     DialogModule,
+    InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
   ],
+  providers: [CategoryService, MessageService, ConfirmationService],
 })
 export class CategoriesPage implements OnInit {
   category: CategoryModel = new CategoryModel();

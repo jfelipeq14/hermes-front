@@ -12,6 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RoleModel } from '../../models';
 import { RolesService } from '../../services';
 import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-roles',
@@ -24,6 +25,7 @@ import { DialogModule } from 'primeng/dialog';
     ButtonModule,
     ToastModule,
     DialogModule,
+    InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,

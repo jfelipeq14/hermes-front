@@ -13,13 +13,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
 import { UserModel } from '../../models';
 import { UserService } from '../../services';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
-  providers: [MessageService, ConfirmationService, UserService],
-  standalone: true,
   imports: [
     CommonModule,
     TableModule,
@@ -27,11 +26,13 @@ import { UserService } from '../../services';
     ButtonModule,
     ToastModule,
     DialogModule,
+    InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
     CalendarModule,
   ],
+  providers: [UserService, MessageService, ConfirmationService],
 })
 export class UsersPage implements OnInit {
   users: UserModel[] = [];
