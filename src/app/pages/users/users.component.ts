@@ -6,8 +6,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -28,8 +26,6 @@ import { UserService } from '../../services';
     FormsModule,
     ButtonModule,
     ToastModule,
-    ToolbarModule,
-    InputTextModule,
     DialogModule,
     InputIconModule,
     IconFieldModule,

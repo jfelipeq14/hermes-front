@@ -6,8 +6,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -20,15 +18,12 @@ import { CategoryModel } from '../../models';
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
   providers: [MessageService, ConfirmationService, CategoryService],
-  standalone: true, // Si estás usando standalone components
   imports: [
     CommonModule,
     TableModule,
     FormsModule,
     ButtonModule,
     ToastModule,
-    ToolbarModule,
-    InputTextModule,
     DialogModule,
     InputIconModule,
     IconFieldModule,

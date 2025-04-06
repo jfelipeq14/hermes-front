@@ -1,0 +1,17 @@
+.grid-container {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-areas:
+    "p s s"
+    "p c c";
+}
+
+.grid-container-packages {
+  grid-area: p;
+}
+.grid-container-sales {
+  grid-area: s;
+}
+.grid-container-clients {
+  grid-area: c;
+}

@@ -1,78 +1,137 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
+import { DashboardService } from '../../services/dashboard.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, TableModule, ButtonModule, RippleModule,ChartModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
+  imports: [CommonModule, TableModule, ButtonModule, RippleModule, ChartModule],
+  providers: [DashboardService, MessageService],
 })
-export class DashboardPage {
-  topClients: any[] = [
-    { name: 'Client 1',surName: 'sanchez', reservations: 1000 },
-    { name: 'Client 2', surName: 'sanchez', reservations: 800 },
-    { name: 'Client 3', surName: 'sanchez', reservations: 600 },
-    { name: 'Client 4', surName: 'sanchez', reservations: 400 },
-    { name: 'Client 5', surName: 'sanchez', reservations: 200 },
-  ];
+export class DashboardPage implements OnInit {
+  constructor(
+    private dashboardService: DashboardService,
+    private messageService: MessageService
+  ) {}
 
-  barData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  topClients: any[] = [];
+  sales: any;
+  packages: any[] = [];
+
+  ngOnInit(): void {
+    this.getSales();
+    this.getClients();
+    this.getPackages();
+  }
+
+  getSales() {
+    this.dashboardService.getSales().subscribe({
+      next: (data) => {
+        this.sales = data;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getClients() {
+    this.dashboardService.getSales().subscribe({
+      next: (data) => {
+        this.topClients = data;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getPackages() {
+    this.dashboardService.getPackages().subscribe({
+      next: (data) => {
+        this.packages = data;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getPackageNames(): string[] {
+    return this.packages.map((p) => p.name);
+  }
+
+  getPackageSales(): number[] {
+    return this.packages.map((p) => p.sales);
+  }
+
+  dataPackages = {
+    labels: this.getPackageNames(),
     datasets: [
-        {
-            label: 'My First dataset',
-            backgroundColor:"red",
-            borderColor: "black",
-            data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {
-            label: 'My Second dataset',
-            backgroundColor:"blue",
-            borderColor: "black",
-            data: [28, 48, 40, 19, 86, 27, 90]
-        }
-    ]
-};
+      {
+        label: 'Paquetes',
+        backgroundColor: 'red',
+        borderColor: 'black',
+        data: this.getPackageSales(),
+      },
+    ],
+  };
 
-barOptions = {
+  barOptions = {
     maintainAspectRatio: false,
     aspectRatio: 0.8,
     plugins: {
-        legend: {
-            labels: {
-                color: "yellow",
-            }
-        }
+      legend: {
+        labels: {
+          color: 'yellow',
+        },
+      },
     },
     scales: {
-        x: {
-            ticks: {
-                color: "green",
-                font: {
-                    weight: 500
-                }
-            },
-            grid: {
-                display: false,
-                drawBorder: false
-            }
+      x: {
+        ticks: {
+          color: 'green',
+          font: {
+            weight: 500,
+          },
         },
-        y: {
-            ticks: {
-                color: "grey"
-            },
-            grid: {
-                color: "black",
-                drawBorder: false
-            }
-        }
-    }
-};
-    
+        grid: {
+          display: false,
+          drawBorder: false,
+        },
+      },
+      y: {
+        ticks: {
+          color: 'grey',
+        },
+        grid: {
+          color: 'black',
+          drawBorder: false,
+        },
+      },
+    },
+  };
 }
