@@ -1,48 +1,75 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
-import { CommonModule } from '@angular/common'; 
-
+import { CommonModule } from '@angular/common';
+import { UserModel } from '../../../models';
+import { AuthService } from '../../../services';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
-  imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, CommonModule],
-
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css'],
+  imports: [
+    ButtonModule,
+    CheckboxModule,
+    InputTextModule,
+    PasswordModule,
+    FormsModule,
+    ToastModule,
+    RouterModule,
+    RippleModule,
+    CommonModule,
+  ],
+  providers: [AuthService, MessageService],
 })
 export class LoginComponent {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {}
 
-  email = '';
+  @Input() loginDialog!: boolean;
+  @Input() submitted!: boolean;
+  @Input() user: UserModel = new UserModel();
 
-  password = '';
-
-  checked = false;
-
-  submitted = false;
-
-  closePopup() {
-    this.submitted = false;
-    this.email = '';
-    this.password = '';
-    this.checked = false;
-  }
-
-  login(){
+  onSubmit() {
     this.submitted = true;
-    if (this.email && this.password) {
-      // Aquí puedes implementar la lógica de inicio de sesión
-      console.log('Inicio de sesión exitoso:', this.email, this.password);
-      this.closePopup();
-    } else {
-      console.log('Por favor, completa todos los campos.');
-    }
+    this.authService.login(this.user).subscribe({
+      next: (response) => {
+        if (!response) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Invalid credentials',
+            life: 3000,
+          });
+          return;
+        }
+        console.log('User logged in successfully: ', response);
+        this.authService.setTokens(response!.accessToken);
+        this.router.navigate(['home']);
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
   }
 
+  onClose() {
+    this.loginDialog = false;
+    this.submitted = false;
+  }
 }
-

@@ -1,18 +1,12 @@
 <!-- Landing page con TailwindCSS y PrimeNG Sakai -->
 <div class="min-h-screen surface-ground">
   <!-- Header con botones de login -->
-  <div class="fixed top-0 right-0 z-50 p-4 flex items-center gap-2">
+  <div class="fixed top-0 right-0 z-50 p-4 flex items-center gap-2 z-5">
     <p-button
       icon="pi pi-user"
       label="Login"
       styleClass="p-button-primary"
-      (click)="openLoginDialog()"
-    ></p-button>
-    <p-button
-      icon="pi pi-sign-out"
-      label="Sign out"
-      styleClass="p-button-primary"
-      (click)="login()"
+      (click)="showPopup()"
     ></p-button>
   </div>
 
@@ -290,5 +284,9 @@
   [dismissableMask]="true"
   styleClass="p-fluid"
 >
-  <app-login></app-login>
+  <app-login
+    [loginDialog]="loginDialog"
+    [submitted]="submitted"
+    [user]="user"
+  ></app-login>
 </p-dialog>

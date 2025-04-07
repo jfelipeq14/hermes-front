@@ -1,41 +1,29 @@
+<div class="field">
+  <label for="name">Gmail</label>
+  <input type="email" pInputText id="name" [(ngModel)]="user.email" required />
+  <small class="p-error" *ngIf="submitted && !user.email"
+    >El nombre es obligatorio.</small
+  >
+</div>
+<div class="field">
+  <label for="name">Password</label>
+  <input
+    type="password"
+    pInputText
+    id="name"
+    [(ngModel)]="user.password"
+    required
+  />
+  <small class="p-error" *ngIf="submitted && !user.password"
+    >El nombre es obligatorio.</small
+  >
+</div>
 
-    <div class="field">
-      <label for="name">Gmail</label>
-      <input
-        type="email"
-        pInputText
-        id="name"
-        [(ngModel)]="email"
-        required
-      />
-      <small class="p-error" *ngIf="submitted && !email"
-        >El nombre es obligatorio.</small
-      >
-    </div>
-    <div class="field">
-      <label for="name">Password</label>
-      <input
-        type="password"
-        pInputText
-        id="name"
-        [(ngModel)]="password"
-        required
-      />
-      <small class="p-error" *ngIf="submitted && !password"
-        >El nombre es obligatorio.</small
-      >
-    </div>
-
-
- 
-    <p-button
-      label="Cancel"
-      icon="pi pi-times"
-      styleClass="p-button-text"
-      (click)="closePopup()"
-    ></p-button>
-    <p-button
-      label="Save"
-      icon="pi pi-check"
-      (click)="login()"
-    ></p-button>
+<p-button
+  label="Cancel"
+  icon="pi pi-times"
+  styleClass="p-button-text"
+  (click)="onClose()"
+></p-button>
+<p-button label="Save" icon="pi pi-check" (click)="onSubmit()"></p-button>
+<p-toast />
