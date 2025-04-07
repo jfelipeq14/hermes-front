@@ -9,10 +9,12 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { TagModule } from 'primeng/tag';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PackageModel } from '../../models/package';
 import { PackageService } from '../../services/package.service';
+import { PackageServiceModel } from '../../models';
 
 @Component({
   selector: 'app-packages',
@@ -28,6 +30,7 @@ import { PackageService } from '../../services/package.service';
     InputTextModule,
     InputIconModule,
     IconFieldModule,
+    TagModule,
     ConfirmDialogModule,
   ],
   providers: [PackageService, MessageService, ConfirmationService],
@@ -35,8 +38,10 @@ import { PackageService } from '../../services/package.service';
 export class PackagesPage implements OnInit {
   package: PackageModel = new PackageModel();
   packages: PackageModel[] = [];
+  packageServices: PackageServiceModel[] = [];
   packageDialog = false;
   submitted = false;
+  expandedRows: Record<string, boolean> = {};
 
   constructor(
     private packageService: PackageService,
@@ -56,6 +61,14 @@ export class PackagesPage implements OnInit {
     this.packageService.getAll().subscribe({
       next: (packages) => {
         this.packages = packages;
+        // Load package services for each package
+        this.packages.forEach((pkg) => {
+          this.packageService.getServicePackages(pkg.id).subscribe({
+            next: (services) => {
+              this.packageServices = services;
+            },
+          });
+        });
       },
       error: (e) => {
         this.messageService.add({
@@ -66,6 +79,35 @@ export class PackagesPage implements OnInit {
         });
       },
     });
+  }
+
+  onRowExpand(event: any) {
+    const packageId = event.data.id;
+    if (!event.data.services) {
+      this.packageService.getServicePackages(packageId).subscribe({
+        next: (services) => {
+          event.data.services = services;
+        },
+      });
+    }
+  }
+
+  onRowCollapse(event: any) {
+    // No action needed for collapse
+  }
+
+  expandAll() {
+    this.packages.forEach((pkg) => {
+      this.expandedRows[pkg.id] = true;
+    });
+  }
+
+  collapseAll() {
+    this.expandedRows = {};
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 
   savePackage() {
