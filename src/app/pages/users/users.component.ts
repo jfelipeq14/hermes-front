@@ -11,6 +11,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
+import { TagModule } from 'primeng/tag';
 import { UserModel } from '../../models';
 import { UserService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
@@ -31,6 +32,7 @@ import { InputTextModule } from 'primeng/inputtext';
     IconFieldModule,
     ConfirmDialogModule,
     CalendarModule,
+    TagModule,
   ],
   providers: [UserService, MessageService, ConfirmationService],
 })
@@ -149,7 +151,7 @@ export class UsersPage implements OnInit {
         this.userService.changeStatus(user.id).subscribe({
           next: (u) => {
             this.messageService.add({
-              severity: 'success',
+              severity: this.getSeverity(u.status),
               summary: 'Éxito',
               detail: `${u.name} ${u.status ? 'activado' : 'desactivado'}`,
               life: 3000,
@@ -168,5 +170,9 @@ export class UsersPage implements OnInit {
         this.refresh();
       },
     });
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 }

@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TagModule } from 'primeng/tag';
 import { CategoryService } from '../../services';
 import { CategoryModel } from '../../models';
 import { InputTextModule } from 'primeng/inputtext';
@@ -29,6 +30,7 @@ import { InputTextModule } from 'primeng/inputtext';
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
+    TagModule,
   ],
   providers: [CategoryService, MessageService, ConfirmationService],
 })
@@ -115,7 +117,7 @@ export class CategoriesPage implements OnInit {
       });
       this.refresh();
     }
-    this.closePopup();
+    this.refresh();
   }
 
   editCategory(category: CategoryModel) {
@@ -133,11 +135,12 @@ export class CategoriesPage implements OnInit {
         this.categoryService.changeStatus(category.id).subscribe({
           next: (c) => {
             this.messageService.add({
-              severity: 'success',
+              severity: this.getSeverity(c.status),
               summary: 'Éxito',
               detail: `${c.name} ${c.status ? 'activado' : 'desactivado'}`,
               life: 3000,
             });
+            this.refresh();
           },
           error: (e) => {
             this.messageService.add({
@@ -166,5 +169,11 @@ export class CategoriesPage implements OnInit {
 
   refresh() {
     this.getAllCategories();
+    this.closePopup();
+    this.submitted = false;
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 }

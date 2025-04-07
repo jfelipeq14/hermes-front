@@ -1,1 +1,14 @@
-<p>calendar works!</p>
+<div class="relative">
+  <full-calendar
+    *ngIf="calendarVisible()"
+    [options]="calendarOptions()"
+    class="w-full"
+  >
+    <ng-template #eventContent let-arg>
+      <div class="flex items-center space-x-2">
+        <span class="font-medium text-gray-600">{{ arg.timeText }}</span>
+        <span class="text-gray-800">{{ arg.event.title }}</span>
+      </div>
+    </ng-template>
+  </full-calendar>
+</div>

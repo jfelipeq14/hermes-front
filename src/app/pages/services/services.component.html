@@ -59,7 +59,12 @@
       <td>{{ service.id }}</td>
       <td>{{ service.name }}</td>
       <td>{{ service.price }}</td>
-      <td>{{ service.status ? "Activo" : "Inactivo" }}</td>
+      <td>
+        <p-tag
+          [value]="service.status ? 'Activo' : 'Inactivo'"
+          [severity]="getSeverity(service.status)"
+        />
+      </td>
       <td>
         <p-button
           icon="pi pi-pencil"
@@ -107,10 +112,10 @@
     <div class="field grid grid-cols-2 justify-content-between">
       <label for="name">Nombre</label>
       <input
-      id="name"
-      type="text"
-      [(ngModel)]="service.name"
-      pInputText
+        id="name"
+        type="text"
+        [(ngModel)]="service.name"
+        pInputText
         required
       />
       <small class="p-error" *ngIf="submitted && !service.name"

@@ -14,6 +14,7 @@ import { CategoryModel, ServiceModel } from '../../models';
 import { CategoryService, ServiceService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   standalone: true,
@@ -32,6 +33,7 @@ import { DropdownModule } from 'primeng/dropdown';
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
+    TagModule,
   ],
   providers: [
     ServiceService,
@@ -121,6 +123,7 @@ export class ServicesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     } else {
       this.serviceService.update(this.service).subscribe({
         next: (s) => {
@@ -140,9 +143,9 @@ export class ServicesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     }
-    this.getAllServices();
-    this.closePopup();
+    this.refresh();
   }
 
   editService(service: ServiceModel) {
@@ -160,7 +163,7 @@ export class ServicesPage implements OnInit {
         this.serviceService.changeStatus(service.id).subscribe({
           next: (s) => {
             this.messageService.add({
-              severity: 'success',
+              severity: this.getSeverity(s.status),
               summary: 'Éxito',
               detail: `${s.name} ${s.status ? 'activado' : 'desactivado'}`,
               life: 3000,
@@ -175,6 +178,7 @@ export class ServicesPage implements OnInit {
             });
           },
         });
+        this.refresh();
       },
     });
   }
@@ -188,5 +192,16 @@ export class ServicesPage implements OnInit {
   closePopup() {
     this.serviceDialog = false;
     this.service = new ServiceModel();
+  }
+
+  refresh() {
+    this.getAllCategories();
+    this.getAllServices();
+    this.closePopup();
+    this.submitted = false;
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 }

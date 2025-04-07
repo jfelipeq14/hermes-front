@@ -9,13 +9,15 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CommonModule } from '@angular/common';
 // import { INITIAL_EVENTS, createEventId } from './event-utils';
 
 @Component({
   selector: 'app-calendar',
-  imports: [],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css',
+  styleUrls: ['./calendar.component.css'],
+  imports: [CommonModule, FullCalendarModule],
 })
 export class CalendarComponent {
   calendarVisible = signal(true);

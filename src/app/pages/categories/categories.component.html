@@ -54,7 +54,12 @@
     <tr>
       <td>{{ category.id }}</td>
       <td>{{ category.name }}</td>
-      <td>{{ category.status ? "Activo" : "Inactivo" }}</td>
+      <td>
+        <p-tag
+          [value]="category.status ? 'Activo' : 'Inactivo'"
+          [severity]="getSeverity(category.status)"
+        />
+      </td>
       <td>
         <p-button
           icon="pi pi-pencil"

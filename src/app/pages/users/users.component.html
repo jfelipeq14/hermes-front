@@ -10,7 +10,8 @@
     'document',
     'phone',
     'address',
-    'dateBirth'
+    'dateBirth',
+    'status'
   ]"
   [tableStyle]="{ 'min-width': '75rem' }"
   [rowHover]="true"
@@ -74,6 +75,10 @@
         Fecha Nac.
         <p-sortIcon field="dateBirth" />
       </th>
+      <th pSortableColumn="status" style="min-width: 12rem">
+        Estado
+        <p-sortIcon field="status" />
+      </th>
       <th style="min-width: 12rem"></th>
     </tr>
   </ng-template>
@@ -88,6 +93,12 @@
       <td>{{ user.phone }}</td>
       <td>{{ user.address }}</td>
       <td>{{ user.dateBirth | date : "dd/MM/yyyy" }}</td>
+      <td>
+        <p-tag
+          [value]="user.status ? 'Activo' : 'Inactivo'"
+          [severity]="getSeverity(user.status)"
+        />
+      </td>
       <td>
         <p-button
           icon="pi pi-pencil"
