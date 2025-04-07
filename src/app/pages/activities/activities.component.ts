@@ -119,7 +119,7 @@ export class ActivitiesPage implements OnInit {
       });
       this.refresh();
     }
-    this.closePopup();
+    this.refresh();
   }
 
   editActivity(activity: ActivityModel) {
@@ -170,5 +170,7 @@ export class ActivitiesPage implements OnInit {
 
   refresh() {
     this.getAllActivities();
+    this.closePopup();
+    this.submitted = false;
   }
 }

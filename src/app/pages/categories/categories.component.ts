@@ -115,7 +115,7 @@ export class CategoriesPage implements OnInit {
       });
       this.refresh();
     }
-    this.closePopup();
+    this.refresh();
   }
 
   editCategory(category: CategoryModel) {
@@ -166,5 +166,7 @@ export class CategoriesPage implements OnInit {
 
   refresh() {
     this.getAllCategories();
+    this.closePopup();
+    this.submitted = false;
   }
 }

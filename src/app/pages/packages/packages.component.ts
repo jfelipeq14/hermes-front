@@ -96,6 +96,7 @@ export class PackagesPage implements OnInit {
   onRowCollapse(event: any) {
     console.log(event);
   }
+
   expandAll() {
     this.packages.forEach((pkg) => {
       this.expandedRows[pkg.id] = true;

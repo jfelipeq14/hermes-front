@@ -121,6 +121,7 @@ export class ServicesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     } else {
       this.serviceService.update(this.service).subscribe({
         next: (s) => {
@@ -140,9 +141,9 @@ export class ServicesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     }
-    this.getAllServices();
-    this.closePopup();
+    this.refresh();
   }
 
   editService(service: ServiceModel) {
@@ -175,6 +176,7 @@ export class ServicesPage implements OnInit {
             });
           },
         });
+        this.refresh();
       },
     });
   }
@@ -188,5 +190,12 @@ export class ServicesPage implements OnInit {
   closePopup() {
     this.serviceDialog = false;
     this.service = new ServiceModel();
+  }
+
+  refresh() {
+    this.getAllCategories();
+    this.getAllServices();
+    this.closePopup();
+    this.submitted = false;
   }
 }
