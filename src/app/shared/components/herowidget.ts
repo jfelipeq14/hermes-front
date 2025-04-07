@@ -30,13 +30,11 @@ import { TagModule } from 'primeng/tag';
             [responsiveOptions]="carouselResponsiveOptions"
           >
             <ng-template let-product #item>
-              <div class="border border-surface rounded-border m-2 p-4">
+              <div class="border border-surface rounded-border m-2 p-2">
                 <div class="mb-4">
                   <div class="relative mx-auto">
                     <img
-                      src="https://primefaces.org/cdn/primeng/images/demo/product/{{
-                        product.image
-                      }}"
+                      src="http://localhost:3000/{{ product.image }}"
                       [alt]="product.name"
                       class="w-full rounded-border"
                     />
@@ -69,42 +67,42 @@ export class HeroWidget {
       name: 'Package 1',
       price: 100,
       inventoryStatus: 'INSTOCK',
-      image: 'https://primefaces.org/cdn/primeng/images/demo/product/1.png',
+      image: 'images/1.png',
     },
     {
       id: 2,
       name: 'Package 2',
       price: 200,
       inventoryStatus: 'LOWSTOCK',
-      image: 'https://primefaces.org/cdn/primeng/images/demo/product/2.png',
+      image: 'images/2.png',
     },
     {
       id: 3,
       name: 'Package 3',
       price: 300,
       inventoryStatus: 'OUTOFSTOCK',
-      image: 'https://primefaces.org/cdn/primeng/images/demo/product/3.png',
+      image: 'images/3.png',
     },
     {
       id: 4,
       name: 'Package 4',
       price: 400,
       inventoryStatus: 'INSTOCK',
-      image: 'https://primefaces.org/cdn/primeng/images/demo/product/4.png',
+      image: 'images/4.png',
     },
     {
       id: 5,
       name: 'Package 5',
       price: 500,
       inventoryStatus: 'LOWSTOCK',
-      image: 'https://primefaces.org/cdn/primeng/images/demo/product/5.png',
+      image: 'images/5.png',
     },
     {
       id: 6,
       name: 'Package 6',
       price: 600,
       inventoryStatus: 'OUTOFSTOCK',
-      image: 'https://primefaces.org/cdn/primeng/images/demo/product/6.png',
+      image: 'images/6.png',
     },
   ];
 

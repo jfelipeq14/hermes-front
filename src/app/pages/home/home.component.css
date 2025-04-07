@@ -1,0 +1,188 @@
+/* Estilos personalizados para complementar PrimeNG Sakai y TailwindCSS */
+
+/* Variables de colores personalizados */
+:root {
+  --primary-color: var(--primary-color, #3b82f6);
+  --primary-dark: var(--primary-800, #2563eb);
+  --surface-card: var(--surface-card, #ffffff);
+  --surface-ground: var(--surface-ground, #f8f9fa);
+  --text-color: var(--text-color, #1f2937);
+  --text-color-secondary: var(--text-color-secondary, #6b7280);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Aplicar animaciones */
+.card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+h1,
+h2,
+h3 {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.p-card {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.p-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Mejoras para las tarjetas de paquetes */
+.package-card img {
+  transition: transform 0.5s ease;
+}
+
+.package-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Estilo para el botón de reserva */
+:host ::ng-deep .p-button {
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras para los iconos */
+.pi {
+  transition: transform 0.3s ease;
+}
+
+.pi:hover {
+  transform: scale(1.2);
+}
+
+/* Estilo para el mensaje de información */
+:host ::ng-deep .p-message {
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Estilo para el accordion */
+:host ::ng-deep .p-accordion .p-accordion-header-link {
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-accordion .p-accordion-header-link:hover {
+  background-color: var(--primary-50);
+}
+
+/* Estilo para el diálogo de login */
+:host ::ng-deep .p-dialog {
+  animation: fadeIn 0.4s ease-out;
+}
+
+:host ::ng-deep .p-dialog-header {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+:host ::ng-deep .p-dialog-content {
+  padding: 1.5rem;
+}
+
+/* Mejoras de responsividad */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .p-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Estilos para el footer */
+.border-t-1 {
+  position: relative;
+}
+
+.border-t-1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--surface-border),
+    transparent
+  );
+}
+
+/* Efecto hover para enlaces */
+a {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+a:not(.p-button):after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+a:not(.p-button):hover:after {
+  width: 100%;
+}
