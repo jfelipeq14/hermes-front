@@ -53,7 +53,10 @@
       <td style="min-width: 12rem">{{ role.id }}</td>
       <td style="min-width: 16rem">{{ role.name }}</td>
       <td>
-        {{ role.status }}
+        <p-tag
+          [value]="role.status ? 'Activo' : 'Inactivo'"
+          [severity]="getSeverity(role.status)"
+        />
       </td>
       <td>
         <p-button

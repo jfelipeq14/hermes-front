@@ -13,6 +13,7 @@ import { RoleModel } from '../../models';
 import { RolesService } from '../../services';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-roles',
@@ -29,6 +30,7 @@ import { InputTextModule } from 'primeng/inputtext';
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
+    TagModule,
   ],
   providers: [RolesService, MessageService, ConfirmationService],
 })
@@ -132,7 +134,7 @@ export class RolesPage implements OnInit {
         this.roleService.changeStatus(role.id).subscribe({
           next: (r) => {
             this.messageService.add({
-              severity: 'success',
+              severity: this.getSeverity(r.status),
               summary: 'Éxito',
               detail: `${r.name} ${r.status ? 'activado' : 'desactivado'}`,
               life: 3000,
@@ -165,5 +167,9 @@ export class RolesPage implements OnInit {
 
   refresh() {
     this.getAllRoles();
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 }

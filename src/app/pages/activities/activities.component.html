@@ -52,7 +52,12 @@
     <tr>
       <td>{{ activity.id }}</td>
       <td>{{ activity.name }}</td>
-      <td>{{ activity.status ? "Activo" : "Inactivo" }}</td>
+      <td>
+        <p-tag
+          [value]="activity.status ? 'Activo' : 'Inactivo'"
+          [severity]="getSeverity(activity.status)"
+        />
+      </td>
       <td>
         <p-button
           icon="pi pi-pencil"

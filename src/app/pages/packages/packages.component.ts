@@ -15,7 +15,13 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PackageModel } from '../../models/package';
 import { PackageService } from '../../services/package.service';
-import { PackageServiceModel } from '../../models';
+import {
+  MunicipalityModel,
+  PackageServiceModel,
+  ServiceModel,
+} from '../../models';
+import { ServiceService } from '../../services';
+import { MunicipalityService } from '../../services/municipality.service';
 
 @Component({
   selector: 'app-packages',
@@ -34,24 +40,38 @@ import { PackageServiceModel } from '../../models';
     TagModule,
     ConfirmDialogModule,
   ],
-  providers: [PackageService, MessageService, ConfirmationService],
+  providers: [
+    PackageService,
+    ServiceService,
+    MunicipalityService,
+    MessageService,
+    ConfirmationService,
+  ],
 })
 export class PackagesPage implements OnInit {
   package: PackageModel = new PackageModel();
   packages: PackageModel[] = [];
   packageServices: PackageServiceModel[] = [];
+
+  services: ServiceModel[] = [];
+  municipalities: MunicipalityModel[] = [];
+
   packageDialog = false;
   submitted = false;
   expandedRows: Record<string, boolean> = {};
 
   constructor(
     private packageService: PackageService,
+    private serviceService: ServiceService,
+    private municipalityService: MunicipalityService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
     this.getAllPackages();
+    this.getAllServices();
+    this.getAllMunicipalities();
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -62,7 +82,6 @@ export class PackagesPage implements OnInit {
     this.packageService.getAll().subscribe({
       next: (packages) => {
         this.packages = packages;
-        // Load package services for each package
         this.packages.forEach((pkg) => {
           this.packageService.getServicePackages(pkg.id).subscribe({
             next: (services) => {
@@ -82,6 +101,46 @@ export class PackagesPage implements OnInit {
     });
   }
 
+  getAllServices() {
+    this.serviceService.getAll().subscribe({
+      next: (services) => {
+        this.services = services;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getAllMunicipalities() {
+    this.municipalityService.getAll().subscribe({
+      next: (municipalities) => {
+        this.municipalities = municipalities;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getServiceName(id: number) {
+    return this.services.find((s) => s.id === id)?.name;
+  }
+
+  getMunicipalityName(id: number) {
+    return this.municipalities.find((m) => m.id === id)?.name;
+  }
+
   onRowExpand(event: any) {
     const packageId = event.data.id;
     if (!event.data.services) {
@@ -95,16 +154,6 @@ export class PackagesPage implements OnInit {
 
   onRowCollapse(event: any) {
     console.log(event);
-  }
-
-  expandAll() {
-    this.packages.forEach((pkg) => {
-      this.expandedRows[pkg.id] = true;
-    });
-  }
-
-  collapseAll() {
-    this.expandedRows = {};
   }
 
   getSeverity(status: boolean): 'success' | 'danger' {
@@ -155,7 +204,7 @@ export class PackagesPage implements OnInit {
         },
       });
     }
-    this.closePopup();
+    this.refresh();
   }
 
   editPackage(pkg: PackageModel) {
@@ -179,7 +228,7 @@ export class PackagesPage implements OnInit {
               }`,
               life: 3000,
             });
-            this.getAllPackages();
+            this.refresh();
           },
           error: (e) => {
             this.messageService.add({
@@ -203,5 +252,11 @@ export class PackagesPage implements OnInit {
   closePopup() {
     this.packageDialog = false;
     this.package = new PackageModel();
+  }
+
+  refresh() {
+    this.getAllPackages();
+    this.closePopup();
+    this.submitted = false;
   }
 }

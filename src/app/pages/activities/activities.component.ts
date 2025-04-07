@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TagModule } from 'primeng/tag';
 import { ActivityModel } from '../../models';
 import { ActivityService } from '../../services';
 
@@ -29,6 +30,7 @@ import { ActivityService } from '../../services';
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
+    TagModule,
   ],
   providers: [ActivityService, MessageService, ConfirmationService],
 })
@@ -137,11 +139,12 @@ export class ActivitiesPage implements OnInit {
         this.activityService.changeStatus(activity.id).subscribe({
           next: (a) => {
             this.messageService.add({
-              severity: 'success',
+              severity: this.getSeverity(a.status),
               summary: 'Éxito',
               detail: `${a.name} ${a.status ? 'activado' : 'desactivado'}`,
               life: 3000,
             });
+            this.refresh();
           },
           error: (e) => {
             this.messageService.add({
@@ -152,7 +155,6 @@ export class ActivitiesPage implements OnInit {
             });
           },
         });
-        this.refresh();
       },
     });
   }
@@ -172,5 +174,9 @@ export class ActivitiesPage implements OnInit {
     this.getAllActivities();
     this.closePopup();
     this.submitted = false;
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 }
