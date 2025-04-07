@@ -1,24 +1,24 @@
-import { Injectable } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class DashboardService {
-  private apiUrl = 'https://api.example.com/dashboard'; // Cambia esta URL por la de tu API
-
   constructor(private http: HttpClient) {}
 
-  getDailyRevenue(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/daily-revenue`);
+  private url = environment.SERVER_URL + 'dashboard/';
+
+  getSales(): Observable<any> {
+    return this.http.get<any>(this.url);
   }
 
-  getTopClients(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/top-clients`);
+  getPackages(): Observable<any[]> {
+    return this.http.get<any[]>(this.url);
   }
 
-  getTopSellingPackages(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/top-selling-packages`);
+  getClients(): Observable<any[]> {
+    return this.http.get<any[]>(this.url);
   }
 }

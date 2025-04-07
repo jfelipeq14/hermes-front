@@ -7,63 +7,131 @@ import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
 import { DashboardService } from '../../services/dashboard.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, TableModule, ButtonModule, RippleModule, ChartModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  styleUrl: './dashboard.component.css',
+  imports: [CommonModule, TableModule, ButtonModule, RippleModule, ChartModule],
+  providers: [DashboardService, MessageService],
 })
 export class DashboardPage implements OnInit {
-  dailyRevenueData: any = {};
-  dailyRevenueOptions: any = {};
-  topClients: any[] = [];
-  topSellingPackagesData: any = {};
-  topSellingPackagesOptions: any = {};
-  barData: any = {};
-  barOptions: any = {};
-  revenue = 0;
+  constructor(
+    private dashboardService: DashboardService,
+    private messageService: MessageService
+  ) {}
 
-  constructor(private dashboardService: DashboardService) {}
+  topClients: any[] = [];
+  sales: any;
+  packages: any[] = [];
 
   ngOnInit(): void {
-    this.loadDailyRevenue();
-    this.loadTopClients();
-    this.loadTopSellingPackages();
-    this.loadBarChartData();
-    this.loadRevenueData();
+    this.getSales();
+    this.getClients();
+    this.getPackages();
   }
 
-  loadDailyRevenue(): void {
-    this.dashboardService.getDailyRevenue().subscribe((data) => {
-      this.dailyRevenueData = data.chartData;
-      this.dailyRevenueOptions = data.chartOptions;
+  getSales() {
+    this.dashboardService.getSales().subscribe({
+      next: (data) => {
+        this.sales = data;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
     });
   }
 
-  loadTopClients(): void {
-    this.dashboardService.getTopClients().subscribe((data) => {
-      this.topClients = data;
+  getClients() {
+    this.dashboardService.getSales().subscribe({
+      next: (data) => {
+        this.topClients = data;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
     });
   }
 
-  loadTopSellingPackages(): void {
-    this.dashboardService.getTopSellingPackages().subscribe((data) => {
-      this.topSellingPackagesData = data.chartData;
-      this.topSellingPackagesOptions = data.chartOptions;
+  getPackages() {
+    this.dashboardService.getPackages().subscribe({
+      next: (data) => {
+        this.packages = data;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
     });
   }
 
-  loadBarChartData(): void {
-    this.dashboardService.getTopClients().subscribe((data) => {
-      this.barData = data.toLocaleString;
-      this.barOptions = data.toLocaleString;
-    });
+  getPackageNames(): string[] {
+    return this.packages.map((p) => p.name);
   }
 
-  loadRevenueData(): void {
-    this.dashboardService.getDailyRevenue().subscribe((data) => {
-      this.revenue = data.totalRevenue;
-    });
+  getPackageSales(): number[] {
+    return this.packages.map((p) => p.sales);
   }
+
+  dataPackages = {
+    labels: this.getPackageNames(),
+    datasets: [
+      {
+        label: 'Paquetes',
+        backgroundColor: 'red',
+        borderColor: 'black',
+        data: this.getPackageSales(),
+      },
+    ],
+  };
+
+  barOptions = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.8,
+    plugins: {
+      legend: {
+        labels: {
+          color: 'yellow',
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: 'green',
+          font: {
+            weight: 500,
+          },
+        },
+        grid: {
+          display: false,
+          drawBorder: false,
+        },
+      },
+      y: {
+        ticks: {
+          color: 'grey',
+        },
+        grid: {
+          color: 'black',
+          drawBorder: false,
+        },
+      },
+    },
+  };
 }

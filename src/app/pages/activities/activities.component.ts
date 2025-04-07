@@ -6,9 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -25,9 +24,8 @@ import { ActivityService } from '../../services';
     FormsModule,
     ButtonModule,
     ToastModule,
-    ToolbarModule,
-    InputTextModule,
     DialogModule,
+    InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
@@ -35,6 +33,7 @@ import { ActivityService } from '../../services';
   providers: [ActivityService, MessageService, ConfirmationService],
 })
 export class ActivitiesPage implements OnInit {
+  //#region Variables
   activities: ActivityModel[] = [];
   activity: ActivityModel = new ActivityModel();
   activityDialog = false;
@@ -43,12 +42,15 @@ export class ActivitiesPage implements OnInit {
     { label: 'Activo', value: true },
     { label: 'Inactivo', value: false },
   ];
+  //#endregion
 
+  //#region constructor
   constructor(
     private activityService: ActivityService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
+  //#endregion
 
   ngOnInit() {
     this.getAllActivities();

@@ -6,34 +6,32 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ServiceModel } from '../../models';
 import { ServiceService } from '../../services';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   standalone: true,
   selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css'],
-  providers: [MessageService, ConfirmationService, ServiceService],
   imports: [
     CommonModule,
     TableModule,
     FormsModule,
     ButtonModule,
     ToastModule,
-    ToolbarModule,
-    InputTextModule,
     DialogModule,
+    InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
   ],
+  providers: [ServiceService, MessageService, ConfirmationService],
 })
 export class ServicesPage implements OnInit {
   service: ServiceModel = new ServiceModel();

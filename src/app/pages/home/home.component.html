@@ -1,11 +1,248 @@
-<p-button label="Sign out" icon="pi pi-sign-out" (click)="login()"></p-button>
+<!-- Landing page con TailwindCSS y PrimeNG Sakai -->
+<div class="min-h-screen surface-ground">
+  <!-- Header con botones de login -->
+  <div class="fixed top-0 right-0 z-50 p-4 flex items-center gap-2">
+    <p-button
+      icon="pi pi-user"
+      label="Login"
+      styleClass="p-button-primary"
+      (click)="openLoginDialog()"
+    ></p-button>
+    <p-button
+      icon="pi pi-sign-out"
+      label="Sign out"
+      styleClass="p-button-primary"
+      (click)="login()"
+    ></p-button>
+  </div>
 
-<p-button
-  label="Login"
-  icon="pi pi-user"
-  (click)="openLoginDialog()"
-></p-button>
+  <div class="py-8 px-4">
+    <div class="container mx-auto max-w-6xl">
+      <!-- Título principal con animación de entrada -->
+      <div class="card shadow-2 mb-5 p-5 border-round text-center">
+        <h1 class="text-4xl font-bold mb-3 text-primary">
+          Conoce los paquetes que ofrecemos
+        </h1>
+        <p class="text-lg text-700 mb-0">
+          Descubre destinos increíbles a precios accesibles
+        </p>
+      </div>
 
+      <!-- Paquetes de viaje con p-card -->
+      <div class="grid">
+        <div class="col-12">
+          <div class="grid">
+            <div
+              *ngFor="let package of packages"
+              class="col-12 md:col-6 lg:col-3 p-2"
+            >
+              <p-card styleClass="shadow-3 h-full package-card">
+                <ng-template pTemplate="header">
+                  <div class="relative">
+                    <img
+                      [src]="package.image"
+                      [alt]="package.location"
+                      class="w-full h-48 object-cover"
+                    />
+                    <div
+                      class="absolute bottom-0 left-0 right-0 bg-primary-900 bg-opacity-70 text-white p-3"
+                    >
+                      <div class="flex items-center">
+                        <i class="pi pi-map-marker mr-2"></i>
+                        <span class="font-medium">{{ package.location }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <div class="p-2">
+                  <ul class="list-none p-0 m-0 text-700 space-y-2">
+                    <li
+                      *ngFor="let detail of package.details"
+                      class="flex align-items-center"
+                    >
+                      <i class="pi pi-check-circle text-primary mr-2"></i>
+                      <span>{{ detail }}</span>
+                    </li>
+                    <li class="flex align-items-center">
+                      <i class="pi pi-check-circle text-primary mr-2"></i>
+                      <span>Transporte completo y pases de viaje</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <ng-template pTemplate="footer">
+                  <div class="bg-gray-50 p-3 border-round-bottom">
+                    <div
+                      class="flex justify-content-between align-items-center"
+                    >
+                      <p class="font-bold text-primary text-xl m-0">
+                        ${{ package.price | number }}
+                      </p>
+                      <p class="text-600 m-0">{{ package.date }}</p>
+                    </div>
+                    <p-button
+                      label="Reservar"
+                      icon="pi pi-calendar-plus"
+                      styleClass="p-button-sm mt-3 w-full"
+                    ></p-button>
+                  </div>
+                </ng-template>
+              </p-card>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información de reserva con p-message -->
+      <div class="my-6">
+        <p-message severity="info" styleClass="w-full" [closable]="false">
+          <ng-template pTemplate="content">
+            <div class="flex align-items-center">
+              <span>
+                Antes de realizar una reserva debes saber que el comprobante se
+                sube en la aplicación, pero previamente debes registrarte.
+                <a href="#" class="text-primary font-medium hover:underline"
+                  >Términos y condiciones</a
+                >
+              </span>
+            </div>
+          </ng-template>
+        </p-message>
+      </div>
+
+      <!-- Preguntas frecuentes -->
+      <div class="card shadow-2 p-5 border-round mb-6">
+        <h2 class="text-center text-3xl font-bold mb-5 text-900">
+          Preguntas frecuentes
+        </h2>
+
+        <!-- Features/FAQ con p-card -->
+        <div class="grid">
+          <div
+            *ngFor="let feature of features"
+            class="col-12 md:col-6 lg:col-3 p-2"
+          >
+            <div class="p-4 border-round bg-white shadow-1 text-center h-full">
+              <i [class]="feature.icon + ' text-4xl text-primary mb-3'"></i>
+              <h3 class="text-xl font-medium mb-3 text-900">
+                {{ feature.title }}
+              </h3>
+              <p class="text-700 m-0 line-height-3">
+                {{ feature.description }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer con información de contacto -->
+      <div class="card shadow-2 p-0 border-round overflow-hidden mb-6">
+        <div class="bg-primary p-4">
+          <h2 class="text-white font-medium m-0 text-xl">
+            Contacto e Información
+          </h2>
+        </div>
+
+        <div class="p-4">
+          <div class="grid">
+            <!-- Información de contacto -->
+            <div class="col-12 md:col-6">
+              <h3 class="text-xl font-medium mb-4 text-900">
+                Información de contacto:
+              </h3>
+              <ul class="list-none p-0 m-0 text-700 space-y-2">
+                <li class="flex align-items-center">
+                  <i class="pi pi-building mr-2 text-primary"></i>
+                  <span>Agencia de viajes Parche Travels</span>
+                </li>
+                <li class="flex align-items-center">
+                  <i class="pi pi-id-card mr-2 text-primary"></i>
+                  <span>Registro Nacional de Turismo: RNT 00000</span>
+                </li>
+                <li class="flex align-items-center">
+                  <i class="pi pi-phone mr-2 text-primary"></i>
+                  <span>Celular: +57 3223654844</span>
+                </li>
+                <li class="flex align-items-center">
+                  <i class="pi pi-envelope mr-2 text-primary"></i>
+                  <span>Correo: {{ "parchetravelsmedellin@gmail.com" }}</span>
+                </li>
+              </ul>
+
+              <!-- Redes sociales -->
+              <div class="flex mt-4 gap-3">
+                <a
+                  href="#"
+                  class="text-primary hover:text-primary-600 transition-colors"
+                >
+                  <i class="pi pi-facebook text-2xl"></i>
+                </a>
+                <a
+                  href="#"
+                  class="text-primary hover:text-primary-600 transition-colors"
+                >
+                  <i class="pi pi-instagram text-2xl"></i>
+                </a>
+                <a
+                  href="#"
+                  class="text-primary hover:text-primary-600 transition-colors"
+                >
+                  <i class="pi pi-twitter text-2xl"></i>
+                </a>
+                <a
+                  href="#"
+                  class="text-primary hover:text-primary-600 transition-colors"
+                >
+                  <i class="pi pi-youtube text-2xl"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- PQRS -->
+            <div class="col-12 md:col-6">
+              <h3 class="text-xl font-medium mb-4 text-900">PQRS</h3>
+              <p class="text-700 line-height-3">
+                Si tienes alguna petición, queja o reclamo comunícate a nuestro
+                línea +57 3223654844 o envía un correo a:
+                {{ "parchetravelspqrs@gmail.com" }}
+              </p>
+
+              <p-accordion styleClass="mt-4">
+                <p-accordionTab header="¿Cómo presentar una PQRS?">
+                  <p class="m-0 p-0 line-height-3 text-700">
+                    Puedes presentar tu PQRS a través de nuestro correo
+                    electrónico o línea telefónica. Responderemos en un plazo
+                    máximo de 15 días hábiles.
+                  </p>
+                </p-accordionTab>
+              </p-accordion>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aviso legal -->
+      <div class="text-center py-4 text-sm text-600 border-t-1 border-300">
+        <p class="mb-2">
+          Parche Travels Rechaza la explotación, la pornografía, el turismo
+          sexual y demás formas de abuso sexual con menores. Ley 1336 de 2009 y
+          ley 679 de 2001
+        </p>
+        <p class="mb-0">
+          Parche Travels cumple la Ley 17 de 1981 y Resolución 1367 de 2000
+          contra la comercialización ilícita de especies de fauna y flora
+          silvestre
+        </p>
+        <p class="mt-3 text-xs">
+          2025 Parche Travels. Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de login -->
 <p-dialog
   [(visible)]="loginDialog"
   [style]="{ width: '450px' }"
@@ -13,9 +250,7 @@
   [modal]="true"
   [closable]="true"
   [dismissableMask]="true"
-  class="p-fluid"
+  styleClass="p-fluid"
 >
-  <ng-template #content>
-    <app-login></app-login>
-  </ng-template>
+  <app-login></app-login>
 </p-dialog>

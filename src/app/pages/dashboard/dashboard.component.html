@@ -1,21 +1,43 @@
-<div class="grid grid-cols-4 gap-8">
-  <!-- Gráfico de ingresos diarios -->
-  <div class="col-span-4">
-    <div class="card mb-0">
-      <div class="font-semibold text-xl mb-4">Ingresos Diarios</div>
-      <p-chart type="line" [data]="dailyRevenueData" [options]="dailyRevenueOptions"></p-chart>
+<div class="grid grid-cols-3 gap-2 max-w-full max-h-full grid-rows-2">
+  <div class="grid-col-start-1 grid-row-start-1 grid-row-end-3">
+    <div class="card m-0 h-full">
+      <div class="font-semibold">Paquetes Mas Vendidos</div>
+      <p-chart
+        type="bar"
+        [data]="dataPackages"
+        [options]="barOptions"
+      ></p-chart>
     </div>
   </div>
 
-  <!-- Tabla de clientes que más compran -->
-  <div class="col-span-2 w-auto">
-    <div class="card !mb-8">
-      <div class="font-semibold text-xl mb-4">Clientes que Más Compran</div>
+  <div class="grid-col-start-2 grid-col-end-4 grid-row-start-1">
+    <div class="card m-0">
+      <div class="flex justify-between my-4">
+        <div>
+          <span class="block text-muted-color font-medium mb-4">Ventas</span>
+          <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">
+            {{ sales.total }}
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-border"
+        >
+          <i class="pi pi-dollar text-orange-500 !text-xl"></i>
+        </div>
+      </div>
+      <span class="text-primary font-medium">%{{ sales.growth }}+ </span>
+      <span class="text-muted-color">Este mes</span>
+    </div>
+  </div>
+
+  <div class="grid-col-start-2 grid-col-end-4 grid-row-start-2">
+    <div class="card m-0">
+      <div class="font-semibold">Top Clientes</div>
       <p-table
         [value]="topClients"
-        [paginator]="true"
-        [rows]="5"
         responsiveLayout="scroll"
+        [rows]="3"
+        [paginator]="true"
       >
         <ng-template #header>
           <tr>
@@ -30,14 +52,6 @@
           </tr>
         </ng-template>
       </p-table>
-    </div>
-  </div>
-
-  <!-- Gráfico de paquetes más vendidos -->
-  <div class="col-span-2 w-auto">
-    <div class="card !mb-8">
-      <div class="font-semibold text-xl mb-4">Paquetes Más Vendidos</div>
-      <p-chart type="bar" [data]="topSellingPackagesData" [options]="topSellingPackagesOptions"></p-chart>
     </div>
   </div>
 </div>

@@ -6,34 +6,31 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CategoryService } from '../../services';
 import { CategoryModel } from '../../models';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
-  providers: [MessageService, ConfirmationService, CategoryService],
-  standalone: true, // Si estás usando standalone components
   imports: [
     CommonModule,
     TableModule,
     FormsModule,
     ButtonModule,
     ToastModule,
-    ToolbarModule,
-    InputTextModule,
     DialogModule,
+    InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
   ],
+  providers: [CategoryService, MessageService, ConfirmationService],
 })
 export class CategoriesPage implements OnInit {
   category: CategoryModel = new CategoryModel();
