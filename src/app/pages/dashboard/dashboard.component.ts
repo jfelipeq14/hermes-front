@@ -22,7 +22,7 @@ export class DashboardPage implements OnInit {
   topSellingPackagesOptions: any = {};
   barData: any = {};
   barOptions: any = {};
-  revenue: number = 0;
+  revenue = 0;
 
   constructor(private dashboardService: DashboardService) {}
 
