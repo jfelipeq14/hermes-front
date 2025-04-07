@@ -17,7 +17,7 @@ export class AuthService {
   private url = environment.SERVER_URL + 'auth/';
 
   login(loginUserRequest: any): Observable<any | null> {
-    return this.http.post<any>(`${this.url}/Login`, loginUserRequest).pipe(
+    return this.http.post<any>(`${this.url}log-in`, loginUserRequest).pipe(
       catchError((err: Error) => {
         console.error(err);
         return of(null);

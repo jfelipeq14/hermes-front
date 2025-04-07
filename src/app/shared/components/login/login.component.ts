@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { UserModel } from '../../../models';
 import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ import { MessageService } from 'primeng/api';
     InputTextModule,
     PasswordModule,
     FormsModule,
+    ToastModule,
     RouterModule,
     RippleModule,
     CommonModule,
@@ -41,9 +43,18 @@ export class LoginComponent {
   onSubmit() {
     this.submitted = true;
     this.authService.login(this.user).subscribe({
-      next: (a) => {
-        console.log('User logged in successfully: ', a);
-        // this.authService.setTokens(response!.accessToken);
+      next: (response) => {
+        if (!response) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Invalid credentials',
+            life: 3000,
+          });
+          return;
+        }
+        console.log('User logged in successfully: ', response);
+        this.authService.setTokens(response!.accessToken);
         this.router.navigate(['home']);
       },
       error: (e) => {
