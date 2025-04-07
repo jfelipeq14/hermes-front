@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // PrimeNG Imports
@@ -15,6 +15,7 @@ import { AccordionModule } from 'primeng/accordion';
 
 // Componentes propios
 import { LoginComponent } from '../../shared/components/login/login.component';
+import { UserModel } from '../../models';
 
 interface TravelPackage {
   id: number;
@@ -46,6 +47,10 @@ interface TravelPackage {
 })
 export class HomePage {
   loginDialog = false;
+  submitted = false;
+
+  user: UserModel = new UserModel();
+
   packages: TravelPackage[] = [
     {
       id: 1,
@@ -128,12 +133,13 @@ export class HomePage {
     },
   ];
 
-  openLoginDialog() {
-    const router = inject(Router);
-    return router.navigate(['/app']);
+  showPopup() {
+    this.loginDialog = true;
+    this.submitted = false;
   }
 
-  login() {
-    this.loginDialog = true;
+  closePopup() {
+    this.loginDialog = false;
+    this.user = new UserModel();
   }
 }

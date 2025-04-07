@@ -6,13 +6,7 @@
       icon="pi pi-user"
       label="Login"
       styleClass="p-button-primary"
-      (click)="openLoginDialog()"
-    ></p-button>
-    <p-button
-      icon="pi pi-sign-out"
-      label="Sign out"
-      styleClass="p-button-primary"
-      (click)="login()"
+      (click)="showPopup()"
     ></p-button>
   </div>
 
@@ -290,5 +284,9 @@
   [dismissableMask]="true"
   styleClass="p-fluid"
 >
-  <app-login></app-login>
+  <app-login
+    [loginDialog]="loginDialog"
+    [submitted]="submitted"
+    [user]="user"
+  ></app-login>
 </p-dialog>
