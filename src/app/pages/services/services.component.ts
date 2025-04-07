@@ -10,9 +10,10 @@ import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ServiceModel } from '../../models';
-import { ServiceService } from '../../services';
+import { CategoryModel, ServiceModel } from '../../models';
+import { CategoryService, ServiceService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   standalone: true,
@@ -26,16 +27,23 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonModule,
     ToastModule,
     DialogModule,
+    DropdownModule,
     InputTextModule,
     InputIconModule,
     IconFieldModule,
     ConfirmDialogModule,
   ],
-  providers: [ServiceService, MessageService, ConfirmationService],
+  providers: [
+    ServiceService,
+    CategoryService,
+    MessageService,
+    ConfirmationService,
+  ],
 })
 export class ServicesPage implements OnInit {
   service: ServiceModel = new ServiceModel();
   services: ServiceModel[] = [];
+  categories: CategoryModel[] = [];
   serviceDialog = false;
   submitted = false;
   statuses = [
@@ -45,16 +53,34 @@ export class ServicesPage implements OnInit {
 
   constructor(
     private serviceService: ServiceService,
+    private categoryService: CategoryService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
     this.getAllServices();
+    this.getAllCategories();
   }
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  getAllCategories() {
+    this.categoryService.getAll().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
   }
 
   getAllServices() {

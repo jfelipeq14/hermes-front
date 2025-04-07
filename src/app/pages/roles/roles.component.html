@@ -82,7 +82,7 @@
   class="p-fluid"
 >
   <ng-template #content>
-    <div class="field">
+    <div class="field grid grid-cols-2 justify-content-between">
       <label for="name">Nombre *</label>
       <input
         type="text"
@@ -94,11 +94,6 @@
       <small class="p-error" *ngIf="submitted && !role.name"
         >El nombre es obligatorio.</small
       >
-    </div>
-
-    <div class="field">
-      <label for="status">Estado</label>
-      <p-inputSwitch id="status" [(ngModel)]="role.status" />
     </div>
   </ng-template>
 
