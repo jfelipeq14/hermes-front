@@ -9,6 +9,7 @@ import { ActivitiesPage } from './pages/activities/activities.component';
 import { PackagesPage } from './pages/packages/packages.component';
 import { ProgrammingPage } from './pages/programming/programming.component';
 import { HomePage } from './pages/home/home.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -18,6 +19,7 @@ export const routes: Routes = [
   {
     path: 'app',
     component: AppLayout,
+    canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: DashboardPage },
       { path: 'roles', component: RolesPage },
