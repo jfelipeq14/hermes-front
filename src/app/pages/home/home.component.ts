@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // PrimeNG Imports
@@ -129,7 +129,8 @@ export class HomePage {
   ];
 
   openLoginDialog() {
-    this.loginDialog = true;
+    const router = inject(Router);
+    return router.navigate(['/app']);
   }
 
   login() {

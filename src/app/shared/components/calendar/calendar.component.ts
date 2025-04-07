@@ -1,7 +1,4 @@
 import { Component, signal, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { FullCalendarModule } from '@fullcalendar/angular';
 import {
   CalendarOptions,
   DateSelectArg,

@@ -94,6 +94,44 @@
         </div>
       </div>
 
+      <!-- <div class="flex justify-content-center">
+        <div class="card bg-transparent">
+          <p-carousel
+            [value]="packages"
+            [numVisible]="3"
+            [numScroll]="3"
+            [circular]="false"
+            [responsiveOptions]="carouselResponsiveOptions"
+          >
+            <ng-template let-product #item>
+              <div class="border border-surface rounded-border m-2 p-2">
+                <div class="mb-4">
+                  <div class="relative mx-auto">
+                    <img
+                      src="http://localhost:3000/{{ product.image }}"
+                      [alt]="product.name"
+                      class="w-full rounded-border"
+                    />
+                    <div class="absolute bg-black/70 rounded-border">
+                      <p-tag [value]="product.inventoryStatus" />
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-4 font-medium">{{ product.name }}</div>
+                <div class="flex justify-between align-items-center">
+                  <div class="mt-0 font-semibold text-xl">
+                    {{ '$' + product.price }}
+                  </div>
+                  <span>
+                    <p-button icon="pi pi-ticket"> Reservar </p-button>
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+          </p-carousel>
+        </div>
+      </div> -->
+
       <!-- Información de reserva con p-message -->
       <div class="my-6">
         <p-message severity="info" styleClass="w-full" [closable]="false">
