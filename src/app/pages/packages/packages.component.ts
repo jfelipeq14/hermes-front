@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
@@ -93,9 +94,8 @@ export class PackagesPage implements OnInit {
   }
 
   onRowCollapse(event: any) {
-    // No action needed for collapse
+    console.log(event);
   }
-
   expandAll() {
     this.packages.forEach((pkg) => {
       this.expandedRows[pkg.id] = true;
