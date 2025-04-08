@@ -66,6 +66,8 @@ export class UsersPage implements OnInit {
   epsList = epslist;
   roles: RoleModel[] = [];
 
+  loggedInUserId: number = 1; // Example logged-in user ID
+
   constructor(
     private userService: UserService,
     private municipalityService: MunicipalityService,
@@ -192,6 +194,16 @@ export class UsersPage implements OnInit {
   }
 
   changeStatusUser(user: UserModel) {
+    if (user.id === this.loggedInUserId) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'No puedes cambiar tu propio estado',
+        life: 3000,
+      });
+      return;
+    }
+
     this.confirmationService.confirm({
       message: `¿Está seguro de que desea cambiar el estado de ${user.name}?`,
       header: 'Confirmar',
