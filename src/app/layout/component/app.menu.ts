@@ -95,6 +95,23 @@ export class AppMenu implements OnInit {
           },
         ],
       },
+      {
+        items: [
+          {
+            label: 'Reservas',
+            icon: 'pi pi-fw pi-building',
+            routerLink: ['reservations'],
+          },
+        ],
+      },{
+        items: [
+          {
+            label: 'Pagos',
+            icon: 'pi pi-fw pi-money-bill',
+            routerLink: ['payments'],
+          },
+        ],
+      }
     ];
   }
 }
