@@ -66,7 +66,7 @@ export class UsersPage implements OnInit {
   epsList = epslist;
   roles: RoleModel[] = [];
 
-  loggedInUserId: number = 1; // Example logged-in user ID
+  loggedInUserId = 1; // Example logged-in user ID
 
   constructor(
     private userService: UserService,

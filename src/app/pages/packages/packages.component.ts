@@ -22,6 +22,9 @@ import {
 } from '../../models';
 import { ServiceService } from '../../services';
 import { MunicipalityService } from '../../services/municipality.service';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-packages',
@@ -34,9 +37,12 @@ import { MunicipalityService } from '../../services/municipality.service';
     ButtonModule,
     ToastModule,
     DialogModule,
+    DropdownModule,
     InputTextModule,
     InputIconModule,
     IconFieldModule,
+    InputNumberModule,
+    TextareaModule,
     TagModule,
     ConfirmDialogModule,
   ],
@@ -55,6 +61,9 @@ export class PackagesPage implements OnInit {
 
   services: ServiceModel[] = [];
   municipalities: MunicipalityModel[] = [];
+
+  selectedServices: PackageServiceModel[] = [];
+  currentService: PackageServiceModel = new PackageServiceModel();
 
   packageDialog = false;
   submitted = false;
@@ -152,6 +161,12 @@ export class PackagesPage implements OnInit {
     }
   }
 
+  getPackageServices(packageId: number): PackageServiceModel[] {
+    return this.packageServices.filter(
+      (service) => service.idPackage === packageId
+    );
+  }
+
   onRowCollapse(event: any) {
     console.log(event);
   }
@@ -163,6 +178,16 @@ export class PackagesPage implements OnInit {
   savePackage() {
     this.submitted = true;
 
+    if (this.selectedServices.length === 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Debe agregar al menos un servicio al paquete',
+        life: 3000,
+      });
+      return;
+    }
+
     if (!this.package.id) {
       this.packageService.create(this.package).subscribe({
         next: (pkg) => {
@@ -172,7 +197,8 @@ export class PackagesPage implements OnInit {
             detail: `${pkg.name} creado`,
             life: 3000,
           });
-          this.getAllPackages();
+
+          this.addServicesToPackage(pkg.id);
         },
         error: (e) => {
           this.messageService.add({
@@ -193,6 +219,7 @@ export class PackagesPage implements OnInit {
             life: 3000,
           });
           this.getAllPackages();
+          this.closePopup();
         },
         error: (e) => {
           this.messageService.add({
@@ -204,31 +231,52 @@ export class PackagesPage implements OnInit {
         },
       });
     }
-    this.refresh();
   }
 
-  editPackage(pkg: PackageModel) {
+  editPackage(pkg: any): void {
+    // Create a deep copy of the package to avoid direct reference modification
     this.package = { ...pkg };
+
+    // Load the services associated with this package
+    this.packageService.getServicePackages(pkg.id).subscribe({
+      next: (services) => {
+        this.selectedServices = services;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+
+    // Show the dialog
     this.packageDialog = true;
+    this.submitted = false;
   }
 
-  changeStatusPackage(pkg: PackageModel) {
+  changeStatusPackage(pkg: PackageModel): void {
     this.confirmationService.confirm({
-      message: `¿Está seguro de que desea cambiar el estado de ${pkg.name}?`,
-      header: 'Confirmar',
+      message: `¿Está seguro de que desea ${
+        pkg.status ? 'desactivar' : 'activar'
+      } el paquete ${pkg.name}?`,
+      header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
+        pkg.status = !pkg.status;
         this.packageService.changeStatus(pkg.id).subscribe({
-          next: (updatedPkg) => {
+          next: (updatedPackage) => {
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
-              detail: `${updatedPkg.name} ${
-                updatedPkg.status ? 'activado' : 'desactivado'
+              detail: `Paquete ${updatedPackage.name} ${
+                updatedPackage.status ? 'activado' : 'desactivado'
               }`,
               life: 3000,
             });
-            this.refresh();
+            this.getAllPackages();
           },
           error: (e) => {
             this.messageService.add({
@@ -243,8 +291,86 @@ export class PackagesPage implements OnInit {
     });
   }
 
+  addServicesToPackage(packageId: number) {
+    let completedServices = 0;
+    const totalServices = this.selectedServices.length;
+
+    this.selectedServices.forEach((selectedService) => {
+      const packageService = new PackageServiceModel();
+      packageService.idPackage = packageId;
+      packageService.idService = selectedService.idService;
+      packageService.quantity = selectedService.quantity;
+      packageService.price = selectedService.price;
+
+      this.packageService.createServicePackage(packageService).subscribe({
+        next: () => {
+          completedServices++;
+
+          if (completedServices === totalServices) {
+            this.refresh();
+          }
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: `Error al agregar servicio: ${e.error.message}`,
+            life: 3000,
+          });
+        },
+      });
+    });
+  }
+
+  addServiceToSelection(event: any) {
+    if (!event.value) {
+      return;
+    }
+
+    const serviceFound = this.services.find((s) => s.id === event.value);
+
+    if (!serviceFound) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Servicio no encontrado',
+        life: 3000,
+      });
+      return;
+    }
+
+    const serviceExists = this.selectedServices.find(
+      (s) => s.idService === serviceFound.id
+    );
+
+    if (serviceExists) {
+      serviceExists.quantity++;
+      return;
+    }
+
+    this.selectedServices.push({
+      id: 0,
+      idPackage: 0,
+      idService: serviceFound.id,
+      quantity: 1,
+      price: serviceFound.price,
+    });
+  }
+
+  removeServiceFromSelection(index: number) {
+    this.selectedServices.splice(index, 1);
+  }
+
+  onServiceChange() {
+    if (this.currentService) {
+      this.currentService.price = this.currentService.price;
+    }
+  }
+
   showPopup() {
     this.package = new PackageModel();
+    this.selectedServices = [];
+    this.currentService = new PackageServiceModel();
     this.packageDialog = true;
     this.submitted = false;
   }
@@ -252,6 +378,7 @@ export class PackagesPage implements OnInit {
   closePopup() {
     this.packageDialog = false;
     this.package = new PackageModel();
+    this.selectedServices = [];
   }
 
   refresh() {
