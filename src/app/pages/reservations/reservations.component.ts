@@ -15,7 +15,8 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ReservationModel } from '../../models/reservation';
-import { ReservationsService } from '../../services/reservations.service';
+import { ReservationsService } from '../../services';
+
 
 @Component({
   selector: 'app-reservations',
