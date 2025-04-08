@@ -1,1 +1,162 @@
-<p>reservations works!</p>
+<p-table
+  #dt
+  [value]="reservations"
+  [rows]="10"
+  [paginator]="true"
+  [globalFilterFields]="['id', 'date', 'price', 'status']"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [rowHover]="true"
+  dataKey="id"
+  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservaciones"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 20, 30]"
+  [expandedRowKeys]="expandedRows"
+  (onRowExpand)="onRowExpand($event)"
+  (onRowCollapse)="onRowCollapse($event)"
+>
+  <ng-template #caption>
+    <h3 class="m-0 p-0 text-center">Reservaciones</h3>
+    <div class="flex justify-content-between align-items-center">
+      <p-button
+        label="Crear"
+        icon="pi pi-plus"
+        severity="secondary"
+        (onClick)="showPopup()"
+      />
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search" />
+        <input
+          pInputText
+          type="text"
+          (input)="onGlobalFilter(dt, $event)"
+          placeholder="Buscar..."
+        />
+      </p-iconfield>
+    </div>
+  </ng-template>
+  <ng-template #header>
+    <tr>
+      <th style="width: 5rem"></th>
+      <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+      <th pSortableColumn="date">Fecha <p-sortIcon field="date" /></th>
+      <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
+      <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-reservation let-expanded="expanded">
+    <tr>
+      <td>
+        <p-button
+          type="button"
+          pRipple
+          [pRowToggler]="reservation"
+          [text]="true"
+          [rounded]="true"
+          [plain]="true"
+          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+        />
+      </td>
+      <td>{{ reservation.id }}</td>
+      <td>{{ reservation.date | date : 'short' }}</td>
+      <td>{{ reservation.price | currency : "USD" }}</td>
+      <td>
+        <p-tag
+          [value]="reservation.status ? 'Activo' : 'Inactivo'"
+          [severity]="getSeverity(reservation.status)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #expandedrow let-reservation>
+    <tr>
+      <td colspan="5">
+        <div class="p-4">
+          <h5>Detalles de la reservación {{ reservation.id }}</h5>
+          <p>Usuario: {{ reservation.idUser }}</p>
+          <p>Fecha: {{ reservation.date | date : 'fullDate' }}</p>
+          <p>Precio: {{ reservation.price | currency : "USD" }}</p>
+          <p>Estado: {{ reservation.status ? 'Activo' : 'Inactivo' }}</p>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  [(visible)]="reservationDialog"
+  [style]="{ width: '450px' }"
+  header="Detalles de la Reservación"
+  [modal]="true"
+  class="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="idUser">Usuario</label>
+      <input
+        id="idUser"
+        type="number"
+        [(ngModel)]="reservation.idUser"
+        pInputText
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !reservation.idUser">
+        El usuario es obligatorio.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="date">Fecha</label>
+      <input
+        id="date"
+        type="date"
+        [(ngModel)]="reservation.date"
+        pInputText
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !reservation.date">
+        La fecha es obligatoria.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="price">Precio</label>
+      <input
+        id="price"
+        type="number"
+        [(ngModel)]="reservation.price"
+        pInputText
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !reservation.price">
+        El precio es obligatorio.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="status">Estado</label>
+      <p-dropdown
+        id="status"
+        [options]="statusOptions"
+        [(ngModel)]="reservation.status"
+        placeholder="Seleccione un estado"
+      ></p-dropdown>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        (onClick)="closePopup()"
+        text
+      />
+      <p-button
+        label="Guardar"
+        icon="pi pi-check"
+        (onClick)="saveReservation()"
+        autofocus
+      />
+    </div>
+  </ng-template>
+</p-dialog>
