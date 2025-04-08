@@ -12,9 +12,17 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
 import { TagModule } from 'primeng/tag';
-import { UserModel } from '../../models';
+import { MunicipalityModel, UserModel } from '../../models';
 import { UserService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { MunicipalityService } from '../../services/municipality.service';
+import { typesDocument } from '../../shared/constants/document-types';
+import { sexlist } from '../../shared/constants/sex';
+import { bloodTypes } from '../../shared/constants/blood-types';
+import { epslist } from '../../shared/constants/eps';
+import { RoleModel } from '../../models/role.model';
+import { RoleService } from '../../services/role.service';
 
 @Component({
   selector: 'app-users',
@@ -27,6 +35,7 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonModule,
     ToastModule,
     DialogModule,
+    DropdownModule,
     InputTextModule,
     InputIconModule,
     IconFieldModule,
@@ -34,7 +43,13 @@ import { InputTextModule } from 'primeng/inputtext';
     CalendarModule,
     TagModule,
   ],
-  providers: [UserService, MessageService, ConfirmationService],
+  providers: [
+    UserService,
+    MunicipalityService,
+    RoleService,
+    MessageService,
+    ConfirmationService,
+  ],
 })
 export class UsersPage implements OnInit {
   users: UserModel[] = [];
@@ -43,14 +58,28 @@ export class UsersPage implements OnInit {
   submitted = false;
   loading = false;
 
+  // Dropdown options
+  municipalities: MunicipalityModel[] = [];
+  documentTypes = typesDocument;
+  sexOptions = sexlist;
+  bloodTypes = bloodTypes;
+  epsList = epslist;
+  roles: RoleModel[] = [];
+
+  loggedInUserId: number = 1; // Example logged-in user ID
+
   constructor(
     private userService: UserService,
+    private municipalityService: MunicipalityService,
+    private roleService: RoleService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
     this.getAllUsers();
+    this.getAllRoles();
+    this.getAllMunicipalities();
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -76,19 +105,41 @@ export class UsersPage implements OnInit {
     });
   }
 
-  showPopup() {
-    this.user = new UserModel();
-    this.submitted = false;
-    this.userDialog = true;
+  getAllMunicipalities() {
+    this.municipalityService.getAll().subscribe({
+      next: (municipalities) => {
+        this.municipalities = municipalities;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message || 'No se pudieron cargar los municipios',
+          life: 3000,
+        });
+      },
+    });
   }
 
-  closePopup() {
-    this.userDialog = false;
-    this.submitted = false;
+  getAllRoles() {
+    this.roleService.getAll().subscribe({
+      next: (roles) => {
+        this.roles = roles;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message || 'No se pudieron cargar los roles',
+          life: 3000,
+        });
+      },
+    });
   }
 
-  refresh() {
-    this.getAllUsers();
+  getRoleName(roleId: number): string {
+    const role = this.roles.find((r) => r.id === roleId);
+    return role ? role.name : 'No asignado';
   }
 
   saveUser() {
@@ -143,17 +194,33 @@ export class UsersPage implements OnInit {
   }
 
   changeStatusUser(user: UserModel) {
+    if (user.id === this.loggedInUserId) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'No puedes cambiar tu propio estado',
+        life: 3000,
+      });
+      return;
+    }
+
     this.confirmationService.confirm({
       message: `¿Está seguro de que desea cambiar el estado de ${user.name}?`,
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.userService.changeStatus(user.id).subscribe({
-          next: (u) => {
+          next: (updatedUser) => {
+            const index = this.users.findIndex((u) => u.id === updatedUser.id);
+            if (index !== -1) {
+              this.users[index] = updatedUser;
+            }
             this.messageService.add({
-              severity: this.getSeverity(u.status),
+              severity: this.getSeverity(updatedUser.status),
               summary: 'Éxito',
-              detail: `${u.name} ${u.status ? 'activado' : 'desactivado'}`,
+              detail: `${updatedUser.name} ${
+                updatedUser.status ? 'activado' : 'desactivado'
+              }`,
               life: 3000,
             });
           },
@@ -167,12 +234,26 @@ export class UsersPage implements OnInit {
             });
           },
         });
-        this.refresh();
       },
     });
   }
 
   getSeverity(status: boolean): 'success' | 'danger' {
     return status ? 'success' : 'danger';
+  }
+
+  showPopup() {
+    this.user = new UserModel();
+    this.submitted = false;
+    this.userDialog = true;
+  }
+
+  closePopup() {
+    this.userDialog = false;
+    this.submitted = false;
+  }
+
+  refresh() {
+    this.getAllUsers();
   }
 }
