@@ -4,6 +4,7 @@ export * from './category.service';
 export * from './dashboard.service';
 export * from './home.service';
 export * from './package.service';
+export * from './payment.service';
 export * from './permits.service';
 export * from './roles.service';
 export * from './reservations.service';
