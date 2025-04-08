@@ -239,6 +239,22 @@
             El precio es obligatorio.
           </small>
         </div>
+
+        <div class="field">
+          <label for="reserve">Reserva *</label>
+          <p-inputNumber
+            id="price"
+            [(ngModel)]="package.reserve"
+            [showButtons]="false"
+            mode="currency"
+            currency="COP"
+            locale="es-CO"
+            required
+          ></p-inputNumber>
+          <small class="p-error" *ngIf="submitted && !package.reserve">
+            El precio de reserva es obligatorio.
+          </small>
+        </div>
       </div>
 
       <p-table [value]="selectedServices">
