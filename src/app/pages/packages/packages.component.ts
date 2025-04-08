@@ -16,11 +16,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PackageModel } from '../../models/package';
 import { PackageService } from '../../services/package.service';
 import {
+  ActivityModel,
   MunicipalityModel,
   PackageServiceModel,
   ServiceModel,
 } from '../../models';
-import { ServiceService } from '../../services';
+import { ActivityService, ServiceService } from '../../services';
 import { MunicipalityService } from '../../services/municipality.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -49,6 +50,7 @@ import { TextareaModule } from 'primeng/textarea';
   providers: [
     PackageService,
     ServiceService,
+    ActivityService,
     MunicipalityService,
     MessageService,
     ConfirmationService,
@@ -60,6 +62,7 @@ export class PackagesPage implements OnInit {
   packageServices: PackageServiceModel[] = [];
 
   services: ServiceModel[] = [];
+  activities: ActivityModel[] = [];
   municipalities: MunicipalityModel[] = [];
 
   selectedServices: PackageServiceModel[] = [];
@@ -72,6 +75,7 @@ export class PackagesPage implements OnInit {
   constructor(
     private packageService: PackageService,
     private serviceService: ServiceService,
+    private activityService: ActivityService,
     private municipalityService: MunicipalityService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
@@ -80,6 +84,7 @@ export class PackagesPage implements OnInit {
   ngOnInit(): void {
     this.getAllPackages();
     this.getAllServices();
+    this.getAllActivities();
     this.getAllMunicipalities();
   }
 
@@ -114,6 +119,22 @@ export class PackagesPage implements OnInit {
     this.serviceService.getAll().subscribe({
       next: (services) => {
         this.services = services;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getAllActivities() {
+    this.activityService.getAll().subscribe({
+      next: (activities) => {
+        this.activities = activities;
       },
       error: (e) => {
         this.messageService.add({
