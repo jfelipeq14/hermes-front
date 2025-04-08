@@ -105,6 +105,22 @@
 >
   <ng-template pTemplate="content">
     <div class="field grid grid-cols-2 justify-content-between">
+      <label for="role">Rol *</label>
+      <p-dropdown
+        id="role"
+        [options]="roles"
+        [(ngModel)]="user.idRole"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Seleccione un rol"
+        [required]="true"
+      ></p-dropdown>
+      <small class="p-error" *ngIf="submitted && !user.idRole"
+        >El rol es obligatorio.</small
+      >
+    </div>
+
+    <div class="field grid grid-cols-2 justify-content-between">
       <label for="typeDocument">Tipo de Documento *</label>
       <p-dropdown
         id="typeDocument"
