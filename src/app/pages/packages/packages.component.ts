@@ -361,12 +361,6 @@ export class PackagesPage implements OnInit {
     this.selectedServices.splice(index, 1);
   }
 
-  onServiceChange() {
-    if (this.currentService) {
-      this.currentService.price = this.currentService.price;
-    }
-  }
-
   showPopup() {
     this.package = new PackageModel();
     this.selectedServices = [];
