@@ -7,6 +7,9 @@ import { ServicesPage } from './services/services.component';
 import { ActivitiesPage } from './activities/activities.component';
 import { PackagesPage } from './packages/packages.component';
 import { ProgrammingPage } from './programming/programming.component';
+import { PaymentsPage } from './payments/payments.component';
+import { ReservationsPage } from './reservations/reservations.component';
+
 
 export default [
   { path: 'dashboard', component: DashboardPage },
@@ -17,6 +20,8 @@ export default [
   { path: 'activities', component: ActivitiesPage },
   { path: 'packages', component: PackagesPage },
   { path: 'programming', component: ProgrammingPage },
+  { path: 'payments', component: PaymentsPage },
+  { path: 'reservations', component: ReservationsPage },
   {
     path: '**',
     redirectTo: 'home',
