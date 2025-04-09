@@ -15,7 +15,9 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ReservationModel } from '../../models/reservation';
-import { ReservationsService } from '../../services';
+import { ReservationsService, UserService } from '../../services';
+import { ProgrammingService } from '../../services/programming.service';
+import { DateModel, UserModel } from '../../models';
 
 
 @Component({
@@ -36,7 +38,7 @@ import { ReservationsService } from '../../services';
     ConfirmDialogModule,
     DropdownModule,
   ],
-  providers: [ReservationsService, MessageService, ConfirmationService],
+  providers: [ReservationsService,ProgrammingService,UserService, MessageService, ConfirmationService],
 })
 export class ReservationsPage implements OnInit {
   reservation: ReservationModel = new ReservationModel();
@@ -48,15 +50,21 @@ export class ReservationsPage implements OnInit {
     { label: 'Activo', value: true },
     { label: 'Inactivo', value: false },
   ];
+  dates:DateModel[] = [];
+  users:UserModel[] = [];
 
   constructor(
     private reservationService: ReservationsService,
+    private programmingService: ProgrammingService,
+    private userService: UserService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
     this.getAllReservations();
+    this.getAllDates();
+    this.getAllUsers();
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -67,6 +75,38 @@ export class ReservationsPage implements OnInit {
     this.reservationService.getAll().subscribe({
       next: (reservations) => {
         this.reservations = reservations;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getAllDates() {
+    this.programmingService.getAll().subscribe({
+      next: (dates) => {
+        this.dates = dates;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getAllUsers(){
+    this.userService.getAll().subscribe({
+      next: (users) => {
+        this.users = users;
       },
       error: (e) => {
         this.messageService.add({
