@@ -101,25 +101,29 @@
 
 <p-dialog
   [(visible)]="paymentDialog"
-  [style]="{ width: '450px' }"
+  [style]="{ width: '500px', height: '500px' }"
   header="Pago"
   [modal]="true"
-  class="p-fluid"
+  class="p-fluid "
 >
   <ng-template pTemplate="content">
     <div class="field">
-      <label for="idReservation">ID Reserva *</label>
-      <input
-        type="number"
-        pInputText
+      <label for="idReservation">Reserva *</label>
+      <p-dropdown
         id="idReservation"
+        [options]="reservations"
         [(ngModel)]="payment.idReservation"
+        optionLabel="id"
+        optionValue="id"
+        placeholder="Seleccione una reserva"
+        [showClear]="true"
         required
-      />
-      <small class="p-error" *ngIf="submitted && !payment.idReservation"
-        >El ID de la reserva es obligatorio.</small
-      >
+      ></p-dropdown>
+      <small class="p-error" *ngIf="submitted && !payment.idReservation">
+        El reserva es obligatorio.
+      </small>
     </div>
+
 
     <div class="field">
       <label for="date">Fecha *</label>
@@ -128,6 +132,7 @@
         [(ngModel)]="payment.date"
         [showIcon]="true"
         dateFormat="dd/mm/yy"
+        disabled="true"
         required
       ></p-calendar>
       <small class="p-error" *ngIf="submitted && !payment.date"
@@ -160,8 +165,20 @@
     </div>
 
     <div class="field">
-      <label for="status">Estado</label>
-      <p-inputSwitch id="status" [(ngModel)]="payment.status"></p-inputSwitch>
+      <label for="status">Estado*</label>
+      <p-dropdown
+        id="status"
+        [options]="statuses"
+        [(ngModel)]="payment.status"
+        optionLabel="name"
+        optionValue="value"
+        placeholder="Seleccione un Estado"
+        [showClear]="true"
+        required
+      ></p-dropdown>
+      <small class="p-error" *ngIf="submitted && !payment.status">
+        El estado es obligatorio.
+      </small>
     </div>
   </ng-template>
 

@@ -13,7 +13,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaymentModel } from '../../models/payment';
-import { PaymentService } from '../../services';
+import { PaymentService, ReservationsService } from '../../services';
+import { ReservationModel } from '../../models';
+import { DropdownModule } from 'primeng/dropdown';
+import { paymentStatus } from '../../shared/constants/payments-status';
 
 @Component({
   selector: 'app-payments',
@@ -29,26 +32,33 @@ import { PaymentService } from '../../services';
     InputTextModule,
     InputIconModule,
     IconFieldModule,
+    DropdownModule,
     ConfirmDialogModule,
     CalendarModule,
   ],
-  providers: [PaymentService, MessageService, ConfirmationService],
+  providers: [PaymentService,ReservationsService, MessageService, ConfirmationService],
 })
 export class PaymentsPage implements OnInit {
   payments: PaymentModel[] = [];
+  reservations: ReservationModel[] = [];
   payment: PaymentModel = new PaymentModel();
   paymentDialog = false;
   submitted = false;
-  loading = false;
+  dateToday: Date = new Date();
+  statuses=paymentStatus
 
   constructor(
     private paymentService: PaymentService,
+    private reservationsService: ReservationsService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
-  ) {}
+  ) {
+    this.payment.date = this.dateToday;
+  }
 
   ngOnInit(): void {
     this.getAllPayments();
+    this.getAllReservations();
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -56,18 +66,31 @@ export class PaymentsPage implements OnInit {
   }
 
   getAllPayments() {
-    this.loading = true;
     this.paymentService.getAll().subscribe({
       next: (payments) => {
         this.payments = payments;
-        this.loading = false;
       },
       error: (e) => {
-        this.loading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: e.error.message || 'No se pudieron cargar los pagos',
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  getAllReservations() {
+    this.reservationsService.getAll().subscribe({
+      next: (reservations) => {
+        this.reservations = reservations;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message || 'No se pudieron cargar las reservas',
           life: 3000,
         });
       },
