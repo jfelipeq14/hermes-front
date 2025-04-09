@@ -163,6 +163,22 @@
         </div>
 
         <div class="field">
+          <label for="idActivity">Actividades *</label>
+          <p-dropdown
+            id="idActivity"
+            [options]="activities"
+            [(ngModel)]="package.idActivity"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Seleccione una actividad"
+            required
+          ></p-dropdown>
+          <small class="p-error" *ngIf="submitted && !package.idMunicipality">
+            La actividad es obligatoria.
+          </small>
+        </div>
+
+        <div class="field">
           <label for="idMunicipality">Municipio *</label>
           <p-dropdown
             id="idMunicipality"
