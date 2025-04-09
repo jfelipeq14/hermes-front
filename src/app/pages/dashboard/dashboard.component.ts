@@ -44,7 +44,7 @@ export class DashboardPage implements OnInit {
         // Setup chart data for monthly sales
         this.setupMonthlySalesChart();
       },
-      error: (e) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -60,7 +60,7 @@ export class DashboardPage implements OnInit {
       next: (data) => {
         this.topClients = data;
       },
-      error: (e) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -79,7 +79,7 @@ export class DashboardPage implements OnInit {
         // Setup chart data for packages
         this.setupPackagesChart();
       },
-      error: (e) => {
+      error: () => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
@@ -5,7 +6,6 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class MockDataService {
-  // Mock data for dashboard
   getMockSales(): Observable<any> {
     const salesData = {
       total: '$7,842,900',
