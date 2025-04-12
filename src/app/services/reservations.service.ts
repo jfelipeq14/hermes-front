@@ -28,7 +28,7 @@ export class ReservationsService {
 
   // Actualizar una reservación existente
   update(reservation: ReservationModel): Observable<ReservationModel> {
-    return this.http.put<ReservationModel>(
+    return this.http.patch<ReservationModel>(
       `${this.url}${reservation.id}`,
       reservation
     );

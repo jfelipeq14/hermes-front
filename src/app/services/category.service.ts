@@ -23,7 +23,7 @@ export class CategoryService {
   }
 
   update(categoryService: CategoryModel): Observable<CategoryModel> {
-    return this.http.put<CategoryModel>(
+    return this.http.patch<CategoryModel>(
       this.url + categoryService.id,
       categoryService
     );

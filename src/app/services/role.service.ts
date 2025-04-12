@@ -25,7 +25,7 @@ export class RoleService {
   }
 
   update(role: RoleModel): Observable<RoleModel> {
-    return this.http.put<RoleModel>(`${this.apiUrl}/${role.id}`, role);
+    return this.http.patch<RoleModel>(`${this.apiUrl}/${role.id}`, role);
   }
 
   changeStatus(id: number): Observable<RoleModel> {
