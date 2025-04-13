@@ -105,8 +105,8 @@
 
   <ng-template pTemplate="expandedrow" let-package>
     <tr>
-      <td colspan="8">
-        <div class="p-4">
+      <td colspan="12">
+        <div class="p-2">
           <h5>Servicios de {{ package.name }}</h5>
           <p-table [value]="getPackageServices(package.id)">
             <ng-template pTemplate="header">
@@ -213,9 +213,12 @@
           <p-dropdown
             id="level"
             [options]="levels"
+            [(ngModel)]="package.level"
             optionLabel="name"
             optionValue="value"
             placeholder="Seleccione un nivel"
+            [showClear]="true"
+            required
           ></p-dropdown>
         </div>
 
@@ -247,7 +250,6 @@
           <p-inputNumber
             id="price"
             [(ngModel)]="package.price"
-            [showButtons]="false"
             mode="currency"
             currency="COP"
             locale="es-CO"
@@ -263,7 +265,6 @@
           <p-inputNumber
             id="price"
             [(ngModel)]="package.reserve"
-            [showButtons]="false"
             mode="currency"
             currency="COP"
             locale="es-CO"
