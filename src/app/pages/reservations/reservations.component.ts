@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { Table, TableModule } from 'primeng/table';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
@@ -14,11 +15,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { ReservationModel } from '../../models/reservation';
-import { ReservationsService, UserService } from '../../services';
-import { ProgrammingService } from '../../services/programming.service';
-import { DateModel, UserModel } from '../../models';
 
+import {
+  ProgrammingService,
+  ReservationsService,
+  UserService,
+} from '../../services';
+import { DateModel, ReservationModel, UserModel } from '../../models';
 
 @Component({
   selector: 'app-reservations',
@@ -38,7 +41,13 @@ import { DateModel, UserModel } from '../../models';
     ConfirmDialogModule,
     DropdownModule,
   ],
-  providers: [ReservationsService,ProgrammingService,UserService, MessageService, ConfirmationService],
+  providers: [
+    ReservationsService,
+    ProgrammingService,
+    UserService,
+    MessageService,
+    ConfirmationService,
+  ],
 })
 export class ReservationsPage implements OnInit {
   reservation: ReservationModel = new ReservationModel();
@@ -50,8 +59,8 @@ export class ReservationsPage implements OnInit {
     { label: 'Activo', value: true },
     { label: 'Inactivo', value: false },
   ];
-  dates:DateModel[] = [];
-  users:UserModel[] = [];
+  dates: DateModel[] = [];
+  users: UserModel[] = [];
 
   constructor(
     private reservationService: ReservationsService,
@@ -103,7 +112,7 @@ export class ReservationsPage implements OnInit {
     });
   }
 
-  getAllUsers(){
+  getAllUsers() {
     this.userService.getAll().subscribe({
       next: (users) => {
         this.users = users;

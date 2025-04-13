@@ -2,12 +2,13 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
 import { MessageService } from 'primeng/api';
-import { MockDataService } from '../../services/mock-data.service';
+import { MockDataService } from '../../services';
 
 @Component({
   selector: 'app-dashboard',
