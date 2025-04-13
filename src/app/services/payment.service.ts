@@ -23,7 +23,7 @@ export class PaymentService {
   }
 
   update(activity: PaymentModel): Observable<PaymentModel> {
-    return this.http.put<PaymentModel>(this.url + activity.id, activity);
+    return this.http.patch<PaymentModel>(this.url + activity.id, activity);
   }
 
   changeStatus(id: number): Observable<PaymentModel> {

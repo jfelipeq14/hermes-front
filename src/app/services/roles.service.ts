@@ -23,7 +23,7 @@ export class RolesService {
   }
 
   update(roles: RoleModel): Observable<RoleModel> {
-    return this.http.put<RoleModel>(this.url + roles.id, roles);
+    return this.http.patch<RoleModel>(this.url + roles.id, roles);
   }
 
   changeStatus(id: number): Observable<RoleModel> {

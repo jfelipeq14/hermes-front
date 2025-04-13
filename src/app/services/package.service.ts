@@ -40,7 +40,7 @@ export class PackageService {
   }
 
   update(pkg: PackageModel): Observable<PackageModel> {
-    return this.http.put<PackageModel>(this.urlPackage + pkg.id, pkg);
+    return this.http.patch<PackageModel>(this.urlPackage + pkg.id, pkg);
   }
 
   changeStatus(id: number): Observable<PackageModel> {

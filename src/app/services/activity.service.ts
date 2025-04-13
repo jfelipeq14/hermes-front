@@ -22,7 +22,7 @@ export class ActivityService {
   }
 
   update(activity: ActivityModel): Observable<ActivityModel> {
-    return this.http.put<ActivityModel>(this.url + activity.id, activity);
+    return this.http.patch<ActivityModel>(this.url + activity.id, activity);
   }
 
   changeStatus(id: number): Observable<ActivityModel> {

@@ -28,7 +28,7 @@ export class ServiceService {
   }
 
   update(service: ServiceModel): Observable<ServiceModel> {
-    return this.http.put<ServiceModel>(this.url + service.id, service);
+    return this.http.patch<ServiceModel>(this.url + service.id, service);
   }
 
   changeStatus(id: number): Observable<ServiceModel> {
