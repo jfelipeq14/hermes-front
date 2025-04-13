@@ -1,9 +1,9 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
@@ -12,11 +12,12 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
-import { PaymentModel } from '../../models/payment';
-import { PaymentService, ReservationsService } from '../../services';
-import { ReservationModel } from '../../models';
 import { DropdownModule } from 'primeng/dropdown';
-import { paymentStatus } from '../../shared/constants/payments-status';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
+import { PaymentService, ReservationsService } from '../../services';
+import { PaymentModel, ReservationModel } from '../../models';
+import { paymentStatus } from '../../shared/constants';
 
 @Component({
   selector: 'app-payments',
@@ -36,7 +37,12 @@ import { paymentStatus } from '../../shared/constants/payments-status';
     ConfirmDialogModule,
     CalendarModule,
   ],
-  providers: [PaymentService,ReservationsService, MessageService, ConfirmationService],
+  providers: [
+    PaymentService,
+    ReservationsService,
+    MessageService,
+    ConfirmationService,
+  ],
 })
 export class PaymentsPage implements OnInit {
   payments: PaymentModel[] = [];
@@ -45,7 +51,7 @@ export class PaymentsPage implements OnInit {
   paymentDialog = false;
   submitted = false;
   dateToday: Date = new Date();
-  statuses=paymentStatus
+  statuses = paymentStatus;
 
   constructor(
     private paymentService: PaymentService,
@@ -174,7 +180,9 @@ export class PaymentsPage implements OnInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
-              detail: `Pago con ID ${p.id} ${p.status ? 'activado' : 'desactivado'}`,
+              detail: `Pago con ID ${p.id} ${
+                p.status ? 'activado' : 'desactivado'
+              }`,
               life: 3000,
             });
           },
@@ -182,7 +190,8 @@ export class PaymentsPage implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: e.error.message || 'No se pudo cambiar el estado del pago',
+              detail:
+                e.error.message || 'No se pudo cambiar el estado del pago',
               life: 3000,
             });
           },

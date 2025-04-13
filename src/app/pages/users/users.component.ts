@@ -1,28 +1,28 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+
+import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { Table, TableModule } from 'primeng/table';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { CalendarModule } from 'primeng/calendar';
-import { TagModule } from 'primeng/tag';
-import { MunicipalityModel, UserModel } from '../../models';
-import { UserService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
-import { MunicipalityService } from '../../services/municipality.service';
-import { typesDocument } from '../../shared/constants/document-types';
-import { sexlist } from '../../shared/constants/sex';
-import { bloodTypes } from '../../shared/constants/blood-types';
-import { epslist } from '../../shared/constants/eps';
-import { RoleModel } from '../../models/role.model';
-import { RoleService } from '../../services/role.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { MunicipalityModel, RoleModel, UserModel } from '../../models';
+import { MunicipalityService, RolesService, UserService } from '../../services';
+import {
+  bloodTypes,
+  epslist,
+  sexlist,
+  typesDocument,
+} from '../../shared/constants';
 
 @Component({
   selector: 'app-users',
@@ -46,7 +46,7 @@ import { RoleService } from '../../services/role.service';
   providers: [
     UserService,
     MunicipalityService,
-    RoleService,
+    RolesService,
     MessageService,
     ConfirmationService,
   ],
@@ -66,12 +66,10 @@ export class UsersPage implements OnInit {
   epsList = epslist;
   roles: RoleModel[] = [];
 
-  loggedInUserId = 1; // Example logged-in user ID
-
   constructor(
     private userService: UserService,
     private municipalityService: MunicipalityService,
-    private roleService: RoleService,
+    private rolesService: RolesService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
@@ -122,7 +120,7 @@ export class UsersPage implements OnInit {
   }
 
   getAllRoles() {
-    this.roleService.getAll().subscribe({
+    this.rolesService.getAll().subscribe({
       next: (roles) => {
         this.roles = roles;
       },
@@ -194,16 +192,6 @@ export class UsersPage implements OnInit {
   }
 
   changeStatusUser(user: UserModel) {
-    if (user.id === this.loggedInUserId) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Advertencia',
-        detail: 'No puedes cambiar tu propio estado',
-        life: 3000,
-      });
-      return;
-    }
-
     this.confirmationService.confirm({
       message: `¿Está seguro de que desea cambiar el estado de ${user.name}?`,
       header: 'Confirmar',
