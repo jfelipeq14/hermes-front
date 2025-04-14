@@ -66,7 +66,7 @@ export class UsersPage implements OnInit {
   epsList = epslist;
   roles: RoleModel[] = [];
 
-  loggedInUserId = 1; // Example logged-in user ID
+  // loggedInUserId = 1; // Example logged-in user ID
 
   constructor(
     private userService: UserService,
@@ -194,15 +194,15 @@ export class UsersPage implements OnInit {
   }
 
   changeStatusUser(user: UserModel) {
-    if (user.id === this.loggedInUserId) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Advertencia',
-        detail: 'No puedes cambiar tu propio estado',
-        life: 3000,
-      });
-      return;
-    }
+    // if (user.id === this.loggedInUserId) {
+    //   this.messageService.add({
+    //     severity: 'warn',
+    //     summary: 'Advertencia',
+    //     detail: 'No puedes cambiar tu propio estado',
+    //     life: 3000,
+    //   });
+    //   return;
+    // }
 
     this.confirmationService.confirm({
       message: `¿Está seguro de que desea cambiar el estado de ${user.name}?`,
@@ -211,10 +211,18 @@ export class UsersPage implements OnInit {
       accept: () => {
         this.userService.changeStatus(user.id).subscribe({
           next: (updatedUser) => {
-            const index = this.users.findIndex((u) => u.id === updatedUser.id);
-            if (index !== -1) {
-              this.users[index] = updatedUser;
+            if (!updatedUser) {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'No se pudo cambiar el estado del usuario',
+                life: 3000,
+              });
             }
+            // const index = this.users.findIndex((u) => u.id === updatedUser.id);
+            // if (index !== -1) {
+            //   this.users[index] = updatedUser;
+            // }
             this.messageService.add({
               severity: this.getSeverity(updatedUser.status),
               summary: 'Éxito',
