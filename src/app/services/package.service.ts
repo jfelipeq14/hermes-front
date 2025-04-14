@@ -18,7 +18,7 @@ export class PackageService {
 
   getServicePackages(idPackage: number): Observable<PackageServiceModel[]> {
     return this.http.get<PackageServiceModel[]>(
-      this.urlPackageService + 'package/' + idPackage
+      this.urlPackageService + idPackage
     );
   }
 
@@ -31,16 +31,16 @@ export class PackageService {
   }
 
   createServicePackage(
-    servicePackage: PackageServiceModel
-  ): Observable<PackageServiceModel> {
-    return this.http.post<PackageServiceModel>(
+    servicePackage: PackageServiceModel[]
+  ): Observable<PackageServiceModel[]> {
+    return this.http.post<PackageServiceModel[]>(
       this.urlPackageService,
       servicePackage
     );
   }
 
   update(pkg: PackageModel): Observable<PackageModel> {
-    return this.http.put<PackageModel>(this.urlPackage + pkg.id, pkg);
+    return this.http.patch<PackageModel>(this.urlPackage + pkg.id, pkg);
   }
 
   changeStatus(id: number): Observable<PackageModel> {

@@ -27,7 +27,7 @@ export class ProgrammingService {
 
   // Actualizar una reservación existente
   update(reservation: DateModel): Observable<DateModel> {
-    return this.http.put<DateModel>(
+    return this.http.patch<DateModel>(
       `${this.url}${reservation.id}`,
       reservation
     );

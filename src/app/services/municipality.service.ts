@@ -23,7 +23,10 @@ export class MunicipalityService {
   }
 
   update(activity: MunicipalityModel): Observable<MunicipalityModel[]> {
-    return this.http.put<MunicipalityModel[]>(this.url + activity.id, activity);
+    return this.http.patch<MunicipalityModel[]>(
+      this.url + activity.id,
+      activity
+    );
   }
 
   changeStatus(id: number): Observable<MunicipalityModel[]> {

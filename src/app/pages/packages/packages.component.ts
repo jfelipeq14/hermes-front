@@ -2,7 +2,6 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -13,19 +12,26 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { PackageModel } from '../../models/package';
-import { PackageService } from '../../services/package.service';
-import {
-  ActivityModel,
-  MunicipalityModel,
-  PackageServiceModel,
-  ServiceModel,
-} from '../../models';
-import { ActivityService, ServiceService } from '../../services';
-import { MunicipalityService } from '../../services/municipality.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import {
+  ActivityModel,
+  DateModel,
+  MunicipalityModel,
+  PackageModel,
+  PackageServiceModel,
+  ServiceModel,
+} from '../../models';
+import {
+  ActivityService,
+  MunicipalityService,
+  PackageService,
+  ProgrammingService,
+  ServiceService,
+} from '../../services';
+import { levels } from '../../shared/constants';
 
 @Component({
   selector: 'app-packages',
@@ -52,6 +58,7 @@ import { TextareaModule } from 'primeng/textarea';
     ServiceService,
     ActivityService,
     MunicipalityService,
+    ProgrammingService,
     MessageService,
     ConfirmationService,
   ],
@@ -64,6 +71,9 @@ export class PackagesPage implements OnInit {
   services: ServiceModel[] = [];
   activities: ActivityModel[] = [];
   municipalities: MunicipalityModel[] = [];
+  dates: DateModel[] = [];
+
+  levels = levels;
 
   selectedServices: PackageServiceModel[] = [];
   currentService: PackageServiceModel = new PackageServiceModel();
@@ -77,6 +87,7 @@ export class PackagesPage implements OnInit {
     private serviceService: ServiceService,
     private activityService: ActivityService,
     private municipalityService: MunicipalityService,
+    private programmingService: ProgrammingService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
@@ -86,6 +97,7 @@ export class PackagesPage implements OnInit {
     this.getAllServices();
     this.getAllActivities();
     this.getAllMunicipalities();
+    this.getAllDates();
   }
 
   onGlobalFilter(table: Table, event: Event) {
@@ -163,12 +175,43 @@ export class PackagesPage implements OnInit {
     });
   }
 
+  getAllDates() {
+    this.programmingService.getAll().subscribe({
+      next: (dates) => {
+        this.dates = dates;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
   getServiceName(id: number) {
     return this.services.find((s) => s.id === id)?.name;
   }
 
   getMunicipalityName(id: number) {
     return this.municipalities.find((m) => m.id === id)?.name;
+  }
+
+  getDate(id: number) {
+    const dateObj = this.dates.find((d) => d.idPackage === id)?.start;
+    if (!dateObj) return '';
+
+    // Parse the ISO string to a Date object
+    const date = new Date(dateObj);
+
+    // Format as yyyy/MM/dd
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}/${month}/${day}`;
   }
 
   onRowExpand(event: any) {
@@ -182,14 +225,10 @@ export class PackagesPage implements OnInit {
     }
   }
 
-  getPackageServices(packageId: number): PackageServiceModel[] {
+  getPackageServices(idPackage: number): PackageServiceModel[] {
     return this.packageServices.filter(
-      (service) => service.idPackage === packageId
+      (service) => service.idPackage === idPackage
     );
-  }
-
-  onRowCollapse(event: any) {
-    console.log(event);
   }
 
   getSeverity(status: boolean): 'success' | 'danger' {
@@ -254,6 +293,36 @@ export class PackagesPage implements OnInit {
     }
   }
 
+  addServicesToPackage(idPackage: number) {
+    // agregar el idPackage a cada idPackage de los servicios seleccionados
+    this.selectedServices.forEach((service) => {
+      service.idPackage = idPackage;
+    });
+
+    if (this.selectedServices.length > 0)
+      this.packageService
+        .createServicePackage(this.selectedServices)
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Exito',
+              detail: 'Servicios agregados correctamente',
+              life: 3000,
+            });
+            this.refresh();
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
+        });
+  }
+
   editPackage(pkg: any): void {
     // Create a deep copy of the package to avoid direct reference modification
     this.package = { ...pkg };
@@ -312,37 +381,6 @@ export class PackagesPage implements OnInit {
     });
   }
 
-  addServicesToPackage(packageId: number) {
-    let completedServices = 0;
-    const totalServices = this.selectedServices.length;
-
-    this.selectedServices.forEach((selectedService) => {
-      const packageService = new PackageServiceModel();
-      packageService.idPackage = packageId;
-      packageService.idService = selectedService.idService;
-      packageService.quantity = selectedService.quantity;
-      packageService.price = selectedService.price;
-
-      this.packageService.createServicePackage(packageService).subscribe({
-        next: () => {
-          completedServices++;
-
-          if (completedServices === totalServices) {
-            this.refresh();
-          }
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: `Error al agregar servicio: ${e.error.message}`,
-            life: 3000,
-          });
-        },
-      });
-    });
-  }
-
   addServiceToSelection(event: any) {
     if (!event.value) {
       return;
@@ -384,8 +422,8 @@ export class PackagesPage implements OnInit {
 
   showPopup() {
     this.package = new PackageModel();
-    this.selectedServices = [];
     this.currentService = new PackageServiceModel();
+    this.selectedServices = [];
     this.packageDialog = true;
     this.submitted = false;
   }
