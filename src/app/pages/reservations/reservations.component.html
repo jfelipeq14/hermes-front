@@ -89,7 +89,7 @@
   [modal]="true"
   class="p-fluid"
 >
-  <ng-template pTemplate="content">
+  <!-- <ng-template pTemplate="content">
     <div class="field">
       <label for="idDate">Paquete *</label>
       <p-dropdown
@@ -135,8 +135,12 @@
         El precio es obligatorio.
       </small>
     </div>
+  </ng-template> -->
+  <ng-template pTemplate="content">
+    <app-form-clients
+    (user)="user"
+    ></app-form-clients>
   </ng-template>
-
   <ng-template pTemplate="footer">
     <div class="flex justify-content-end">
       <p-button

@@ -22,6 +22,7 @@ import {
   UserService,
 } from '../../services';
 import { DateModel, ReservationModel, UserModel } from '../../models';
+import { FormClientsComponent } from '../../shared/components/form-clients/form-clients.component';
 
 @Component({
   selector: 'app-reservations',
@@ -40,6 +41,7 @@ import { DateModel, ReservationModel, UserModel } from '../../models';
     TagModule,
     ConfirmDialogModule,
     DropdownModule,
+    FormClientsComponent
   ],
   providers: [
     ReservationsService,
@@ -61,6 +63,7 @@ export class ReservationsPage implements OnInit {
   ];
   dates: DateModel[] = [];
   users: UserModel[] = [];
+  user: UserModel = new UserModel();
 
   constructor(
     private reservationService: ReservationsService,
