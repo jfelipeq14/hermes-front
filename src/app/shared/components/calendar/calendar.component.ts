@@ -48,7 +48,6 @@ export class CalendarComponent {
     events: this.getCalendarEvents(),
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    // eventChange: this.handleEventChange.bind(this),
   });
 
   private getCalendarEvents(): any[] {
@@ -75,31 +74,17 @@ export class CalendarComponent {
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    // const date = new Date(selectInfo.startStr);
-    // const newDate = {
-    //   id: 0,
-    //   name: 'Nuevo Evento',
-    //   date: date.toISOString().split('T')[0],
-    //   status: 'active',
-    // };
-
-    // this.dates.push(newDate as DateModel);
-    // this.calendarOptions.update({ events: this.getCalendarEvents() });
     this.datesChanged.emit(this.dates);
   }
 
   handleEventClick(clickInfo: EventClickArg) {
     const date = this.dates.find((d) => d.id === parseInt(clickInfo.event.id));
-    if (date) {
-      this.editDate(date);
-    }
+    if (!date) return;
   }
 
   handleEventChange(changeInfo: EventClickArg) {
     const date = this.dates.find((d) => d.id === parseInt(changeInfo.event.id));
     if (date) {
-      // date. = changeInfo.event.startStr;
-      // this.calendarOptions.update({ events: this.getCalendarEvents() });
       this.datesChanged.emit(this.dates);
     }
   }
@@ -109,7 +94,6 @@ export class CalendarComponent {
   }
 
   handleEvents(events: EventApi[]) {
-    // this.currentEvents.set(events);
-    this.changeDetector.detectChanges(); // workaround for pressionChangedAfterItHasBeenCheckedError
+    this.changeDetector.detectChanges();
   }
 }
