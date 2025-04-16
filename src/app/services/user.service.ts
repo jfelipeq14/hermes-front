@@ -27,6 +27,6 @@ export class UserService {
   }
 
   changeStatus(id: number): Observable<UserModel> {
-    return this.http.patch<UserModel>(this.url + id, {});
+    return this.http.patch<UserModel>(this.url + `changeStatus/${id}`, {});
   }
 }
