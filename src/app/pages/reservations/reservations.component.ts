@@ -64,6 +64,9 @@ export class ReservationsPage implements OnInit {
   dates: DateModel[] = [];
   users: UserModel[] = [];
   user: UserModel = new UserModel();
+  travel=false;
+  travelers: UserModel[] = [];
+  submitted = false;
 
   constructor(
     private reservationService: ReservationsService,
@@ -143,88 +146,42 @@ export class ReservationsPage implements OnInit {
     console.log('Row collapsed:', event);
   }
 
-  saveReservation() {
-    this.submitted = true;
+  createClient(event: any) {
+    console.log('Client created:', event);
 
-    if (!this.reservation.id) {
-      this.reservationService.create(this.reservation).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: `Reservación creada con éxito`,
-            life: 3000,
-          });
-          this.getAllReservations();
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
-    } else {
-      this.reservationService.update(this.reservation).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: `Reservación actualizada con éxito`,
-            life: 3000,
-          });
-          this.getAllReservations();
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
+    if (!event.value) {
+      return;
     }
-    this.refresh();
-  }
 
-  editReservation(reservation: ReservationModel) {
-    this.reservation = { ...reservation };
-    this.reservationDialog = true;
-  }
+    const clientFound = this.users.find((u) => u.document === event.value);
 
-  changeStatusReservation(reservation: ReservationModel) {
-    this.confirmationService.confirm({
-      message: `¿Está seguro de que desea cambiar el estado de la reservación con ID ${reservation.id}?`,
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.reservationService.changeStatus(reservation.id).subscribe({
-          next: (updatedReservation) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: `Reservación ${
-                updatedReservation.status ? 'activada' : 'desactivada'
-              } con éxito`,
-              life: 3000,
-            });
-            this.refresh();
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
-            });
-          },
-        });
-      },
-    });
-  }
+    if (!clientFound) {
+      return;
+    }
+    this.user = clientFound;
+    if (this.travel){
+      this.travelers.push(this.user);
+    }
+    if(this.submitted){
+      this.userService.create(this.user).subscribe({
+        next: (user) => {
+          this.user = user;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Client created successfully',
+            life: 3000,
+          });
+        }
+      });
+
+    }
+    }
+    
+
+ 
+
+ 
 
   showPopup() {
     this.reservation = new ReservationModel();
@@ -242,4 +199,6 @@ export class ReservationsPage implements OnInit {
     this.closePopup();
     this.submitted = false;
   }
+
+
 }

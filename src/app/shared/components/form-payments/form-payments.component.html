@@ -1,1 +1,52 @@
-<p>form-payments works!</p>
+
+    <div class="field">
+      <label for="idReservation">Reserva</label>
+      <input
+        type="text"
+        pInputText
+        id="idReservation"
+        [(ngModel)]="payment.idReservation"
+        [disabled]="true"
+      />
+    </div>
+
+    <div class="field">
+      <label for="date">Fecha *</label>
+      <p-calendar
+        id="date"
+        [(ngModel)]="payment.date"
+        [showIcon]="true"
+        dateFormat="dd/mm/yy"
+        [disabled]="true"
+      ></p-calendar>
+      <small class="p-error" *ngIf="submitted && !payment.date">
+        La fecha es obligatoria.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="price">Precio *</label>
+      <input
+        type="number"
+        pInputText
+        id="price"
+        [(ngModel)]="payment.price"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !payment.price">
+        El precio es obligatorio.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="voucher">Comprobante</label>
+      <input
+        type="text"
+        pInputText
+        id="voucher"
+        [(ngModel)]="payment.voucher"
+      />
+    </div>
+
+   
+
