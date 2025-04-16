@@ -1,4 +1,12 @@
-import { Component, signal, ChangeDetectorRef } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Component,
+  signal,
+  ChangeDetectorRef,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
@@ -11,7 +19,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
-// import { INITIAL_EVENTS, createEventId } from './event-utils';
+import { DateModel } from '../../../models';
 
 @Component({
   selector: 'app-calendar',
@@ -20,6 +28,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, FullCalendarModule],
 })
 export class CalendarComponent {
+  @Input() dates: DateModel[] = [];
+  @Output() datesChanged = new EventEmitter<DateModel[]>();
+
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -29,22 +40,26 @@ export class CalendarComponent {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
     initialView: 'dayGridMonth',
-    // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
+    events: this.getCalendarEvents(),
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
-    /* you can update a remote database when these fire:
-    eventAdd:
-    eventChange:
-    eventRemove:
-    */
+    // eventChange: this.handleEventChange.bind(this),
   });
-  currentEvents = signal<EventApi[]>([]);
+
+  private getCalendarEvents(): any[] {
+    return this.dates.map((date) => ({
+      id: date.id.toString(),
+      title: date.idPackage,
+      start: new Date(date.start),
+      allDay: false,
+      backgroundColor: date.status === true ? '#4caf50' : '#f44336',
+    }));
+  }
 
   constructor(private changeDetector: ChangeDetectorRef) {}
 
@@ -60,34 +75,41 @@ export class CalendarComponent {
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Please enter a new title for your event');
-    const calendarApi = selectInfo.view.calendar;
+    // const date = new Date(selectInfo.startStr);
+    // const newDate = {
+    //   id: 0,
+    //   name: 'Nuevo Evento',
+    //   date: date.toISOString().split('T')[0],
+    //   status: 'active',
+    // };
 
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        // id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-    }
+    // this.dates.push(newDate as DateModel);
+    // this.calendarOptions.update({ events: this.getCalendarEvents() });
+    this.datesChanged.emit(this.dates);
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    if (
-      confirm(
-        `Are you sure you want to delete the event '${clickInfo.event.title}'`
-      )
-    ) {
-      clickInfo.event.remove();
+    const date = this.dates.find((d) => d.id === parseInt(clickInfo.event.id));
+    if (date) {
+      this.editDate(date);
     }
   }
 
+  handleEventChange(changeInfo: EventClickArg) {
+    const date = this.dates.find((d) => d.id === parseInt(changeInfo.event.id));
+    if (date) {
+      // date. = changeInfo.event.startStr;
+      // this.calendarOptions.update({ events: this.getCalendarEvents() });
+      this.datesChanged.emit(this.dates);
+    }
+  }
+
+  editDate(date: DateModel) {
+    // Implement date editing logic here
+  }
+
   handleEvents(events: EventApi[]) {
-    this.currentEvents.set(events);
+    // this.currentEvents.set(events);
     this.changeDetector.detectChanges(); // workaround for pressionChangedAfterItHasBeenCheckedError
   }
 }

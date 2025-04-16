@@ -74,7 +74,6 @@ export class PackagesPage implements OnInit {
   dates: DateModel[] = [];
 
   levels = levels;
-  isEdit = false;
 
   selectedServices: PackageServiceModel[] = [];
   currentService: PackageServiceModel = new PackageServiceModel();
@@ -249,7 +248,7 @@ export class PackagesPage implements OnInit {
       return;
     }
 
-    if (!this.package.id && !this.isEdit) {
+    if (!this.package.id) {
       this.packageService.create(this.package).subscribe({
         next: (pkg) => {
           this.messageService.add({
@@ -299,56 +298,31 @@ export class PackagesPage implements OnInit {
 
   addServicesToPackage(idPackage: number) {
     this.selectedServices.forEach((service) => {
+      service.id = 0;
       service.idPackage = idPackage;
     });
 
     if (this.selectedServices.length <= 0) return;
 
-    if (!this.isEdit) {
-      this.packageService
-        .createServicePackage(this.selectedServices)
-        .subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Exito',
-              detail: 'Servicios agregados correctamente',
-              life: 3000,
-            });
-            this.refresh();
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
-            });
-          },
+    this.packageService.createServicePackage(this.selectedServices).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'Servicios agregados correctamente',
+          life: 3000,
         });
-    } else {
-      this.packageService
-        .updateServicePackage(this.selectedServices)
-        .subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Exito',
-              detail: 'Servicios actualizados correctamente',
-              life: 3000,
-            });
-            this.refresh();
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
-            });
-          },
+        this.refresh();
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
         });
-    }
+      },
+    });
   }
 
   // modifyServicePackage(packageService: PackageServiceModel) {}
@@ -356,7 +330,6 @@ export class PackagesPage implements OnInit {
   editPackage(pkg: PackageModel): void {
     // Create a deep copy of the package to avoid direct reference modification
     this.package = { ...pkg };
-    this.isEdit = true;
 
     // Load the services associated with this package
     this.packageService.getServicePackages(pkg.id).subscribe({
@@ -386,7 +359,6 @@ export class PackagesPage implements OnInit {
       header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        pkg.status = !pkg.status;
         this.packageService.changeStatus(pkg.id).subscribe({
           next: (updatedPackage) => {
             this.messageService.add({
@@ -397,7 +369,7 @@ export class PackagesPage implements OnInit {
               }`,
               life: 3000,
             });
-            this.getAllPackages();
+            this.refresh();
           },
           error: (e) => {
             this.messageService.add({
@@ -448,30 +420,23 @@ export class PackagesPage implements OnInit {
   }
 
   removeServiceFromSelection(index: number) {
-    if (this.isEdit) {
-      this.packageService
-        .deleteServicePackage(this.selectedServices[index].id)
-        .subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Servicio eliminado correctamente',
-              life: 3000,
-            });
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
-            });
-          },
-        });
-    }
+    this.packageService
+      .deleteServicePackage(this.selectedServices[index].id)
+      .subscribe({
+        next: (deleted) => {
+          if (!deleted) this.selectedServices.splice(index, 1);
 
-    this.selectedServices.splice(index, 1);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Servicio eliminado correctamente',
+            life: 3000,
+          });
+        },
+        error: () => {
+          this.selectedServices.splice(index, 1);
+        },
+      });
   }
 
   showPopup() {
