@@ -270,6 +270,9 @@ export class PackagesPage implements OnInit {
         },
       });
     } else {
+      this.package.price = parseInt(this.package.price.toString());
+      this.package.reserve = parseInt(this.package.reserve.toString());
+
       this.packageService.update(this.package).subscribe({
         next: (pkg) => {
           this.messageService.add({
@@ -278,8 +281,8 @@ export class PackagesPage implements OnInit {
             detail: `${pkg.name} actualizado`,
             life: 3000,
           });
-          this.getAllPackages();
-          this.closePopup();
+
+          this.addServicesToPackage(pkg.id);
         },
         error: (e) => {
           this.messageService.add({
@@ -294,36 +297,37 @@ export class PackagesPage implements OnInit {
   }
 
   addServicesToPackage(idPackage: number) {
-    // agregar el idPackage a cada idPackage de los servicios seleccionados
     this.selectedServices.forEach((service) => {
+      service.id = 0;
       service.idPackage = idPackage;
     });
 
-    if (this.selectedServices.length > 0)
-      this.packageService
-        .createServicePackage(this.selectedServices)
-        .subscribe({
-          next: () => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Exito',
-              detail: 'Servicios agregados correctamente',
-              life: 3000,
-            });
-            this.refresh();
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
-            });
-          },
+    if (this.selectedServices.length <= 0) return;
+
+    this.packageService.createServicePackage(this.selectedServices).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Exito',
+          detail: 'Servicios agregados correctamente',
+          life: 3000,
         });
+        this.refresh();
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
   }
 
-  editPackage(pkg: any): void {
+  // modifyServicePackage(packageService: PackageServiceModel) {}
+
+  editPackage(pkg: PackageModel): void {
     // Create a deep copy of the package to avoid direct reference modification
     this.package = { ...pkg };
 
@@ -355,7 +359,6 @@ export class PackagesPage implements OnInit {
       header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        pkg.status = !pkg.status;
         this.packageService.changeStatus(pkg.id).subscribe({
           next: (updatedPackage) => {
             this.messageService.add({
@@ -366,7 +369,7 @@ export class PackagesPage implements OnInit {
               }`,
               life: 3000,
             });
-            this.getAllPackages();
+            this.refresh();
           },
           error: (e) => {
             this.messageService.add({
@@ -417,7 +420,23 @@ export class PackagesPage implements OnInit {
   }
 
   removeServiceFromSelection(index: number) {
-    this.selectedServices.splice(index, 1);
+    this.packageService
+      .deleteServicePackage(this.selectedServices[index].id)
+      .subscribe({
+        next: (deleted) => {
+          if (!deleted) this.selectedServices.splice(index, 1);
+
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Servicio eliminado correctamente',
+            life: 3000,
+          });
+        },
+        error: () => {
+          this.selectedServices.splice(index, 1);
+        },
+      });
   }
 
   showPopup() {
