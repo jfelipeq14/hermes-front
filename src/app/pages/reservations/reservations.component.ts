@@ -66,7 +66,6 @@ export class ReservationsPage implements OnInit {
   user: UserModel = new UserModel();
   travel=false;
   travelers: UserModel[] = [];
-  submitted = false;
 
   constructor(
     private reservationService: ReservationsService,

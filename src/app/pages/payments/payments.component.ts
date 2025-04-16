@@ -59,7 +59,6 @@ export class PaymentsPage implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {
-    this.payment.date = this.dateToday;
   }
 
   ngOnInit(): void {
