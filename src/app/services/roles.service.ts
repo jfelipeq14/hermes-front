@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RoleModel } from '../models';
+import { RoleModel } from '../models/role';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -18,15 +18,15 @@ export class RolesService {
     return this.http.get<RoleModel>(this.url + id);
   }
 
-  create(roles: RoleModel): Observable<RoleModel> {
-    return this.http.post<RoleModel>(this.url, roles);
+  create(role: RoleModel): Observable<RoleModel> {
+    return this.http.post<RoleModel>(this.url, role);
   }
 
-  update(roles: RoleModel): Observable<RoleModel> {
-    return this.http.patch<RoleModel>(this.url + roles.id, roles);
+  update(role: RoleModel): Observable<RoleModel> {
+    return this.http.patch<RoleModel>(this.url + role.id, role);
   }
 
   changeStatus(id: number): Observable<RoleModel> {
-    return this.http.patch<RoleModel>(this.url + id, {});
+    return this.http.patch<RoleModel>(`${this.url}${id}/change-status`, {});
   }
 }
