@@ -30,6 +30,14 @@ export class PackageService {
     return this.http.post<PackageModel>(this.urlPackage, pkg);
   }
 
+  update(pkg: PackageModel): Observable<PackageModel> {
+    return this.http.patch<PackageModel>(this.urlPackage + pkg.id, pkg);
+  }
+
+  changeStatus(id: number): Observable<PackageModel> {
+    return this.http.patch<PackageModel>(this.urlPackage + id, {});
+  }
+
   createServicePackage(
     servicePackage: PackageServiceModel[]
   ): Observable<PackageServiceModel[]> {
@@ -39,11 +47,16 @@ export class PackageService {
     );
   }
 
-  update(pkg: PackageModel): Observable<PackageModel> {
-    return this.http.patch<PackageModel>(this.urlPackage + pkg.id, pkg);
+  updateServicePackage(
+    servicePackage: PackageServiceModel[]
+  ): Observable<PackageServiceModel[]> {
+    return this.http.patch<PackageServiceModel[]>(
+      this.urlPackageService,
+      servicePackage
+    );
   }
 
-  changeStatus(id: number): Observable<PackageModel> {
-    return this.http.patch<PackageModel>(this.urlPackage + id, {});
+  deleteServicePackage(id: number): Observable<PackageServiceModel[]> {
+    return this.http.delete<PackageServiceModel[]>(this.urlPackageService + id);
   }
 }

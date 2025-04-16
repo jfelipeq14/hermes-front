@@ -10,30 +10,22 @@ export class ProgrammingService {
 
   private url = environment.SERVER_URL + 'dates/';
 
-  // Obtener todas las reservaciones
   getAll(): Observable<DateModel[]> {
     return this.http.get<DateModel[]>(this.url);
   }
 
-  // Obtener una reservación por ID
-  getById(id: number): Observable<DateModel> {
-    return this.http.get<DateModel>(`${this.url}${id}`);
+  getAllActive(): Observable<DateModel[]> {
+    return this.http.get<DateModel[]>(`${this.url}`);
   }
 
-  // Crear una nueva reservación
-  create(reservation: DateModel): Observable<DateModel> {
-    return this.http.post<DateModel>(this.url, reservation);
+  create(date: DateModel): Observable<DateModel> {
+    return this.http.post<DateModel>(`${this.url}`, date);
   }
 
-  // Actualizar una reservación existente
-  update(reservation: DateModel): Observable<DateModel> {
-    return this.http.patch<DateModel>(
-      `${this.url}${reservation.id}`,
-      reservation
-    );
+  update(dates: DateModel[]): Observable<DateModel[]> {
+    return this.http.patch<DateModel[]>(`${this.url}`, dates);
   }
 
-  // Cambiar el estado de una reservación
   changeStatus(id: number): Observable<DateModel> {
     return this.http.patch<DateModel>(`${this.url}${id}`, {});
   }

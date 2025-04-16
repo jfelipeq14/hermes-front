@@ -22,7 +22,7 @@ import {
   UserService,
 } from '../../services';
 import { DateModel, ReservationModel, UserModel } from '../../models';
-import { FormClientsComponent } from '../../shared/components/form-clients/form-clients.component';
+import { FormClientsComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-reservations',
@@ -41,7 +41,7 @@ import { FormClientsComponent } from '../../shared/components/form-clients/form-
     TagModule,
     ConfirmDialogModule,
     DropdownModule,
-    FormClientsComponent
+    FormClientsComponent,
   ],
   providers: [
     ReservationsService,
