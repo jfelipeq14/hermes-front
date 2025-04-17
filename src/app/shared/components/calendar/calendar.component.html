@@ -5,9 +5,11 @@
     class="w-full"
   >
     <ng-template #eventContent let-arg>
-      <div class="flex items-center space-x-2">
-        <span class="font-medium text-gray-600">{{ arg.timeText }}</span>
-        <span class="text-gray-800">{{ arg.event.title }}</span>
+      <div class="flex flex-col gap-2 align-items-center">
+        <div class="text-sm font-semibold text-gray-900">
+          {{ arg.event.title }}
+        </div>
+        <p-button icon="pi pi-chevron-down" />
       </div>
     </ng-template>
   </full-calendar>
