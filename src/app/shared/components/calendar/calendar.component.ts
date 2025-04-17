@@ -94,41 +94,4 @@ export class CalendarComponent implements OnInit {
       allDay: false,
     })),
   });
-
-  eventMenuItems(event: EventApi): MenuItem[] {
-    return [
-      {
-        label: 'View Details',
-        icon: 'pi pi-eye',
-        command: () => this.viewEventDetails(event),
-      },
-      {
-        label: 'Edit',
-        icon: 'pi pi-pencil',
-        command: () => this.editEvent(event),
-      },
-      {
-        label: 'Delete',
-        icon: 'pi pi-trash',
-        command: () => this.deleteEvent(event),
-      },
-    ];
-  }
-
-  showEventMenu(event: Event, menuButton: HTMLElement): void {
-    event.stopPropagation();
-    this.eventMenu.toggle(event, menuButton);
-  }
-
-  viewEventDetails(event: EventApi): void {
-    console.log('View event details', event);
-  }
-
-  editEvent(event: EventApi): void {
-    console.log('Edit event', event);
-  }
-
-  deleteEvent(event: EventApi): void {
-    console.log('Delete event', event);
-  }
 }

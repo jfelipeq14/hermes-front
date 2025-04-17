@@ -12,15 +12,10 @@
         <button
           #menuButton
           class="p-1 text-gray-500 hover:text-gray-700 absolute top-0 right-0"
-          (click)="showEventMenu($event, menuButton, arg.event)"
         >
           <i class="pi pi-ellipsis-v text-xs"></i>
         </button>
-        <p-menu
-          #eventMenu
-          [popup]="true"
-          [model]="eventMenuItems(arg.event)"
-        ></p-menu>
+        <p-menu #eventMenu [popup]="true"></p-menu>
       </div>
     </ng-template>
   </full-calendar>
