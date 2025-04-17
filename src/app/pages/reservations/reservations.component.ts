@@ -21,7 +21,7 @@ import {
   ReservationsService,
   UserService,
 } from '../../services';
-import { DateModel, ReservationModel, UserModel } from '../../models';
+import { DateModel, PackageModel, ReservationModel, UserModel } from '../../models';
 import { FormClientsComponent } from '../../shared/components';
 
 @Component({
@@ -64,8 +64,9 @@ export class ReservationsPage implements OnInit {
   dates: DateModel[] = [];
   users: UserModel[] = [];
   user: UserModel = new UserModel();
-  travel=false;
+  travel = false;
   travelers: UserModel[] = [];
+  packages: PackageModel[] = [];
 
   constructor(
     private reservationService: ReservationsService,
@@ -151,36 +152,51 @@ export class ReservationsPage implements OnInit {
     if (!event.value) {
       return;
     }
-
-    const clientFound = this.users.find((u) => u.document === event.value);
-
-    if (!clientFound) {
-      return;
-    }
-    this.user = clientFound;
-    if (this.travel){
-      this.travelers.push(this.user);
-    }
-    if(this.submitted){
+    if (this.submitted) {
       this.userService.create(this.user).subscribe({
         next: (user) => {
-          this.user = user;
+          if (this.reservation.idUser === 0 && !this.travel) {
+            this.reservation.idUser = user.id;
+          }
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
             detail: 'Client created successfully',
             life: 3000,
           });
-        }
+          this.travelers.push(user);
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
       });
+    }
 
+    const clientFound = this.users.find((u) => u.document === event.value);
+
+    if (!clientFound) return;
+    if (this.reservation.idUser === 0) {
+      this.reservation.idUser = clientFound.id;
     }
+    if (this.travel) {
+      this.travelers.push(clientFound);
     }
+    const price = this.getPrice(clientFound.id);
+    if (!price) return;
+    this.reservation.price = price*this.travelers.length;
+  }
+
+  getPrice(id: number) {
+    const dateFound = this.dates.find((d) => d.id === id);
+    if (!dateFound) return 0;
+    return this.packages.find((p) => p.id === dateFound.idPackage)?.price;
     
-
- 
-
- 
+  }
 
   showPopup() {
     this.reservation = new ReservationModel();
@@ -198,6 +214,4 @@ export class ReservationsPage implements OnInit {
     this.closePopup();
     this.submitted = false;
   }
-
-
 }
