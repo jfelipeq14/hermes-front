@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserModel } from '../../../models/user';
-import { bloodTypes, sexlist } from '../../constants';
+import { bloodTypes, sexlist, typesDocument } from '../../constants';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -8,12 +8,23 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MunicipalityModel } from '../../../models';
 import { MunicipalityService } from '../../../services';
 import { MessageService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
 
 @Component({
   selector: 'app-form-clients',
   templateUrl: './form-clients.component.html',
   styleUrls: ['./form-clients.component.css'],
-  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    DropdownModule,
+    InputTextModule,
+    InputIconModule,
+    IconFieldModule,
+  ],
   providers: [MunicipalityService, MessageService],
 })
 export class FormClientsComponent implements OnInit {
@@ -21,8 +32,9 @@ export class FormClientsComponent implements OnInit {
   @Input() submitted = false; // Indica si el formulario fue enviado
 
   @Output() save = new EventEmitter<UserModel>(); // Emite el usuario al guardar
-  // @Output() cancel = new EventEmitter<void>(); // Emite un evento al cancelar
+  @Output() clientCreated = new EventEmitter<any>(); // Emite el cliente creado al componente padre
 
+  typesDocument = typesDocument; // Lista de tipos de documento para el dropdown
   sexlist = sexlist; // Lista de sexos para el dropdown
   bloodTypes = bloodTypes; // Lista de tipos de sangre para el dropdown
   municipalities: MunicipalityModel[] = [];
@@ -47,6 +59,7 @@ export class FormClientsComponent implements OnInit {
     private municipalityService: MunicipalityService,
     private messageService: MessageService
   ) {}
+
   ngOnInit(): void {
     this.getAllMunicipalities(); // Obtiene todas las municipalidades al iniciar el componente
   }
@@ -55,7 +68,7 @@ export class FormClientsComponent implements OnInit {
     this.save.emit(this.user); // Emite el usuario al guardar
   }
 
-  // onCancel() {
-  //   this.cancel.emit(); // Emite el evento al cancelar
-  // }
+  createClientHandler(documentValue: string): void {
+    this.clientCreated.emit(documentValue); // Emite el cliente creado al componente padre
+  }
 }

@@ -22,8 +22,18 @@ import {
   ReservationsService,
   UserService,
 } from '../../services';
-import { DateModel, PackageModel, PaymentModel, ReservationModel, UserModel } from '../../models';
-import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } from '../../shared/components';
+import {
+  DateModel,
+  PackageModel,
+  PaymentModel,
+  ReservationModel,
+  UserModel,
+} from '../../models';
+import {
+  FormClientsComponent,
+  FormPaymentsComponent,
+  FormTravelersComponent,
+} from '../../shared/components';
 
 @Component({
   selector: 'app-reservations',
@@ -45,7 +55,7 @@ import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } f
     StepperModule,
     FormClientsComponent,
     FormTravelersComponent,
-    FormPaymentsComponent
+    FormPaymentsComponent,
   ],
   providers: [
     ReservationsService,
@@ -70,7 +80,7 @@ export class ReservationsPage implements OnInit {
   user: UserModel = new UserModel();
   travel = false;
   travelers: UserModel[] = [];
-  payment:PaymentModel = new PaymentModel();
+  payment: PaymentModel = new PaymentModel();
   packages: PackageModel[] = [];
   activeStepIndex = 0;
   steps = [
@@ -193,7 +203,10 @@ export class ReservationsPage implements OnInit {
   }
 
   nextStep() {
-    if (this.isStepValid(this.activeStepIndex) && this.activeStepIndex < this.steps.length - 1) {
+    if (
+      this.isStepValid(this.activeStepIndex) &&
+      this.activeStepIndex < this.steps.length - 1
+    ) {
       this.activeStepIndex++;
     }
   }
@@ -241,6 +254,7 @@ export class ReservationsPage implements OnInit {
     if (!event.value) {
       return;
     }
+
     if (this.submitted) {
       this.userService.create(this.user).subscribe({
         next: (user) => {

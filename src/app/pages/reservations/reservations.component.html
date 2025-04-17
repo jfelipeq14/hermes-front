@@ -57,7 +57,7 @@
         />
       </td>
       <td>{{ reservation.id }}</td>
-      <td>{{ reservation.date | date : 'short' }}</td>
+      <td>{{ reservation.date | date : "short" }}</td>
       <td>{{ reservation.price | currency : "USD" }}</td>
       <td>
         <p-tag
@@ -73,9 +73,9 @@
         <div class="p-4">
           <h5>Detalles de la reservación {{ reservation.id }}</h5>
           <p>Usuario: {{ reservation.idUser }}</p>
-          <p>Fecha: {{ reservation.date | date : 'fullDate' }}</p>
+          <p>Fecha: {{ reservation.date | date : "fullDate" }}</p>
           <p>Precio: {{ reservation.price | currency : "USD" }}</p>
-          <p>Estado: {{ reservation.status ? 'Activo' : 'Inactivo' }}</p>
+          <p>Estado: {{ reservation.status ? "Activo" : "Inactivo" }}</p>
         </div>
       </td>
     </tr>
@@ -102,8 +102,9 @@
         <!-- Aquí irá el contenido del primer paso -->
         <ng-container>
           <app-form-clients
-          [user]="user"
-          [submitted]="submitted"
+            [user]="user"
+            [submitted]="submitted"
+            (createClient)="createClient($event)"
           />
         </ng-container>
       </div>
@@ -112,7 +113,7 @@
       <div *ngIf="activeStepIndex === 1" class="step-content">
         <!-- Aquí irá el contenido del segundo paso -->
         <ng-container>
-          <app-form-travelers/>
+          <app-form-travelers />
         </ng-container>
       </div>
 
@@ -120,10 +121,7 @@
       <div *ngIf="activeStepIndex === 2" class="step-content">
         <!-- Aquí irá el contenido del tercer paso -->
         <ng-container>
-          <app-form-payments
-            [payment]="payment"
-            [submitted]="submitted"
-          />
+          <app-form-payments [payment]="payment" [submitted]="submitted" />
         </ng-container>
       </div>
     </p-stepper>
@@ -142,7 +140,6 @@
         label="Siguiente"
         icon="pi pi-arrow-right"
         (onClick)="nextStep()"
-        [disabled]="!isStepValid(activeStepIndex)"
       ></p-button>
       <p-button
         *ngIf="activeStepIndex === 2"
