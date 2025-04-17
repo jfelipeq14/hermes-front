@@ -8,11 +8,12 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { FullCalendarModule } from '@fullcalendar/angular';
+
 import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
+import { MessageService, MenuItem } from 'primeng/api';
 
 import { DateModel } from '../../../models';
-import { MessageService, MenuItem } from 'primeng/api';
 import { ProgrammingService } from '../../../services';
 
 @Component({
@@ -114,11 +115,7 @@ export class CalendarComponent implements OnInit {
     ];
   }
 
-  showEventMenu(
-    event: Event,
-    menuButton: HTMLElement,
-    calendarEvent: EventApi
-  ): void {
+  showEventMenu(event: Event, menuButton: HTMLElement): void {
     event.stopPropagation();
     this.eventMenu.toggle(event, menuButton);
   }

@@ -103,7 +103,8 @@ export class AppMenu implements OnInit {
             routerLink: ['reservations'],
           },
         ],
-      },{
+      },
+      {
         items: [
           {
             label: 'Pagos',
@@ -111,7 +112,7 @@ export class AppMenu implements OnInit {
             routerLink: ['payments'],
           },
         ],
-      }
+      },
     ];
   }
 }

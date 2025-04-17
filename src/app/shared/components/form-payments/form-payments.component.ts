@@ -1,16 +1,23 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PaymentModel } from '../../../models/payment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
+import { PaymentModel } from '../../../models';
 
 @Component({
   selector: 'app-form-payments',
   templateUrl: './form-payments.component.html',
   styleUrls: ['./form-payments.component.css'],
-  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, CalendarModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    DropdownModule,
+    CalendarModule,
+  ],
 })
 export class FormPaymentsComponent {
   @Input() payment: PaymentModel = new PaymentModel(); // Recibe el modelo de pago
@@ -26,6 +33,4 @@ export class FormPaymentsComponent {
   // onCancel() {
   //   this.cancel.emit(); // Emite el evento al cancelar
   // }
-
-  }
-
+}

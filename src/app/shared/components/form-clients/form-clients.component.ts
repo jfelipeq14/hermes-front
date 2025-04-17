@@ -1,16 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UserModel } from '../../../models/user';
-import { bloodTypes, sexlist, typesDocument } from '../../constants';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
-import { MunicipalityModel } from '../../../models';
-import { MunicipalityService } from '../../../services';
-import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
+
+import { bloodTypes, sexlist, typesDocument } from '../../constants';
+import { MunicipalityModel, UserModel } from '../../../models';
+import { MunicipalityService } from '../../../services';
 
 @Component({
   selector: 'app-form-clients',

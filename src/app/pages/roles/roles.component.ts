@@ -1,25 +1,30 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
+
+import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { CheckboxModule } from 'primeng/checkbox';
+import { Table, TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { RoleModel } from '../../models/role';
-import { RolePrivilegeModel } from '../../models/role-privilege';
-import { DialogModule } from 'primeng/dialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { InputTextModule } from 'primeng/inputtext';
-import { TagModule } from 'primeng/tag';
-import { CheckboxModule } from 'primeng/checkbox';
-import { TooltipModule } from 'primeng/tooltip';
-import { HttpErrorResponse } from '@angular/common/http';
+import {
+  PermitModel,
+  PrivilegeModel,
+  RoleModel,
+  RolePrivilegeModel,
+} from '../../models';
 import { PermitsService, PrivilegeService, RolesService } from '../../services';
-import { PermitModel, PrivilegeModel } from '../../models';
 
 type PermitPrivilegeMatrix = Record<
   string,

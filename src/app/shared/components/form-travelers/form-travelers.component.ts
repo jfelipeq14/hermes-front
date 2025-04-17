@@ -7,12 +7,10 @@ import { UserModel } from '../../../models';
 
 @Component({
   selector: 'app-form-travelers',
-  imports: [ TableModule,ButtonModule,CommonModule,FormClientsComponent],
+  imports: [TableModule, ButtonModule, CommonModule, FormClientsComponent],
   templateUrl: './form-travelers.component.html',
-  styleUrl: './form-travelers.component.css'
+  styleUrl: './form-travelers.component.css',
 })
 export class FormTravelersComponent {
-  travelers:UserModel[] = []; // Lista de viajeros
+  travelers: UserModel[] = []; // Lista de viajeros
 }
-
-

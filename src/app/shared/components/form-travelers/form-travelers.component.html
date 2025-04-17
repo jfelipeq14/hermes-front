@@ -1,35 +1,32 @@
 <div class="flex justify-content-between">
-    <div>
-        <app-form-clients>
-
-        </app-form-clients>
-    </div>
-    <p-table [value]="travelers">
-        <ng-template pTemplate="header">
-            <tr>
-              <th>Documento</th>
-              <th>Nombre</th>
-              <th>Contacto</th>
-              <th style="width: 5rem"></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-traveler let-i="rowIndex">
-            <tr>
-              <td>{{ traveler.document }}</td>
-              <td>{{ traveler.name+traveler.surname }}</td>
-              <td>
-                {{ traveler.phone }}
-              </td>
-              <td>
-                <p-button
-                  icon="pi pi-trash"
-                  severity="danger"
-                  [rounded]="true"
-                  [text]="true"
-                ></p-button>
-              </td>
-            </tr>
-          </ng-template>
-
-    </p-table>
+  <div>
+    <app-form-clients> </app-form-clients>
+  </div>
+  <p-table [value]="travelers">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Contacto</th>
+        <th style="width: 5rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-traveler let-i="rowIndex">
+      <tr>
+        <td>{{ traveler.document }}</td>
+        <td>{{ traveler.name + traveler.surname }}</td>
+        <td>
+          {{ traveler.phone }}
+        </td>
+        <td>
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [rounded]="true"
+            [text]="true"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
