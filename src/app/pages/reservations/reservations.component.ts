@@ -15,14 +15,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { StepperModule } from 'primeng/stepper';
 
 import {
   ProgrammingService,
   ReservationsService,
   UserService,
 } from '../../services';
-import { DateModel, PackageModel, ReservationModel, UserModel } from '../../models';
-import { FormClientsComponent } from '../../shared/components';
+import { DateModel, PackageModel, PaymentModel, ReservationModel, UserModel } from '../../models';
+import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-reservations',
@@ -41,7 +42,10 @@ import { FormClientsComponent } from '../../shared/components';
     TagModule,
     ConfirmDialogModule,
     DropdownModule,
+    StepperModule,
     FormClientsComponent,
+    FormTravelersComponent,
+    FormPaymentsComponent
   ],
   providers: [
     ReservationsService,
@@ -66,7 +70,14 @@ export class ReservationsPage implements OnInit {
   user: UserModel = new UserModel();
   travel = false;
   travelers: UserModel[] = [];
+  payment:PaymentModel = new PaymentModel();
   packages: PackageModel[] = [];
+  activeStepIndex = 0;
+  steps = [
+    { label: 'Crear Cliente', value: 0 },
+    { label: 'Agregar Viajeros', value: 1 },
+    { label: 'Confirmar Reserva', value: 2 },
+  ];
 
   constructor(
     private reservationService: ReservationsService,
@@ -146,6 +157,84 @@ export class ReservationsPage implements OnInit {
     console.log('Row collapsed:', event);
   }
 
+  handleClientCreated(client: UserModel) {
+    if (client) {
+      this.user = client;
+      this.reservation.idUser = client.id;
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Cliente Creado',
+        detail: `Cliente ${client.id} creado exitosamente.`,
+        life: 3000,
+      });
+    }
+  }
+
+  handleTravelerAdded(traveler: UserModel) {
+    if (traveler) {
+      this.travelers.push(traveler);
+      const price = this.getPrice(this.reservation.idUser);
+      if (price) {
+        this.reservation.price = price * this.travelers.length;
+      }
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Viajero Agregado',
+        detail: `Viajero ${traveler.id} agregado exitosamente.`,
+        life: 3000,
+      });
+    }
+  }
+
+  previousStep() {
+    if (this.activeStepIndex > 0) {
+      this.activeStepIndex--;
+    }
+  }
+
+  nextStep() {
+    if (this.isStepValid(this.activeStepIndex) && this.activeStepIndex < this.steps.length - 1) {
+      this.activeStepIndex++;
+    }
+  }
+
+  isStepValid(step: number): boolean {
+    switch (step) {
+      case 0:
+        return this.reservation.idUser > 0; // Validar que se haya seleccionado un cliente
+      case 1:
+        return this.travelers.length > 0; // Validar que se haya agregado al menos un viajero
+      case 2:
+        return this.reservation.idUser > 0 && this.travelers.length > 0; // Validar que todo esté completo
+      default:
+        return false;
+    }
+  }
+
+  saveReservation() {
+    if (this.isStepValid(2)) {
+      this.reservationService.create(this.reservation).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Reservación creada correctamente',
+            life: 3000,
+          });
+          this.refresh();
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
+      });
+    }
+  }
+
   createClient(event: any) {
     console.log('Client created:', event);
 
@@ -188,14 +277,13 @@ export class ReservationsPage implements OnInit {
     }
     const price = this.getPrice(clientFound.id);
     if (!price) return;
-    this.reservation.price = price*this.travelers.length;
+    this.reservation.price = price * this.travelers.length;
   }
 
   getPrice(id: number) {
     const dateFound = this.dates.find((d) => d.id === id);
     if (!dateFound) return 0;
     return this.packages.find((p) => p.id === dateFound.idPackage)?.price;
-    
   }
 
   showPopup() {

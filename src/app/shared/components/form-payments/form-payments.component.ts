@@ -15,7 +15,6 @@ import { CalendarModule } from 'primeng/calendar';
 export class FormPaymentsComponent {
   @Input() payment: PaymentModel = new PaymentModel(); // Recibe el modelo de pago
   @Input() submitted = false; // Indica si el formulario fue enviado
-  @Input() statuses: { name: string; value: boolean }[] = []; // Opciones de estado
 
   @Output() save = new EventEmitter<PaymentModel>(); // Emite el modelo de pago al guardar
   // @Output() cancel = new EventEmitter<void>(); // Emite un evento al cancelar
