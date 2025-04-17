@@ -13,13 +13,9 @@ import { MessageService } from 'primeng/api';
   selector: 'app-form-clients',
   templateUrl: './form-clients.component.html',
   styleUrls: ['./form-clients.component.css'],
-  imports: [CommonModule,FormsModule,ButtonModule,DropdownModule],
-  providers: [
-      MunicipalityService,
-      MessageService,
-    ],
+  imports: [CommonModule, FormsModule, ButtonModule, DropdownModule],
+  providers: [MunicipalityService, MessageService],
 })
-
 export class FormClientsComponent implements OnInit {
   @Input() user: UserModel = new UserModel(); // Recibe el modelo de usuario
   @Input() submitted = false; // Indica si el formulario fue enviado
@@ -51,8 +47,7 @@ export class FormClientsComponent implements OnInit {
     private municipalityService: MunicipalityService,
     private messageService: MessageService
   ) {}
-  ngOnInit(
-    ): void {
+  ngOnInit(): void {
     this.getAllMunicipalities(); // Obtiene todas las municipalidades al iniciar el componente
   }
 

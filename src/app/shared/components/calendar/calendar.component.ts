@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CalendarOptions } from '@fullcalendar/core';
+import { CalendarOptions, EventApi } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -12,14 +12,8 @@ import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
 
 import { DateModel } from '../../../models';
-import { MessageService } from 'primeng/api';
+import { MessageService, MenuItem } from 'primeng/api';
 import { ProgrammingService } from '../../../services';
-
-interface MenuItem {
-  label: string;
-  icon: string;
-  command?: () => void;
-}
 
 @Component({
   selector: 'app-calendar',
@@ -29,11 +23,13 @@ interface MenuItem {
   providers: [ProgrammingService, MessageService],
 })
 export class CalendarComponent implements OnInit {
+  @ViewChild('eventMenu') eventMenu: any;
+
   constructor(private programmingService: ProgrammingService) {}
 
   selectedEvent: any;
   dates: DateModel[] = [];
-  overlayMenuItems: MenuItem[] = [
+  menuItems: MenuItem[] = [
     {
       label: 'Editar programación',
       icon: 'pi pi-fw pi-pencil',
@@ -97,4 +93,45 @@ export class CalendarComponent implements OnInit {
       allDay: false,
     })),
   });
+
+  eventMenuItems(event: EventApi): MenuItem[] {
+    return [
+      {
+        label: 'View Details',
+        icon: 'pi pi-eye',
+        command: () => this.viewEventDetails(event),
+      },
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.editEvent(event),
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        command: () => this.deleteEvent(event),
+      },
+    ];
+  }
+
+  showEventMenu(
+    event: Event,
+    menuButton: HTMLElement,
+    calendarEvent: EventApi
+  ): void {
+    event.stopPropagation();
+    this.eventMenu.toggle(event, menuButton);
+  }
+
+  viewEventDetails(event: EventApi): void {
+    console.log('View event details', event);
+  }
+
+  editEvent(event: EventApi): void {
+    console.log('Edit event', event);
+  }
+
+  deleteEvent(event: EventApi): void {
+    console.log('Delete event', event);
+  }
 }

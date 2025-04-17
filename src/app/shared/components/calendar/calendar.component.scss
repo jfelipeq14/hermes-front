@@ -1,0 +1,23 @@
+:host ::ng-deep {
+  .fc-event-title {
+    padding-right: 20px; // Make space for the menu button
+  }
+
+  .fc-event {
+    cursor: pointer;
+
+    &:hover {
+      .p-menu-button {
+        visibility: visible;
+      }
+    }
+  }
+
+  .p-menu-button {
+    visibility: hidden;
+  }
+
+  .p-menu .p-menuitem-link {
+    padding: 0.5rem 1rem;
+  }
+}
