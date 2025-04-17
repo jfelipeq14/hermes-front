@@ -1,19 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Component,
-  signal,
-  ChangeDetectorRef,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-} from '@angular/core';
-import {
-  CalendarOptions,
-  DateSelectArg,
-  EventClickArg,
-  EventApi,
-} from '@fullcalendar/core';
+import { Component, signal, OnInit } from '@angular/core';
+import { CalendarOptions } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -32,11 +18,7 @@ import { ProgrammingService } from '../../../services';
   providers: [ProgrammingService, MessageService],
 })
 export class CalendarComponent implements OnInit {
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    private programmingService: ProgrammingService,
-    private messageService: MessageService
-  ) {}
+  constructor(private programmingService: ProgrammingService) {}
 
   dates: DateModel[] = [];
 
