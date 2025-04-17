@@ -13,6 +13,6 @@ import { UserModel } from '../../../models';
 })
 export class FormTravelersComponent {
   travelers:UserModel[] = []; // Lista de viajeros
-
 }
+
 

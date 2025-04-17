@@ -84,76 +84,73 @@
 
 <p-dialog
   [(visible)]="reservationDialog"
-  [style]="{ width: '500px', height: '500px' }"
-  header="Detalles de la Reservación"
+  [style]="{ width: '700px' }"
+  header="Crear Reservación"
   [modal]="true"
   class="p-fluid"
 >
-  <!-- <ng-template pTemplate="content">
-    <div class="field">
-      <label for="idDate">Paquete *</label>
-      <p-dropdown
-        id="idDate"
-        [options]="dates"
-        [(ngModel)]="reservation.idDate"
-        optionLabel="id"
-        optionValue="id"
-        placeholder="Seleccione un paquete"
-        required
-      ></p-dropdown>
-      <small class="p-error" *ngIf="submitted && !reservation.idDate">
-        El paquete es obligatorio.
-      </small>
-    </div>
-
-    <div class="field">
-      <label for="idUSer">Cliente *</label>
-      <p-dropdown
-        id="idUser"
-        [options]="users"
-        [(ngModel)]="reservation.idUser"
-        optionLabel="id"
-        optionValue="id"
-        placeholder="Seleccione un cliente"
-        required
-      ></p-dropdown>
-      <small class="p-error" *ngIf="submitted && !reservation.idUser">
-        El cliente es obligatorio.
-      </small>
-    </div>
-
-    <div class="field">
-      <label for="price">Precio</label>
-      <input
-        id="price"
-        type="number"
-        [(ngModel)]="reservation.price"
-        pInputText
-        required
-      />
-      <small class="p-error" *ngIf="submitted && !reservation.price">
-        El precio es obligatorio.
-      </small>
-    </div>
-  </ng-template> -->
   <ng-template pTemplate="content">
-    <app-form-clients
-    (user)="user"
-    ></app-form-clients>
+    <p-stepper [value]="activeStepIndex">
+      <p-step-list>
+        <p-step [value]="0" label="Crear Cliente"></p-step>
+        <p-step [value]="1" label="Agregar Viajeros"></p-step>
+        <p-step [value]="2" label="Confirmar Reserva"></p-step>
+      </p-step-list>
+
+      <!-- Contenido del Step 1 -->
+      <div *ngIf="activeStepIndex === 0" class="step-content">
+        <!-- Aquí irá el contenido del primer paso -->
+        <ng-container>
+          <app-form-clients
+          [user]="user"
+          [submitted]="submitted"
+          />
+        </ng-container>
+      </div>
+
+      <!-- Contenido del Step 2 -->
+      <div *ngIf="activeStepIndex === 1" class="step-content">
+        <!-- Aquí irá el contenido del segundo paso -->
+        <ng-container>
+          <app-form-travelers/>
+        </ng-container>
+      </div>
+
+      <!-- Contenido del Step 3 -->
+      <div *ngIf="activeStepIndex === 2" class="step-content">
+        <!-- Aquí irá el contenido del tercer paso -->
+        <ng-container>
+          <app-form-payments
+            [payment]="payment"
+            [submitted]="submitted"
+          />
+        </ng-container>
+      </div>
+    </p-stepper>
   </ng-template>
+
   <ng-template pTemplate="footer">
-    <div class="flex justify-content-end">
+    <div class="flex justify-content-between">
       <p-button
-        label="Cancelar"
-        icon="pi pi-times"
-        (onClick)="closePopup()"
-        text
-      />
+        label="Anterior"
+        icon="pi pi-arrow-left"
+        (onClick)="previousStep()"
+        [disabled]="activeStepIndex === 0"
+      ></p-button>
       <p-button
+        *ngIf="activeStepIndex !== 2"
+        label="Siguiente"
+        icon="pi pi-arrow-right"
+        (onClick)="nextStep()"
+        [disabled]="!isStepValid(activeStepIndex)"
+      ></p-button>
+      <p-button
+        *ngIf="activeStepIndex === 2"
         label="Guardar"
         icon="pi pi-check"
-        autofocus
-      />
+        (onClick)="saveReservation()"
+        [disabled]="!isStepValid(activeStepIndex)"
+      ></p-button>
     </div>
   </ng-template>
 </p-dialog>
