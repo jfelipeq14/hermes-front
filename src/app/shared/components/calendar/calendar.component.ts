@@ -6,6 +6,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  OnInit,
 } from '@angular/core';
 import {
   CalendarOptions,
@@ -20,16 +21,48 @@ import listPlugin from '@fullcalendar/list';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
 import { DateModel } from '../../../models';
+import { MessageService } from 'primeng/api';
+import { ProgrammingService } from '../../../services';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
   imports: [CommonModule, FullCalendarModule],
+  providers: [ProgrammingService, MessageService],
 })
-export class CalendarComponent {
-  @Input() dates: DateModel[] = [];
-  @Output() datesChanged = new EventEmitter<DateModel[]>();
+export class CalendarComponent implements OnInit {
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private programmingService: ProgrammingService,
+    private messageService: MessageService
+  ) {}
+
+  dates: DateModel[] = [];
+
+  ngOnInit(): void {
+    this.getAllDates();
+  }
+
+  getAllDates() {
+    this.programmingService.getAll().subscribe({
+      next: (dates) => {
+        this.dates = dates;
+        this.calendarOptions.update((options) => ({
+          ...options,
+          events: dates.map((date) => ({
+            title: `Paquete ${date.idPackage}`,
+            start: date.start,
+            end: date.end,
+            allDay: true,
+          })),
+        }));
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
+  }
 
   calendarVisible = signal(true);
   calendarOptions = signal<CalendarOptions>({
@@ -45,55 +78,11 @@ export class CalendarComponent {
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-    events: this.getCalendarEvents(),
-    select: this.handleDateSelect.bind(this),
-    eventClick: this.handleEventClick.bind(this),
+    events: this.dates.map((date) => ({
+      title: `Paquete ${date.idPackage}`,
+      start: date.start,
+      end: date.end,
+      allDay: true,
+    })),
   });
-
-  private getCalendarEvents(): any[] {
-    return this.dates.map((date) => ({
-      id: date.id.toString(),
-      title: date.idPackage,
-      start: new Date(date.start),
-      allDay: false,
-      backgroundColor: date.status === true ? '#4caf50' : '#f44336',
-    }));
-  }
-
-  constructor(private changeDetector: ChangeDetectorRef) {}
-
-  handleCalendarToggle() {
-    this.calendarVisible.update((bool) => !bool);
-  }
-
-  handleWeekendsToggle() {
-    this.calendarOptions.update((options) => ({
-      ...options,
-      weekends: !options.weekends,
-    }));
-  }
-
-  handleDateSelect(selectInfo: DateSelectArg) {
-    this.datesChanged.emit(this.dates);
-  }
-
-  handleEventClick(clickInfo: EventClickArg) {
-    const date = this.dates.find((d) => d.id === parseInt(clickInfo.event.id));
-    if (!date) return;
-  }
-
-  handleEventChange(changeInfo: EventClickArg) {
-    const date = this.dates.find((d) => d.id === parseInt(changeInfo.event.id));
-    if (date) {
-      this.datesChanged.emit(this.dates);
-    }
-  }
-
-  editDate(date: DateModel) {
-    // Implement date editing logic here
-  }
-
-  handleEvents(events: EventApi[]) {
-    this.changeDetector.detectChanges();
-  }
 }
