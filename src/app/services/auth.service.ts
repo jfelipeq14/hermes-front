@@ -16,6 +16,15 @@ export class AuthService {
   private router: Router = inject(Router);
   private url = environment.SERVER_URL + 'auth/';
 
+  register(user: any): Observable<any | null> {
+    return this.http.post<any>(`${this.url}register`, user).pipe(
+      catchError((err: Error) => {
+        console.error(err);
+        return of(null);
+      })
+    );
+  }
+
   login(loginUserRequest: any): Observable<any | null> {
     return this.http.post<any>(`${this.url}log-in`, loginUserRequest).pipe(
       catchError((err: Error) => {
