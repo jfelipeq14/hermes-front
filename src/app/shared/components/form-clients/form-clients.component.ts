@@ -10,8 +10,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 
-import { bloodTypes, sexlist, typesDocument } from '../../constants';
-import { MunicipalityModel, UserModel } from '../../../models';
+import { bloodTypes, epslist, sexlist, typesDocument } from '../../constants';
+import {
+  MunicipalityModel,
+  ReservationModel,
+  UserModel,
+} from '../../../models';
 import { MunicipalityService } from '../../../services';
 
 @Component({
@@ -30,15 +34,25 @@ import { MunicipalityService } from '../../../services';
   providers: [MunicipalityService, MessageService],
 })
 export class FormClientsComponent implements OnInit {
-  @Input() user: UserModel = new UserModel(); // Recibe el modelo de usuario
-  @Input() submitted = false; // Indica si el formulario fue enviado
+  constructor(
+    private municipalityService: MunicipalityService,
+    private messageService: MessageService
+  ) {}
 
-  @Output() save = new EventEmitter<UserModel>(); // Emite el usuario al guardar
-  @Output() clientCreated = new EventEmitter<any>(); // Emite el cliente creado al componente padre
+  @Input() reservation: ReservationModel = new ReservationModel();
+  @Input() travel = false;
+  @Input() travelers: UserModel[] = [];
+  @Input() users: UserModel[] = [];
+  @Input() user: UserModel = new UserModel();
+  @Input() submitted = false;
 
-  typesDocument = typesDocument; // Lista de tipos de documento para el dropdown
-  sexlist = sexlist; // Lista de sexos para el dropdown
-  bloodTypes = bloodTypes; // Lista de tipos de sangre para el dropdown
+  @Output() searchClient = new EventEmitter<any>();
+  @Output() createClient = new EventEmitter<any>();
+
+  typesDocument = typesDocument;
+  sexlist = sexlist;
+  bloodTypes = bloodTypes;
+  epslist = epslist;
   municipalities: MunicipalityModel[] = [];
 
   getAllMunicipalities() {
@@ -57,20 +71,15 @@ export class FormClientsComponent implements OnInit {
     });
   }
 
-  constructor(
-    private municipalityService: MunicipalityService,
-    private messageService: MessageService
-  ) {}
-
   ngOnInit(): void {
-    this.getAllMunicipalities(); // Obtiene todas las municipalidades al iniciar el componente
+    this.getAllMunicipalities();
   }
 
-  onSave() {
-    this.save.emit(this.user); // Emite el usuario al guardar
+  onSearchClient(document: string) {
+    this.searchClient.emit(document);
   }
 
-  createClientHandler(documentValue: string): void {
-    this.clientCreated.emit(documentValue); // Emite el cliente creado al componente padre
+  onCreateClient(user: UserModel) {
+    this.createClient.emit(user);
   }
 }

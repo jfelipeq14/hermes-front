@@ -79,6 +79,7 @@ export class ReservationsPage implements OnInit {
   users: UserModel[] = [];
   user: UserModel = new UserModel();
   travel = false;
+  traveler: UserModel = new UserModel();
   travelers: UserModel[] = [];
   payment: PaymentModel = new PaymentModel();
   packages: PackageModel[] = [];
@@ -155,96 +156,24 @@ export class ReservationsPage implements OnInit {
     });
   }
 
-  getSeverity(status: boolean): 'success' | 'danger' {
-    return status ? 'success' : 'danger';
-  }
-
-  onRowExpand(event: any) {
-    console.log('Row expanded:', event);
-  }
-
-  onRowCollapse(event: any) {
-    console.log('Row collapsed:', event);
-  }
-
-  handleClientCreated(client: UserModel) {
-    if (client) {
-      this.user = client;
-      this.reservation.idUser = client.id;
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Cliente Creado',
-        detail: `Cliente ${client.id} creado exitosamente.`,
-        life: 3000,
-      });
+  searchClient(document: any) {
+    if (!document) {
+      return;
     }
-  }
 
-  handleTravelerAdded(traveler: UserModel) {
-    if (traveler) {
-      this.travelers.push(traveler);
-      const price = this.getPrice(this.reservation.idUser);
-      if (price) {
-        this.reservation.price = price * this.travelers.length;
-      }
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Viajero Agregado',
-        detail: `Viajero ${traveler.id} agregado exitosamente.`,
-        life: 3000,
-      });
+    const clientFound = this.users.find((u) => u.document === document);
+
+    if (!clientFound) return;
+
+    if (this.reservation.idUser !== 0 && this.user.document !== '') {
+      this.travel = true;
+      this.traveler = clientFound;
+    } else {
+      this.user = clientFound;
     }
-  }
 
-  previousStep() {
-    if (this.activeStepIndex > 0) {
-      this.activeStepIndex--;
-    }
-  }
-
-  nextStep() {
-    if (
-      this.isStepValid(this.activeStepIndex) &&
-      this.activeStepIndex < this.steps.length - 1
-    ) {
-      this.activeStepIndex++;
-    }
-  }
-
-  isStepValid(step: number): boolean {
-    switch (step) {
-      case 0:
-        return this.reservation.idUser > 0; // Validar que se haya seleccionado un cliente
-      case 1:
-        return this.travelers.length > 0; // Validar que se haya agregado al menos un viajero
-      case 2:
-        return this.reservation.idUser > 0 && this.travelers.length > 0; // Validar que todo esté completo
-      default:
-        return false;
-    }
-  }
-
-  saveReservation() {
-    if (this.isStepValid(2)) {
-      this.reservationService.create(this.reservation).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Reservación creada correctamente',
-            life: 3000,
-          });
-          this.refresh();
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
+    if (this.reservation.idUser === 0) {
+      this.reservation.idUser = this.user.id;
     }
   }
 
@@ -289,9 +218,76 @@ export class ReservationsPage implements OnInit {
     if (this.travel) {
       this.travelers.push(clientFound);
     }
-    const price = this.getPrice(clientFound.id);
-    if (!price) return;
-    this.reservation.price = price * this.travelers.length;
+  }
+
+  addTraveler() {
+    if (this.travel && this.traveler.document) {
+      this.travelers.push(this.traveler);
+    }
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
+  }
+
+  onRowExpand(event: any) {
+    console.log('Row expanded:', event);
+  }
+
+  onRowCollapse(event: any) {
+    console.log('Row collapsed:', event);
+  }
+
+  previousStep() {
+    if (this.activeStepIndex > 0) {
+      this.activeStepIndex--;
+    }
+  }
+
+  nextStep() {
+    if (
+      this.isStepValid(this.activeStepIndex) &&
+      this.activeStepIndex < this.steps.length - 1
+    ) {
+      this.activeStepIndex++;
+    }
+  }
+
+  isStepValid(step: number): boolean {
+    switch (step) {
+      case 0:
+        return this.reservation.idUser > 0; // Validar que se haya seleccionado un cliente
+      case 1:
+        return this.travelers.length > 0; // Validar que se haya agregado al menos un viajero
+      case 2:
+        return this.reservation.idUser > 0 && this.travelers.length > 0; // Validar que todo esté completo
+      default:
+        return false;
+    }
+  }
+
+  saveReservation() {
+    if (this.activeStepIndex === 2) {
+      this.reservationService.create(this.reservation).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Reservación creada correctamente',
+            life: 3000,
+          });
+          this.refresh();
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
+      });
+    }
   }
 
   getPrice(id: number) {

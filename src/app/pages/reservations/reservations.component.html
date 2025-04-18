@@ -102,8 +102,13 @@
         <!-- Aquí irá el contenido del primer paso -->
         <ng-container>
           <app-form-clients
+            [reservation]="reservation"
+            [travel]="travel"
+            [travelers]="travelers"
+            [users]="users"
             [user]="user"
             [submitted]="submitted"
+            (searchClient)="searchClient($event)"
             (createClient)="createClient($event)"
           />
         </ng-container>
@@ -113,7 +118,17 @@
       <div *ngIf="activeStepIndex === 1" class="step-content">
         <!-- Aquí irá el contenido del segundo paso -->
         <ng-container>
-          <app-form-travelers />
+          <app-form-travelers
+            [reservation]="reservation"
+            [travel]="travel"
+            [travelers]="travelers"
+            [users]="users"
+            [traveler]="traveler"
+            [submitted]="submitted"
+            (searchClient)="searchClient($event)"
+            (createClient)="createClient($event)"
+            (addTraveler)="addTraveler()"
+          />
         </ng-container>
       </div>
 
@@ -140,6 +155,7 @@
         label="Siguiente"
         icon="pi pi-arrow-right"
         (onClick)="nextStep()"
+        [disabled]="!isStepValid(activeStepIndex)"
       ></p-button>
       <p-button
         *ngIf="activeStepIndex === 2"
