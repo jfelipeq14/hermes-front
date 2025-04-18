@@ -30,6 +30,6 @@ export class CategoryService {
   }
 
   changeStatus(id: number): Observable<CategoryModel> {
-    return this.http.patch<CategoryModel>(this.url + id, {});
+    return this.http.patch<CategoryModel>(this.url + `${id}/change-status`, {});
   }
 }

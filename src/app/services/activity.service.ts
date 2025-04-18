@@ -26,6 +26,6 @@ export class ActivityService {
   }
 
   changeStatus(id: number): Observable<ActivityModel> {
-    return this.http.patch<ActivityModel>(this.url + id, {});
+    return this.http.patch<ActivityModel>(this.url + `${id}/change-status`, {});
   }
 }

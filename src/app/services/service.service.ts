@@ -32,6 +32,6 @@ export class ServiceService {
   }
 
   changeStatus(id: number): Observable<ServiceModel> {
-    return this.http.patch<ServiceModel>(this.url + id, {});
+    return this.http.patch<ServiceModel>(this.url + `${id}/change-status`, {});
   }
 }
