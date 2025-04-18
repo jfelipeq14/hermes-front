@@ -9,7 +9,7 @@ import { PackagesPage } from './packages/packages.component';
 import { ProgrammingPage } from './programming/programming.component';
 import { PaymentsPage } from './payments/payments.component';
 import { ReservationsPage } from './reservations/reservations.component';
-
+import { ClientsPage } from './clients/clients.component';
 
 export default [
   { path: 'dashboard', component: DashboardPage },
@@ -20,6 +20,7 @@ export default [
   { path: 'activities', component: ActivitiesPage },
   { path: 'packages', component: PackagesPage },
   { path: 'programming', component: ProgrammingPage },
+  { path: 'clients', component: ClientsPage },
   { path: 'payments', component: PaymentsPage },
   { path: 'reservations', component: ReservationsPage },
   {

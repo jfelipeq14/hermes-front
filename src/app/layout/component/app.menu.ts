@@ -98,6 +98,15 @@ export class AppMenu implements OnInit {
       {
         items: [
           {
+            label: 'Clientes',
+            icon: 'pi pi-fw pi-user',
+            routerLink: ['clients'],
+          },
+        ],
+      },
+      {
+        items: [
+          {
             label: 'Reservas',
             icon: 'pi pi-fw pi-building',
             routerLink: ['reservations'],

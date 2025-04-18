@@ -1,6 +1,7 @@
 export * from './activity.service';
 export * from './auth.service';
 export * from './category.service';
+export * from './clients.service';
 export * from './dashboard.service';
 export * from './mock-data.service';
 export * from './municipality.service';

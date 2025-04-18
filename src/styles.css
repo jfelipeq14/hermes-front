@@ -4,3 +4,7 @@
 @import "primeflex/primeflex.css";
 @import "tailwindcss";
 @import "tailwindcss-primeui";
+
+* {
+  scrollbar-width: thin;
+}
