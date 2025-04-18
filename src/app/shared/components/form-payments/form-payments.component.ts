@@ -6,6 +6,9 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { PaymentModel } from '../../../models';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
 
 @Component({
   selector: 'app-form-payments',
@@ -14,6 +17,9 @@ import { PaymentModel } from '../../../models';
   imports: [
     CommonModule,
     FormsModule,
+    InputTextModule,
+    InputIconModule,
+    IconFieldModule,
     ButtonModule,
     DropdownModule,
     CalendarModule,

@@ -1,6 +1,22 @@
 <div class="flex justify-content-between">
   <div>
-    <app-form-clients> </app-form-clients>
+    <app-form-clients
+      [reservation]="reservation"
+      [travel]="travel"
+      [travelers]="travelers"
+      [users]="users"
+      [user]="traveler"
+      [submitted]="submitted"
+      (searchClient)="onSearchClient($event)"
+      (createClient)="onCreateClient($event)"
+    />
+    <p-button
+      label="Agregar viajero"
+      icon="pi pi-user"
+      severity="secondary"
+      [text]="true"
+      (click)="onAddTraveler()"
+    />
   </div>
   <p-table [value]="travelers">
     <ng-template pTemplate="header">
@@ -14,7 +30,7 @@
     <ng-template pTemplate="body" let-traveler let-i="rowIndex">
       <tr>
         <td>{{ traveler.document }}</td>
-        <td>{{ traveler.name + traveler.surname }}</td>
+        <td>{{ traveler.name + " " + traveler.surName }}</td>
         <td>
           {{ traveler.phone }}
         </td>
@@ -24,7 +40,7 @@
             severity="danger"
             [rounded]="true"
             [text]="true"
-          ></p-button>
+          />
         </td>
       </tr>
     </ng-template>

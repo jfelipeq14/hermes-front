@@ -30,7 +30,7 @@
     <p-button
       icon="pi pi-search"
       severity="secondary"
-      (onClick)="createClientHandler(documentInput.value)"
+      (onClick)="onSearchClient(documentInput.value)"
     />
   </div>
   <small class="p-error" *ngIf="submitted && !user.document">
@@ -166,10 +166,19 @@
     optionValue="value"
     placeholder="Seleccione un tipo de sangre"
     required
-  ></p-dropdown>
+  />
 </div>
 
 <div class="field flex flex-column">
   <label for="eps">EPS</label>
-  <input id="eps" type="text" [(ngModel)]="user.eps" name="eps" pInputText />
+  <p-dropdown
+    id="eps"
+    [options]="epslist"
+    [(ngModel)]="user.eps"
+    name="eps"
+    optionLabel="name"
+    optionValue="value"
+    placeholder="Seleccione una EPS"
+    required
+  />
 </div>
