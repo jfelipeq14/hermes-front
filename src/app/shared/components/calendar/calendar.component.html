@@ -5,17 +5,16 @@
     class="w-full"
   >
     <ng-template #eventContent let-arg>
-      <div class="flex flex-col gap-2 align-items-center relative">
-        <div class="text-sm font-semibold text-gray-900">
-          {{ arg.event.title }}
-        </div>
-        <button
-          #menuButton
-          class="p-1 text-gray-500 hover:text-gray-700 absolute top-0 right-0"
-        >
-          <i class="pi pi-ellipsis-v text-xs"></i>
-        </button>
-        <p-menu #eventMenu [popup]="true"></p-menu>
+      <div class="card">
+        <div class="font-semibold text-xl mb-4">{{ arg.event.idPackage }}</div>
+        <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+        <p-button
+          type="button"
+          severity="secondary"
+          icon="pi pi-chevron-down"
+          label="Paquete X"
+          (click)="menu.toggle($event)"
+        ></p-button>
       </div>
     </ng-template>
   </full-calendar>
