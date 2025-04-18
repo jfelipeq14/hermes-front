@@ -35,7 +35,10 @@ export class PackageService {
   }
 
   changeStatus(id: number): Observable<PackageModel> {
-    return this.http.patch<PackageModel>(this.urlPackage + id, {});
+    return this.http.patch<PackageModel>(
+      this.urlPackage + `${id}/change-status`,
+      {}
+    );
   }
 
   createServicePackage(
