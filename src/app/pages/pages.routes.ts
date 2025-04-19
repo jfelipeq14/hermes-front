@@ -25,6 +25,6 @@ export default [
   { path: 'reservations', component: ReservationsPage },
   {
     path: '**',
-    redirectTo: 'home',
+    redirectTo: '',
   },
 ] as Routes;
