@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // PrimeNG Imports
@@ -16,6 +16,8 @@ import { AccordionModule } from 'primeng/accordion';
 // Componentes propios
 import { MunicipalityModel, UserModel } from '../../models';
 import { LoginComponent, RegisterComponent } from '../../shared/components';
+import { MunicipalityService } from '../../services';
+import { MessageService } from 'primeng/api';
 
 interface TravelPackage {
   id: number;
@@ -44,8 +46,9 @@ interface TravelPackage {
     LoginComponent,
     RegisterComponent,
   ],
+  providers: [MunicipalityService, MessageService],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   loginDialog = false;
   registerDialog = false;
   submitted = false;
@@ -136,6 +139,36 @@ export class HomePage {
         'Llevamos más de 1 mes en el mercado ofreciendo paquetes a nivel nacional e internacional',
     },
   ];
+
+  constructor(
+    private municipalityService: MunicipalityService,
+    private messageService: MessageService,
+    private router: Router // Inject Router service
+  ) {}
+
+  ngOnInit(): void {
+    this.getAllMunicipalities();
+  }
+
+  getAllMunicipalities() {
+    this.municipalityService.getAll().subscribe({
+      next: (municipalities) => {
+        this.municipalities = municipalities;
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message || 'No se pudieron cargar los municipios',
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  goToReservation(idDate: number) {
+    this.router.navigate(['/reservation'], { queryParams: { idDate: idDate } });
+  }
 
   showPopupLogin(): void {
     this.dialogType = 'login';

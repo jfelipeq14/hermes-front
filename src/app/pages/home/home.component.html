@@ -16,7 +16,7 @@
       (click)="showPopupRegister()"
     ></p-button>
   </div>
-  
+
   <div class="py-8 px-4">
     <div class="container mx-auto max-w-6xl">
       <!-- Título principal con animación de entrada -->
@@ -86,6 +86,7 @@
                       label="Reservar"
                       icon="pi pi-calendar-plus"
                       styleClass="p-button-sm mt-3 w-full"
+                      (click)="goToReservation(package.id)"
                     ></p-button>
                   </div>
                 </ng-template>
