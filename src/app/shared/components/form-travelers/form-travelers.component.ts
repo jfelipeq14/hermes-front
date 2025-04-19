@@ -24,7 +24,7 @@ export class FormTravelersComponent implements OnInit {
   @Input() travel = false;
   @Input() traveler: UserModel = new UserModel();
   @Input() travelers: UserModel[] = [];
-  @Input() users: UserModel[] = [];
+  @Input() clients: UserModel[] = [];
   @Input() submitted = false;
 
   @Output() searchClient = new EventEmitter<any>();

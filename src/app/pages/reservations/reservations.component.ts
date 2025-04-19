@@ -76,8 +76,8 @@ export class ReservationsPage implements OnInit {
     { label: 'Inactivo', value: false },
   ];
   dates: DateModel[] = [];
-  users: UserModel[] = [];
-  user: UserModel = new UserModel();
+  clients: UserModel[] = [];
+  client: UserModel = new UserModel();
   travel = false;
   traveler: UserModel = new UserModel();
   travelers: UserModel[] = [];
@@ -142,8 +142,8 @@ export class ReservationsPage implements OnInit {
 
   getAllUsers() {
     this.userService.getAll().subscribe({
-      next: (users) => {
-        this.users = users;
+      next: (clients) => {
+        this.clients = clients;
       },
       error: (e) => {
         this.messageService.add({
@@ -161,19 +161,19 @@ export class ReservationsPage implements OnInit {
       return;
     }
 
-    const clientFound = this.users.find((u) => u.document === document);
+    const clientFound = this.clients.find((u) => u.document === document);
 
     if (!clientFound) return;
 
-    if (this.reservation.idUser !== 0 && this.user.document !== '') {
+    if (this.reservation.idUser !== 0 && this.client.document !== '') {
       this.travel = true;
       this.traveler = clientFound;
     } else {
-      this.user = clientFound;
+      this.client = clientFound;
     }
 
     if (this.reservation.idUser === 0) {
-      this.reservation.idUser = this.user.id;
+      this.reservation.idUser = this.client.id;
     }
   }
 
@@ -185,10 +185,10 @@ export class ReservationsPage implements OnInit {
     }
 
     if (this.submitted) {
-      this.userService.create(this.user).subscribe({
-        next: (user) => {
+      this.userService.create(this.client).subscribe({
+        next: (client) => {
           if (this.reservation.idUser === 0 && !this.travel) {
-            this.reservation.idUser = user.id;
+            this.reservation.idUser = client.id;
           }
           this.messageService.add({
             severity: 'success',
@@ -196,7 +196,7 @@ export class ReservationsPage implements OnInit {
             detail: 'Client created successfully',
             life: 3000,
           });
-          this.travelers.push(user);
+          this.travelers.push(client);
         },
         error: (e) => {
           this.messageService.add({
@@ -209,7 +209,7 @@ export class ReservationsPage implements OnInit {
       });
     }
 
-    const clientFound = this.users.find((u) => u.document === event.value);
+    const clientFound = this.clients.find((u) => u.document === event.value);
 
     if (!clientFound) return;
     if (this.reservation.idUser === 0) {

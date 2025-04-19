@@ -42,8 +42,8 @@ export class FormClientsComponent implements OnInit {
   @Input() reservation: ReservationModel = new ReservationModel();
   @Input() travel = false;
   @Input() travelers: UserModel[] = [];
-  @Input() users: UserModel[] = [];
-  @Input() user: UserModel = new UserModel();
+  @Input() clients: UserModel[] = [];
+  @Input() client: UserModel = new UserModel();
   @Input() submitted = false;
 
   @Output() searchClient = new EventEmitter<any>();
@@ -54,6 +54,9 @@ export class FormClientsComponent implements OnInit {
   bloodTypes = bloodTypes;
   epslist = epslist;
   municipalities: MunicipalityModel[] = [];
+
+  age = 0;
+  maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
 
   getAllMunicipalities() {
     this.municipalityService.getAll().subscribe({
@@ -73,6 +76,16 @@ export class FormClientsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllMunicipalities();
+  }
+
+  onChangeBirthDate(event: any) {
+    if (!event.value) {
+      return;
+    }
+
+    const birthDate = new Date(event.value);
+    const today = new Date();
+    this.age = today.getFullYear() - birthDate.getFullYear();
   }
 
   onSearchClient(document: string) {
