@@ -6,10 +6,17 @@
       icon="pi pi-user"
       label="Login"
       styleClass="p-button-primary"
-      (click)="showPopup()"
+      (click)="showPopupLogin()"
+    ></p-button>
+
+    <p-button
+      icon="pi pi-user"
+      label="Registro"
+      styleClass="p-button-primary"
+      (click)="showPopupRegister()"
     ></p-button>
   </div>
-
+  
   <div class="py-8 px-4">
     <div class="container mx-auto max-w-6xl">
       <!-- Título principal con animación de entrada -->
@@ -276,17 +283,28 @@
 
 <!-- Modal de login -->
 <p-dialog
-  [(visible)]="loginDialog"
+  [(visible)]="dialogVisible"
   [style]="{ width: '450px' }"
-  header="Login"
+  header="{{ dialogType === 'login' ? 'Login' : 'Registro' }}"
   [modal]="true"
   [closable]="true"
   [dismissableMask]="true"
   styleClass="p-fluid"
 >
-  <app-login
-    [loginDialog]="loginDialog"
-    [submitted]="submitted"
-    [user]="user"
-  ></app-login>
+  <ng-container *ngIf="dialogType === 'login'">
+    <app-login
+      [loginDialog]="dialogVisible"
+      [submitted]="submitted"
+      [user]="user"
+    ></app-login>
+  </ng-container>
+
+  <ng-container *ngIf="dialogType === 'register'">
+    <app-register
+      [registerDialog]="dialogVisible"
+      [submitted]="submitted"
+      [user]="user"
+      [municipalities]="municipalities"
+    ></app-register>
+  </ng-container>
 </p-dialog>

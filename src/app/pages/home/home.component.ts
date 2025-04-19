@@ -14,8 +14,8 @@ import { MessageModule } from 'primeng/message';
 import { AccordionModule } from 'primeng/accordion';
 
 // Componentes propios
-import { LoginComponent } from '../../shared/components/login/login.component';
-import { UserModel } from '../../models';
+import { MunicipalityModel, UserModel } from '../../models';
+import { LoginComponent, RegisterComponent } from '../../shared/components';
 
 interface TravelPackage {
   id: number;
@@ -30,7 +30,6 @@ interface TravelPackage {
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  standalone: true,
   imports: [
     CommonModule,
     RouterModule,
@@ -43,13 +42,18 @@ interface TravelPackage {
     MessageModule,
     AccordionModule,
     LoginComponent,
+    RegisterComponent,
   ],
 })
 export class HomePage {
   loginDialog = false;
+  registerDialog = false;
   submitted = false;
+  dialogVisible = false;
+  dialogType: 'login' | 'register' = 'login';
 
   user: UserModel = new UserModel();
+  municipalities: MunicipalityModel[] = [];
 
   packages: TravelPackage[] = [
     {
@@ -133,13 +137,19 @@ export class HomePage {
     },
   ];
 
-  showPopup() {
-    this.loginDialog = true;
-    this.submitted = false;
+  showPopupLogin(): void {
+    this.dialogType = 'login';
+    this.dialogVisible = true;
+  }
+
+  showPopupRegister(): void {
+    this.dialogType = 'register';
+    this.dialogVisible = true;
   }
 
   closePopup() {
     this.loginDialog = false;
+    this.registerDialog = false;
     this.user = new UserModel();
   }
 }
