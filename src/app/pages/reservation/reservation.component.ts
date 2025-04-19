@@ -14,7 +14,8 @@ import {
 import {
   ReservationsService,
   ProgrammingService,
-  UserService,
+  ClientsService,
+  AuthService,
 } from '../../services';
 import {
   PackageModel,
@@ -41,7 +42,8 @@ import { CardModule } from 'primeng/card';
   providers: [
     ReservationsService,
     ProgrammingService,
-    UserService,
+    ClientsService,
+    AuthService,
     MessageService,
   ],
 })
@@ -53,9 +55,9 @@ export class ReservationComponent implements OnInit {
     { label: 'Confirmar Reserva', value: 2 },
   ];
   reservation: ReservationModel = new ReservationModel();
-  users: UserModel[] = [];
-  user: UserModel = new UserModel();
-  travel = false;
+  clients: UserModel[] = [];
+  client: UserModel = new UserModel();
+  travel = true;
   traveler: UserModel = new UserModel();
   travelers: UserModel[] = [];
   payment: PaymentModel = new PaymentModel();
@@ -68,7 +70,8 @@ export class ReservationComponent implements OnInit {
   constructor(
     private reservationService: ReservationsService,
     private programmingService: ProgrammingService,
-    private userService: UserService,
+    private clientService: ClientsService,
+    private authService: AuthService,
     private messageService: MessageService,
     private route: ActivatedRoute
   ) {}
@@ -80,13 +83,14 @@ export class ReservationComponent implements OnInit {
         this.reservation.idDate = +idDate;
       }
     });
-    this.getAllUsers();
+    this.getAllClients();
   }
 
-  getAllUsers() {
-    this.userService.getAll().subscribe({
-      next: (users) => {
-        this.users = users;
+  getAllClients() {
+    this.clientService.getAll().subscribe({
+      next: (clients) => {
+        this.clients = clients;
+        console.log(this.clients);
       },
       error: (e) => {
         this.messageService.add({
@@ -104,19 +108,19 @@ export class ReservationComponent implements OnInit {
       return;
     }
 
-    const clientFound = this.users.find((u) => u.document === document);
+    const clientFound = this.clients.find((c) => c.document === document);
 
     if (!clientFound) return;
 
-    if (this.reservation.idUser !== 0 && this.user.document !== '') {
+    if (this.reservation.idUser !== 0 && this.client.document !== '') {
       this.travel = true;
       this.traveler = clientFound;
     } else {
-      this.user = clientFound;
+      this.client = clientFound;
     }
 
     if (this.reservation.idUser === 0) {
-      this.reservation.idUser = this.user.id;
+      this.reservation.idUser = this.client.id;
     }
   }
 
@@ -126,10 +130,11 @@ export class ReservationComponent implements OnInit {
     }
 
     if (this.submitted) {
-      this.userService.create(this.user).subscribe({
-        next: (user) => {
-          if (this.reservation.idUser === 0 && !this.travel) {
-            this.reservation.idUser = user.id;
+      this.client.idRole = 3;
+      this.authService.register(this.client).subscribe({
+        next: (client) => {
+          if (this.reservation.idUser === 0) {
+            this.reservation.idUser = client.id;
           }
           this.messageService.add({
             severity: 'success',
@@ -137,7 +142,9 @@ export class ReservationComponent implements OnInit {
             detail: 'Client created successfully',
             life: 3000,
           });
-          this.travelers.push(user);
+          if (this.travel) {
+            this.travelers.push(client);
+          }
         },
         error: (e) => {
           this.messageService.add({
@@ -150,21 +157,78 @@ export class ReservationComponent implements OnInit {
       });
     }
 
-    const clientFound = this.users.find((u) => u.document === event.value);
+    // const clientFound = this.clients.find((c) => c.document === event.value);
 
-    if (!clientFound) return;
-    if (this.reservation.idUser === 0) {
-      this.reservation.idUser = clientFound.id;
-    }
-    if (this.travel) {
-      this.travelers.push(clientFound);
-    }
+    // if (!clientFound) return;
+    // if (this.reservation.idUser === 0) {
+    //   this.reservation.idUser = clientFound.id;
+    // }
+    // if (this.travel) {
+    //   this.travelers.push(clientFound);
+    // }
   }
 
   addTraveler() {
     if (this.travel && this.traveler.document) {
       this.travelers.push(this.traveler);
     }
+  }
+
+  saveReservation() {
+    if (this.activeStepIndex === 2) {
+      this.reservationService.create(this.reservation).subscribe({
+        next: (reservation) => {
+          this.createTravelers(reservation.id);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Reservación creada correctamente',
+            life: 3000,
+          });
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
+      });
+    }
+  }
+
+  createTravelers(idReservation: number) {
+    if (this.travelers.length <= 0 || !idReservation) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No hay viajeros agregados',
+        life: 3000,
+      });
+      return;
+    }
+
+    // this.travelers.forEach((traveler) => {
+    //   this.clientService.createTraveler(traveler).subscribe({
+    //     next: (traveler) => {
+    //       this.messageService.add({
+    //         severity: 'success',
+    //         summary: 'Success',
+    //         detail: 'Traveler created successfully',
+    //         life: 3000,
+    //       });
+    //     },
+    //     error: (e) => {
+    //       this.messageService.add({
+    //         severity: 'error',
+    //         summary: 'Error',
+    //         detail: e.error.message,
+    //         life: 3000,
+    //       });
+    //     },
+    //   });
+    // });
   }
 
   previousStep() {
@@ -192,29 +256,6 @@ export class ReservationComponent implements OnInit {
         return this.reservation.idUser > 0 && this.travelers.length > 0;
       default:
         return false;
-    }
-  }
-
-  saveReservation() {
-    if (this.activeStepIndex === 2) {
-      this.reservationService.create(this.reservation).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Reservación creada correctamente',
-            life: 3000,
-          });
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
     }
   }
 }
