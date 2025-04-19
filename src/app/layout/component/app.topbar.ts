@@ -4,11 +4,19 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { LayoutService } from '../service/layout.service';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
-  imports: [RouterModule, CommonModule, StyleClassModule],
+  imports: [
+    RouterModule,
+    CommonModule,
+    StyleClassModule,
+    ButtonModule,
+    MenuModule,
+  ],
   template: ` <div class="layout-topbar">
     <div class="layout-topbar-logo-container">
       <button
@@ -53,7 +61,12 @@ import { LayoutService } from '../service/layout.service';
 
       <div class="layout-topbar-menu hidden lg:block">
         <div class="layout-topbar-menu-content">
-          <button type="button" class="layout-topbar-action">
+          <p-menu #menu [popup]="true" [model]="overlayMenuItems"></p-menu>
+          <button
+            class="layout-topbar-action"
+            type="button"
+            (click)="menu.toggle($event)"
+          >
             <i class="pi pi-user"></i>
             <span>Profile</span>
           </button>
@@ -71,4 +84,15 @@ export class AppTopbar {
       darkTheme: !state.darkTheme,
     }));
   }
+
+  overlayMenuItems = [
+    {
+      label: 'Perfil',
+      icon: 'pi pi-user',
+    },
+    {
+      label: 'Cerrar sesión',
+      icon: 'pi pi-sign-out',
+    },
+  ];
 }

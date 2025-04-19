@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -36,16 +36,16 @@ export class RegisterComponent {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {}
 
   @Input() registerDialog!: boolean;
   @Input() submitted!: boolean;
   @Input() user: UserModel = new UserModel();
-  @Input() municipalities: MunicipalityModel[] = []
+  @Input() municipalities: MunicipalityModel[] = [];
 
   typesDocument = typesDocument;
-  
+
   onSubmit() {
     this.submitted = true;
     this.user.idRole = 3;

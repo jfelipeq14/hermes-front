@@ -14,6 +14,13 @@ export const routes: Routes = [
       import('./pages/home/home.component').then((m) => m.HomePage),
   },
   {
+    path: 'reservation',
+    loadComponent: () =>
+      import('./pages/reservation/reservation.component').then(
+        (m) => m.ReservationComponent
+      ),
+  },
+  {
     path: 'home',
     component: AppLayout,
     loadChildren: () => import('./pages/pages.routes'),
