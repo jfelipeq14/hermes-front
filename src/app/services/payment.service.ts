@@ -34,7 +34,7 @@ export class PaymentService {
     return this.http.patch<PaymentModel>(this.urlPayment + activity.id, activity);
   }
 
-  changeStatus(id: number): Observable<PaymentModel> {
-    return this.http.patch<PaymentModel>(this.urlPayment + id, {});
+  changeStatus(id: number, status: string): Observable<PaymentModel> {
+    return this.http.patch<PaymentModel>(this.urlPayment + `changeStatus/${id}`,{status});
   }
 }
