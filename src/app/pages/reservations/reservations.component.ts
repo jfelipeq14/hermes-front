@@ -259,22 +259,27 @@ export class ReservationsPage implements OnInit {
   onRowExpand(event: any) {
     const reservationId = event.data.id;
     // Cargar los viajeros si aún no están cargados
-    if (
-      !this.reservationTravelers.some((t) => t.idReservation === reservationId)
-    ) {
-      this.reservationService
-        .getAllTravelersByReservation(reservationId)
-        .subscribe({
-          next: (travelers) => {
-            event.data.travelers = travelers;
-          },
-        });
+    if (!this.reservationTravelers.some(t => t.idReservation === reservationId)) {
+      this.reservationService.getAllTravelersByReservation(reservationId).subscribe({
+        next: (travelers) => {
+          // Agregar los nuevos viajeros al array existente
+          this.reservationTravelers = [...this.reservationTravelers, ...travelers];
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los viajeros de la reservación',
+            life: 3000
+          });
+        }
+      });
     }
   }
 
   getTravelersByReservation(reservationId: number): ReservationTravelerModel[] {
     return this.reservationTravelers.filter(
-      (traveler) => traveler.idReservation === reservationId
+      traveler => traveler.idReservation === reservationId
     );
   }
 
