@@ -90,7 +90,6 @@ export class ReservationComponent implements OnInit {
     this.clientService.getAll().subscribe({
       next: (clients) => {
         this.clients = clients;
-        console.log(this.clients);
       },
       error: (e) => {
         this.messageService.add({

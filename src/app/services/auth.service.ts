@@ -2,10 +2,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ACCESS_TOKEN_KEY } from '../shared/helpers';
-import { ROLE_IDS } from '../shared/constants/roles';
+import { jwtDecode } from 'jwt-decode';
 
 export interface User {
   id: number;
@@ -32,50 +32,46 @@ export class AuthService {
       if (!token && this.isTokenExpired(token)) {
         this.clearSession();
       }
+      const decodedToken = this.getDecodedAccessToken(token);
+      if (decodedToken) {
+        this.currentUserSubject.next(decodedToken);
+      }
     }
   }
 
-  register(user: any): Observable<any | null> {
-    return this.http.post<any>(`${this.url}register`, user).pipe(
-      catchError((err: Error) => {
-        console.error(err);
-        return of(null);
-      })
-    );
+  login(user: any): Observable<any> {
+    return this.http.post<any>(this.url + 'log-in', user);
   }
 
-  login(loginUserRequest: any): Observable<any | null> {
-    return this.http.post<any>(`${this.url}log-in`, loginUserRequest).pipe(
-      tap((response) => {
-        console.log(response);
-        if (response?.token) {
-          this.setTokens(response.token);
-          this.currentUserSubject.next(response.user);
-
-          // Redirigir según el rol del usuario
-          this.redirectBasedOnRole(response.user.idRole);
-        }
-      }),
-      catchError((err: Error) => {
-        console.error(err);
-        return of(null);
-      })
-    );
+  register(user: any): Observable<any> {
+    return this.http.post<any>(this.url + 'sign-up', user);
   }
 
   redirectBasedOnRole(roleId: number): void {
-    switch (roleId) {
-      case ROLE_IDS.ADMIN:
-        this.router.navigate(['/home/dashboard']);
-        break;
-      case ROLE_IDS.GUIDE:
-        this.router.navigate(['/home/programming']);
-        break;
-      case ROLE_IDS.CLIENT:
-        this.router.navigate(['/home/reservations']);
-        break;
-      default:
-        this.router.navigate(['/landing']);
+    if (!roleId) {
+      this.router.navigate(['/landing']);
+      return;
+    }
+    this.router.navigate(['/home']);
+  }
+
+  getDecodedAccessToken(token: string | null): any {
+    try {
+      if (!token) return null;
+      const decodedToken = jwtDecode(token);
+
+      this.currentUser$.subscribe((decodedToken) => {
+        if (decodedToken) {
+          this.currentUserSubject.next(decodedToken);
+        }
+      });
+
+      console.log(this.currentUser$ + ' decoded token', decodedToken);
+
+      return decodedToken;
+    } catch (err) {
+      console.error('Error decoding token:', err);
+      return null;
     }
   }
 
@@ -134,13 +130,13 @@ export class AuthService {
 
   clearSession(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
+    this.router.navigate(['/landing']);
     this.isAuthenticated$.next(false);
     this.currentUserSubject.next(null);
-    this.router.navigate(['/landing']);
+    console.log('User logged out');
   }
 
   logout(): void {
-    console.log('User logged out');
     this.clearSession();
   }
 }

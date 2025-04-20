@@ -1,6 +1,6 @@
 export class UserModel {
   id = 0;
-  idRole = 3;
+  idRole = 0;
   typeDocument = '';
   document = '';
   name = '';

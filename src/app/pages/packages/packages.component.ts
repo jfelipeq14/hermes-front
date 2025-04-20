@@ -73,14 +73,13 @@ export class PackagesPage implements OnInit {
   municipalities: MunicipalityModel[] = [];
   dates: DateModel[] = [];
 
-  levels = levels;
-
   selectedServices: PackageServiceModel[] = [];
   currentService: PackageServiceModel = new PackageServiceModel();
 
   packageDialog = false;
   submitted = false;
   expandedRows: Record<string, boolean> = {};
+  levels = levels;
 
   constructor(
     private packageService: PackageService,
@@ -455,7 +454,20 @@ export class PackagesPage implements OnInit {
 
   refresh() {
     this.getAllPackages();
-    this.closePopup();
+    this.package = new PackageModel();
+    this.packages = [];
+    this.packageServices = [];
+
+    this.services = [];
+    this.activities = [];
+    this.municipalities = [];
+    this.dates = [];
+
+    this.selectedServices = [];
+    this.currentService = new PackageServiceModel();
+
+    this.packageDialog = false;
     this.submitted = false;
+    this.closePopup();
   }
 }

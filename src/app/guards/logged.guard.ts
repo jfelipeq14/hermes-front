@@ -2,7 +2,6 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { map, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { ROLE_IDS } from '../shared/constants/roles';
 
 export const loggedGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
@@ -15,21 +14,7 @@ export const loggedGuard: CanActivateFn = () => {
       if (!user) {
         return true;
       }
-
-      // Si ya está logueado, redirigir según su rol
-      switch (user.idRole) {
-        case ROLE_IDS.GUIDE:
-          router.navigate(['/home/programming']);
-          break;
-        case ROLE_IDS.CLIENT:
-          router.navigate(['/home/reservations']);
-          break;
-        case ROLE_IDS.ADMIN:
-          router.navigate(['/home/dashboard']);
-          break;
-        default:
-          router.navigate(['/home']);
-      }
+      router.navigate(['/home']);
 
       return false;
     })
