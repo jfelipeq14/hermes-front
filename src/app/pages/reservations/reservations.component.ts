@@ -18,9 +18,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { StepperModule } from 'primeng/stepper';
 
 import {
+  AuthService,
+  ClientsService,
   ProgrammingService,
   ReservationsService,
-  UserService,
 } from '../../services';
 import {
   DateModel,
@@ -61,7 +62,7 @@ import {
   providers: [
     ReservationsService,
     ProgrammingService,
-    UserService,
+    ClientsService,
     MessageService,
     ConfirmationService,
   ],
@@ -96,7 +97,8 @@ export class ReservationsPage implements OnInit {
   constructor(
     private reservationService: ReservationsService,
     private programmingService: ProgrammingService,
-    private userService: UserService,
+    private clientsService: ClientsService,
+    private authService: AuthService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
@@ -145,7 +147,7 @@ export class ReservationsPage implements OnInit {
   }
 
   getAllUsers() {
-    this.userService.getAll().subscribe({
+    this.clientsService.getAll().subscribe({
       next: (clients) => {
         this.clients = clients;
       },
@@ -203,7 +205,7 @@ export class ReservationsPage implements OnInit {
     }
 
     if (this.submitted) {
-      this.userService.create(this.client).subscribe({
+      this.authService.register(this.client).subscribe({
         next: (client) => {
           if (this.reservation.idUser === 0 && !this.travel) {
             this.reservation.idUser = client.id;
@@ -257,46 +259,42 @@ export class ReservationsPage implements OnInit {
   onRowExpand(event: any) {
     const reservationId = event.data.id;
     // Cargar los viajeros si aún no están cargados
-    if (!this.reservationTravelers.some(t => t.idReservation === reservationId)) {
-      this.reservationService.getAllTravelersByReservation(reservationId).subscribe({
-        next: (travelers) => {
-          this.reservationTravelers = [...this.reservationTravelers, ...travelers];
-        },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudieron cargar los viajeros de la reservación',
-            life: 3000
-          });
-        }
-      });
+    if (
+      !this.reservationTravelers.some((t) => t.idReservation === reservationId)
+    ) {
+      this.reservationService
+        .getAllTravelersByReservation(reservationId)
+        .subscribe({
+          next: (travelers) => {
+            event.data.travelers = travelers;
+          },
+        });
     }
   }
 
   getTravelersByReservation(reservationId: number): ReservationTravelerModel[] {
     return this.reservationTravelers.filter(
-      traveler => traveler.idReservation === reservationId
+      (traveler) => traveler.idReservation === reservationId
     );
   }
 
   getTravelerName(travelerId: number): string {
-    const traveler = this.clients.find(c => c.id === travelerId);
+    const traveler = this.clients.find((c) => c.id === travelerId);
     return traveler ? `${traveler.name} ${traveler.surName}` : 'N/A';
   }
 
   getTravelerDocument(travelerId: number): string {
-    const traveler = this.clients.find(c => c.id === travelerId);
+    const traveler = this.clients.find((c) => c.id === travelerId);
     return traveler ? traveler.document : 'N/A';
   }
 
   getTravelerEmail(travelerId: number): string {
-    const traveler = this.clients.find(c => c.id === travelerId);
+    const traveler = this.clients.find((c) => c.id === travelerId);
     return traveler ? traveler.email : 'N/A';
   }
 
   getTravelerPhone(travelerId: number): string {
-    const traveler = this.clients.find(c => c.id === travelerId);
+    const traveler = this.clients.find((c) => c.id === travelerId);
     return traveler ? traveler.phone : 'N/A';
   }
 
@@ -316,7 +314,6 @@ export class ReservationsPage implements OnInit {
     } else if (this.activeStepIndex === 1) {
       this.createTraveler(this.reservation.id);
     }
-
 
     if (
       this.isStepValid(this.activeStepIndex) &&
@@ -362,7 +359,6 @@ export class ReservationsPage implements OnInit {
           detail: 'Reservación creada correctamente',
           life: 3000,
         });
-
       },
       error: (e) => {
         this.messageService.add({
