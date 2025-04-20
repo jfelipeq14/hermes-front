@@ -23,7 +23,7 @@ export class PaymentService {
   }
 
   getByReservation(idReservation: number): Observable<PaymentModel[]> {
-    return this.http.get<PaymentModel[]>(`${this.urlPayment}${idReservation}`);
+    return this.http.get<PaymentModel[]>(`${this.urlPayment}reservation/${idReservation}`);
   }
 
   create(activity: PaymentModel): Observable<PaymentModel> {
