@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -18,6 +19,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { PaymentService, ReservationsService } from '../../services';
 import { PaymentModel, ReservationModel } from '../../models';
 import { paymentStatus } from '../../shared/constants';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-payments',
@@ -36,6 +38,7 @@ import { paymentStatus } from '../../shared/constants';
     DropdownModule,
     ConfirmDialogModule,
     CalendarModule,
+    TagModule,
   ],
   providers: [
     PaymentService,
@@ -52,6 +55,7 @@ export class PaymentsPage implements OnInit {
   submitted = false;
   dateToday: Date = new Date();
   statuses = paymentStatus;
+  expandedRows: Record<string, boolean> = {};
 
   constructor(
     private paymentService: PaymentService,
@@ -62,7 +66,6 @@ export class PaymentsPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllPayments();
     this.getAllReservations();
   }
 
@@ -70,10 +73,10 @@ export class PaymentsPage implements OnInit {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  getAllPayments() {
-    this.paymentService.getAll().subscribe({
-      next: (payments) => {
-        this.payments = payments;
+  getAllReservations() {
+    this.paymentService.getAllReservationWhitPayments().subscribe({
+      next: (reservations) => {
+        this.reservations = reservations;
       },
       error: (e) => {
         this.messageService.add({
@@ -86,20 +89,41 @@ export class PaymentsPage implements OnInit {
     });
   }
 
-  getAllReservations() {
-    this.reservationsService.getAll().subscribe({
-      next: (reservations) => {
-        this.reservations = reservations;
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message || 'No se pudieron cargar las reservas',
-          life: 3000,
-        });
-      },
-    });
+  getPaymentsByReservation(reservationId: number): PaymentModel[] {
+    return this.payments.filter(payment => payment.idReservation === reservationId);
+  }
+
+  getPaymentsTotal(reservationId: number): number {
+    const reservationPayments = this.getPaymentsByReservation(reservationId);
+    return reservationPayments.reduce((total, payment) => total + payment.price, 0);
+  }
+
+  getPaymentsCount(reservationId: number): number {
+    return this.getPaymentsByReservation(reservationId).length;
+  }
+
+  onRowExpand(event: any) {
+    const reservationId = event.data.id;
+    // Cargar los pagos si aún no están cargados
+    if (!this.payments.some(p => p.idReservation === reservationId)) {
+      this.paymentService.getByReservation(reservationId).subscribe({
+        next: (payments) => {
+          this.payments = [...this.payments, ...payments];
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los pagos de la reservación',
+            life: 3000
+          });
+        }
+      });
+    }
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 
   showPopup() {
@@ -114,7 +138,7 @@ export class PaymentsPage implements OnInit {
   }
 
   refresh() {
-    this.getAllPayments();
+    this.getAllReservations();
   }
 
   savePayment() {

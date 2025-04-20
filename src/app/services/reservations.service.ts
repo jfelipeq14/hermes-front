@@ -17,6 +17,9 @@ export class ReservationsService {
   getAll(): Observable<ReservationModel[]> {
     return this.http.get<ReservationModel[]>(this.urlReservation);
   }
+  getAllTravelersByReservation(idReservation:number): Observable<ReservationTravelerModel[]> {
+    return this.http.get<ReservationTravelerModel[]>(this.urlTraveler + `reservation/${idReservation}`);
+  }
 
   // Obtener una reservación por ID
   getById(id: number): Observable<ReservationModel> {
@@ -49,5 +52,10 @@ export class ReservationsService {
   // Cambiar el estado de una reservación
   changeStatus(id: number): Observable<ReservationModel> {
     return this.http.patch<ReservationModel>(`${this.urlReservation}${id}`, {});
+  }
+
+  // Obtener viajeros por reservación
+  getTravelersByReservation(reservationId: number): Observable<ReservationTravelerModel[]> {
+    return this.http.get<ReservationTravelerModel[]>(`${this.urlTraveler}by-reservation/${reservationId}`);
   }
 }

@@ -3,30 +3,38 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { PaymentModel } from '../models';
+import { PaymentModel, ReservationModel } from '../models';
 
 @Injectable()
 export class PaymentService {
   constructor(private http: HttpClient) {}
-  private url = environment.SERVER_URL + 'payments/';
+  private urlPayment = environment.SERVER_URL + 'payments/';
+  private urlReservation = environment.SERVER_URL + 'reservations/';
 
   getAll(): Observable<PaymentModel[]> {
-    return this.http.get<PaymentModel[]>(this.url);
+    return this.http.get<PaymentModel[]>(this.urlPayment);
+  }
+  getAllReservationWhitPayments(): Observable<ReservationModel[]> {
+    return this.http.get<ReservationModel[]>(this.urlReservation + 'reservations-with-payments');
   }
 
   getById(id: number): Observable<PaymentModel> {
-    return this.http.get<PaymentModel>(this.url + id);
+    return this.http.get<PaymentModel>(this.urlPayment + id);
+  }
+
+  getByReservation(idReservation: number): Observable<PaymentModel[]> {
+    return this.http.get<PaymentModel[]>(`${this.urlPayment}${idReservation}`);
   }
 
   create(activity: PaymentModel): Observable<PaymentModel> {
-    return this.http.post<PaymentModel>(this.url, activity);
+    return this.http.post<PaymentModel>(this.urlPayment, activity);
   }
 
   update(activity: PaymentModel): Observable<PaymentModel> {
-    return this.http.patch<PaymentModel>(this.url + activity.id, activity);
+    return this.http.patch<PaymentModel>(this.urlPayment + activity.id, activity);
   }
 
   changeStatus(id: number): Observable<PaymentModel> {
-    return this.http.patch<PaymentModel>(this.url + id, {});
+    return this.http.patch<PaymentModel>(this.urlPayment + id, {});
   }
 }

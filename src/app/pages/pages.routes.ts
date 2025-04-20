@@ -10,19 +10,71 @@ import { ProgrammingPage } from './programming/programming.component';
 import { PaymentsPage } from './payments/payments.component';
 import { ReservationsPage } from './reservations/reservations.component';
 import { ClientsPage } from './clients/clients.component';
+import { hasRoleGuard } from '../guards/has-role.guard';
+
+// Definir constantes para los IDs de roles
+const ROLE_IDS = {
+  ADMIN: 1,
+  GUIDE: 2,
+  CLIENT: 3
+};
 
 export default [
-  { path: 'dashboard', component: DashboardPage },
-  { path: 'roles', component: RolesPage },
-  { path: 'users', component: UsersPage },
-  { path: 'categories', component: CategoriesPage },
-  { path: 'services', component: ServicesPage },
-  { path: 'activities', component: ActivitiesPage },
-  { path: 'packages', component: PackagesPage },
-  { path: 'programming', component: ProgrammingPage },
-  { path: 'clients', component: ClientsPage },
-  { path: 'payments', component: PaymentsPage },
-  { path: 'reservations', component: ReservationsPage },
+  { 
+    path: 'dashboard', 
+    component: DashboardPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'roles', 
+    component: RolesPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'users', 
+    component: UsersPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'categories', 
+    component: CategoriesPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'services', 
+    component: ServicesPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'activities', 
+    component: ActivitiesPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'packages', 
+    component: PackagesPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'programming', 
+    component: ProgrammingPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.GUIDE])]
+  },
+  { 
+    path: 'clients', 
+    component: ClientsPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+  },
+  { 
+    path: 'payments', 
+    component: PaymentsPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])]
+  },
+  { 
+    path: 'reservations', 
+    component: ReservationsPage,
+    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])]
+  },
   {
     path: '**',
     redirectTo: '',

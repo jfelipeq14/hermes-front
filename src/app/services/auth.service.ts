@@ -5,16 +5,35 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ACCESS_TOKEN_KEY } from '../shared/helpers';
+import { ROLE_IDS } from '../shared/constants/roles';
+
+export interface User {
+  id: number;
+  idRole: number;
+  name: string;
+  email: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private isAuthenticated$ = new BehaviorSubject<boolean>(this.hasToken());
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
 
   private http: HttpClient = inject(HttpClient);
   private router: Router = inject(Router);
   private url = environment.SERVER_URL + 'auth/';
+
+  constructor() {
+    if (this.hasToken()) {
+      const token = this.getAccessToken();
+      if (!token && this.isTokenExpired(token)) {
+        this.clearSession();
+      }
+    }
+  }
 
   register(user: any): Observable<any | null> {
     return this.http.post<any>(`${this.url}register`, user).pipe(
@@ -27,11 +46,37 @@ export class AuthService {
 
   login(loginUserRequest: any): Observable<any | null> {
     return this.http.post<any>(`${this.url}log-in`, loginUserRequest).pipe(
+      tap((response) => {
+        console.log(response);
+        if (response?.token) {
+          this.setTokens(response.token);
+          this.currentUserSubject.next(response.user);
+
+          // Redirigir según el rol del usuario
+          this.redirectBasedOnRole(response.user.idRole);
+        }
+      }),
       catchError((err: Error) => {
         console.error(err);
         return of(null);
       })
     );
+  }
+
+  redirectBasedOnRole(roleId: number): void {
+    switch (roleId) {
+      case ROLE_IDS.ADMIN:
+        this.router.navigate(['/home/dashboard']);
+        break;
+      case ROLE_IDS.GUIDE:
+        this.router.navigate(['/home/programming']);
+        break;
+      case ROLE_IDS.CLIENT:
+        this.router.navigate(['/home/reservations']);
+        break;
+      default:
+        this.router.navigate(['/landing']);
+    }
   }
 
   setTokens(accessToken: string): void {
@@ -47,7 +92,7 @@ export class AuthService {
     return localStorage.getItem(ACCESS_TOKEN_KEY);
   }
 
-  isTokenExpired(token: string): boolean {
+  isTokenExpired(token: string | null): boolean {
     if (!token) return true;
 
     try {
@@ -57,6 +102,11 @@ export class AuthService {
       console.error(error);
       return true;
     }
+  }
+
+  hasRole(allowedRoleIds: number[]): boolean {
+    const user = this.currentUserSubject.getValue();
+    return !!user && allowedRoleIds.includes(user.idRole);
   }
 
   refreshToken() {
@@ -85,11 +135,11 @@ export class AuthService {
   clearSession(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     this.isAuthenticated$.next(false);
+    this.currentUserSubject.next(null);
     this.router.navigate(['/landing']);
   }
 
   logout(): void {
-    // codigo pendiente
     console.log('User logged out');
     this.clearSession();
   }
