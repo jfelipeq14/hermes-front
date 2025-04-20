@@ -62,8 +62,7 @@ export class PaymentsPage implements OnInit {
     private reservationsService: ReservationsService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.getAllReservations();
@@ -192,35 +191,30 @@ export class PaymentsPage implements OnInit {
     this.paymentDialog = true;
   }
 
-  changeStatusPayment(payment: PaymentModel) {
-    this.confirmationService.confirm({
-      message: `¿Está seguro de que desea cambiar el estado del pago con ID ${payment.id}?`,
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.paymentService.changeStatus(payment.id).subscribe({
-          next: (p) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: `Pago con ID ${p.id} ${
-                p.status ? 'activado' : 'desactivado'
-              }`,
-              life: 3000,
-            });
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail:
-                e.error.message || 'No se pudo cambiar el estado del pago',
-              life: 3000,
-            });
-          },
+  changeStatusPayment(idPayment: number, event:any) {
+    if (!event) return;
+    const status = event.value;
+    this.paymentService.changeStatus(idPayment,status).subscribe({
+      next: (p) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Pago con ID ${p.id} ${
+            p.status ? 'activado' : 'desactivado'
+          }`,
+          life: 3000,
         });
-        this.refresh();
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail:
+            e.error.message || 'No se pudo cambiar el estado del pago',
+          life: 3000,
+        });
       },
     });
   }
+
 }

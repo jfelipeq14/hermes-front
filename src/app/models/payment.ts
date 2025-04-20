@@ -4,5 +4,5 @@ export class PaymentModel {
   date = new Date();
   price = 0;
   voucher: string | null = null;
-  status = true;
+  status: "R" | "N" | "P" | "A" = "R";
 }
