@@ -11,6 +11,7 @@ import { UserModel } from '../../../models';
 import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ROLE_IDS } from '../../../shared/constants/roles';
 
 @Component({
   selector: 'app-login',
@@ -44,6 +45,7 @@ export class LoginComponent {
     this.submitted = true;
     this.authService.login(this.user).subscribe({
       next: (response) => {
+        console.log('Login response: ', response);
         if (!response) {
           this.messageService.add({
             severity: 'error',
@@ -54,8 +56,38 @@ export class LoginComponent {
           return;
         }
         console.log('User logged in successfully: ', response);
-        this.authService.setTokens(response!.accessToken);
-        this.router.navigate(['home']);
+
+        if (response.token && response.user) {
+          // Primero establecemos el token
+          this.authService.setTokens(response.token);
+
+          // Luego redirigimos según el rol
+          const roleId = response.user.idRole;
+          console.log('Redirecting user with role:', roleId);
+
+          switch (roleId) {
+            case ROLE_IDS.GUIDE:
+              this.router.navigate(['/home/programming']);
+              break;
+            case ROLE_IDS.CLIENT:
+              this.router.navigate(['/home/reservations']);
+              break;
+            case ROLE_IDS.ADMIN:
+              this.router.navigate(['/home/dashboard']);
+              break;
+            default:
+              console.error('Unknown role ID:', roleId);
+              this.router.navigate(['/home']);
+          }
+        } else {
+          console.error('Invalid response format:', response);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Invalid server response',
+            life: 3000,
+          });
+        }
       },
       error: (e) => {
         this.messageService.add({

@@ -1,11 +1,11 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, ElementRef } from '@angular/core';
-import { AppMenu } from './app.menu';
+import { AppMenuComponent } from './app.menu';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [AppMenu],
+  imports: [AppMenuComponent],
   template: ` <div class="layout-sidebar">
     <app-menu></app-menu>
   </div>`,
