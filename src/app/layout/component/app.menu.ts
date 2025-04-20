@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
-import { ShowForRolesDirective } from '../../directives/show-roles.directive';
-import { ROLE_IDS } from '../../shared/constants/roles';
+import { ROLE_IDS } from '../../shared/constants';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, AppMenuitem, RouterModule, ShowForRolesDirective],
+  imports: [CommonModule, AppMenuitem, RouterModule],
   template: `
     <ul class="layout-menu">
       <ng-container *ngFor="let item of model; let i = index">
@@ -36,8 +35,8 @@ import { ROLE_IDS } from '../../shared/constants/roles';
     </ul>
   `,
 })
-export class AppMenu implements OnInit {
-  model: {menuItem: MenuItem, roles?: number[]}[] = [];
+export class AppMenuComponent implements OnInit {
+  model: { menuItem: MenuItem; roles?: number[] }[] = [];
 
   ngOnInit() {
     this.model = [
@@ -47,15 +46,15 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-home',
           routerLink: ['dashboard'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
-        menuItem: { 
-          label: 'Roles', 
-          icon: 'pi pi-fw pi-users', 
-          routerLink: ['roles'] 
+        menuItem: {
+          label: 'Roles',
+          icon: 'pi pi-fw pi-users',
+          routerLink: ['roles'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
         menuItem: {
@@ -63,7 +62,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-user',
           routerLink: ['users'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
         menuItem: {
@@ -71,7 +70,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-th-large',
           routerLink: ['categories'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
         menuItem: {
@@ -79,7 +78,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-sparkles',
           routerLink: ['services'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
         menuItem: {
@@ -87,7 +86,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-objects-column',
           routerLink: ['activities'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
         menuItem: {
@@ -95,7 +94,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-box',
           routerLink: ['packages'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
         menuItem: {
@@ -103,7 +102,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-calendar',
           routerLink: ['programming'],
         },
-        roles: [ROLE_IDS.ADMIN, ROLE_IDS.GUIDE]
+        roles: [ROLE_IDS.ADMIN, ROLE_IDS.GUIDE],
       },
       {
         menuItem: {
@@ -111,7 +110,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-user',
           routerLink: ['clients'],
         },
-        roles: [ROLE_IDS.ADMIN]
+        roles: [ROLE_IDS.ADMIN],
       },
       {
         menuItem: {
@@ -119,7 +118,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-building',
           routerLink: ['reservations'],
         },
-        roles: [ROLE_IDS.ADMIN, ROLE_IDS.CLIENT]
+        roles: [ROLE_IDS.ADMIN, ROLE_IDS.CLIENT],
       },
       {
         menuItem: {
@@ -127,7 +126,7 @@ export class AppMenu implements OnInit {
           icon: 'pi pi-fw pi-money-bill',
           routerLink: ['payments'],
         },
-        roles: [ROLE_IDS.ADMIN, ROLE_IDS.CLIENT]
+        roles: [ROLE_IDS.ADMIN, ROLE_IDS.CLIENT],
       },
     ];
   }

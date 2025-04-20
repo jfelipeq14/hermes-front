@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -26,27 +27,12 @@ export class AuthService {
   private url = environment.SERVER_URL + 'auth/';
 
   constructor() {
-    // Intenta cargar el usuario desde localStorage si existe un token
     if (this.hasToken()) {
-      this.loadUserFromToken();
-    }
-  }
-
-  // Método para cargar el usuario desde el token si existe
-  private loadUserFromToken(): void {
-    // Aquí podrías decodificar el token JWT si contiene la información del usuario
-    // o hacer una petición al backend para obtener la información del usuario actual
-    this.http.get<User>(`${this.url}me`).subscribe({
-      next: (user) => {
-        if (user) {
-          this.currentUserSubject.next(user);
-        }
-      },
-      error: () => {
-        // Si hay error (token inválido o expirado), limpiar la sesión
+      const token = this.getAccessToken();
+      if (!token && this.isTokenExpired(token)) {
         this.clearSession();
       }
-    });
+    }
   }
 
   register(user: any): Observable<any | null> {
@@ -60,11 +46,12 @@ export class AuthService {
 
   login(loginUserRequest: any): Observable<any | null> {
     return this.http.post<any>(`${this.url}log-in`, loginUserRequest).pipe(
-      tap(response => {
+      tap((response) => {
+        console.log(response);
         if (response?.token) {
           this.setTokens(response.token);
           this.currentUserSubject.next(response.user);
-          
+
           // Redirigir según el rol del usuario
           this.redirectBasedOnRole(response.user.idRole);
         }
@@ -105,7 +92,7 @@ export class AuthService {
     return localStorage.getItem(ACCESS_TOKEN_KEY);
   }
 
-  isTokenExpired(token: string): boolean {
+  isTokenExpired(token: string | null): boolean {
     if (!token) return true;
 
     try {

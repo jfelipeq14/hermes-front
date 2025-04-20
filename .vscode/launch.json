@@ -2,10 +2,12 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
+    
     {
       "name": "Launch Edge",
       "request": "launch",
-      "type": "msedge",
+      "type": "msedge","preLaunchTask": "npm: start",
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}"
     },

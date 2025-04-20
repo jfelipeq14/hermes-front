@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map, of, switchMap, tap } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ROLE_IDS } from '../shared/constants/roles';
 
@@ -10,7 +10,7 @@ export const hasRoleGuard = (allowedRoleIds: number[]): CanActivateFn => {
     const router = inject(Router);
 
     return authService.currentUser$.pipe(
-      switchMap(user => {
+      switchMap((user) => {
         // Si no hay usuario, redirigir al login
         if (!user) {
           router.navigate(['/landing']);
@@ -19,11 +19,11 @@ export const hasRoleGuard = (allowedRoleIds: number[]): CanActivateFn => {
 
         // Verificar si el usuario tiene un rol permitido
         const hasRole = allowedRoleIds.includes(user.idRole);
-        
+
         if (!hasRole) {
           // Mostrar mensaje de acceso denegado
           alert('Acceso denegado. No tiene los permisos necesarios.');
-          
+
           // Redirigir según el rol del usuario
           switch (user.idRole) {
             case ROLE_IDS.ADMIN:
@@ -39,7 +39,7 @@ export const hasRoleGuard = (allowedRoleIds: number[]): CanActivateFn => {
               router.navigate(['/landing']);
           }
         }
-        
+
         return of(hasRole);
       })
     );

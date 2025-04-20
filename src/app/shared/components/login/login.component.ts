@@ -45,6 +45,7 @@ export class LoginComponent {
     this.submitted = true;
     this.authService.login(this.user).subscribe({
       next: (response) => {
+        console.log('Login response: ', response);
         if (!response) {
           this.messageService.add({
             severity: 'error',
@@ -55,15 +56,15 @@ export class LoginComponent {
           return;
         }
         console.log('User logged in successfully: ', response);
-        
+
         if (response.token && response.user) {
           // Primero establecemos el token
           this.authService.setTokens(response.token);
-          
+
           // Luego redirigimos según el rol
           const roleId = response.user.idRole;
           console.log('Redirecting user with role:', roleId);
-          
+
           switch (roleId) {
             case ROLE_IDS.GUIDE:
               this.router.navigate(['/home/programming']);

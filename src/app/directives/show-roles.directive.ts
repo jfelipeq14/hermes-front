@@ -1,42 +1,24 @@
-import {
-  Directive,
-  Input,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
-import { distinctUntilChanged, map, Subscription, tap } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { AuthService } from '../services';
+import { map, Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[akoShowForRoles]',
-  standalone: true, // Aseguramos que la directiva sea standalone
+  selector: '[appShowRoles]',
 })
 export class ShowForRolesDirective implements OnInit, OnDestroy {
-  @Input('akoShowForRoles') allowedRoleIds?: number[];
+  @Input('appShowRoles') allowedRoles?: number[];
   private sub?: Subscription;
 
-  constructor(
-    private authService: AuthService,
-    private viewContainerRef: ViewContainerRef,
-    private templateRef: TemplateRef<any>
-  ) {}
-  
+  constructor(private authService: AuthService) {}
+
   ngOnInit(): void {
     this.sub = this.authService.currentUser$
       .pipe(
-        map((user) => Boolean(user && this.allowedRoleIds?.includes(user.idRole))),
-        distinctUntilChanged(),
-        tap((hasRole) =>
-          hasRole
-            ? this.viewContainerRef.createEmbeddedView(this.templateRef)
-            : this.viewContainerRef.clear()
-        )
+        map((user) => Boolean(user && this.allowedRoles?.includes(user.idRole)))
       )
       .subscribe();
   }
-  
+
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }

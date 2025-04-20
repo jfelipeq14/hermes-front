@@ -4,18 +4,18 @@ import { map, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ROLE_IDS } from '../shared/constants/roles';
 
-export const loggedGuard: CanActivateFn = (route, state) => {
+export const loggedGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
   return authService.currentUser$.pipe(
     take(1),
-    map(user => {
+    map((user) => {
       // Si no está logueado, permitir acceso al landing
       if (!user) {
         return true;
       }
-      
+
       // Si ya está logueado, redirigir según su rol
       switch (user.idRole) {
         case ROLE_IDS.GUIDE:
@@ -30,7 +30,7 @@ export const loggedGuard: CanActivateFn = (route, state) => {
         default:
           router.navigate(['/home']);
       }
-      
+
       return false;
     })
   );
