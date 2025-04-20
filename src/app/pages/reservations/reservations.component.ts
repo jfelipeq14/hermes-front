@@ -91,6 +91,7 @@ export class ReservationsPage implements OnInit {
     { label: 'Activo', value: true },
     { label: 'Inactivo', value: false },
   ];
+  reservationTravelers: ReservationTravelerModel[] = [];
 
   constructor(
     private reservationService: ReservationsService,
@@ -254,7 +255,49 @@ export class ReservationsPage implements OnInit {
   }
 
   onRowExpand(event: any) {
-    console.log('Row expanded:', event);
+    const reservationId = event.data.id;
+    // Cargar los viajeros si aún no están cargados
+    if (!this.reservationTravelers.some(t => t.idReservation === reservationId)) {
+      this.reservationService.getAllTravelersByReservation(reservationId).subscribe({
+        next: (travelers) => {
+          this.reservationTravelers = [...this.reservationTravelers, ...travelers];
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los viajeros de la reservación',
+            life: 3000
+          });
+        }
+      });
+    }
+  }
+
+  getTravelersByReservation(reservationId: number): ReservationTravelerModel[] {
+    return this.reservationTravelers.filter(
+      traveler => traveler.idReservation === reservationId
+    );
+  }
+
+  getTravelerName(travelerId: number): string {
+    const traveler = this.clients.find(c => c.id === travelerId);
+    return traveler ? `${traveler.name} ${traveler.surName}` : 'N/A';
+  }
+
+  getTravelerDocument(travelerId: number): string {
+    const traveler = this.clients.find(c => c.id === travelerId);
+    return traveler ? traveler.document : 'N/A';
+  }
+
+  getTravelerEmail(travelerId: number): string {
+    const traveler = this.clients.find(c => c.id === travelerId);
+    return traveler ? traveler.email : 'N/A';
+  }
+
+  getTravelerPhone(travelerId: number): string {
+    const traveler = this.clients.find(c => c.id === travelerId);
+    return traveler ? traveler.phone : 'N/A';
   }
 
   onRowCollapse(event: any) {
