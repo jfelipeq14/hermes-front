@@ -51,18 +51,26 @@ export class RegisterComponent {
     this.user.idRole = 3;
     this.authService.register(this.user).subscribe({
       next: (response) => {
-        if (!response) {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Invalid credentials',
-            life: 3000,
-          });
-          return;
-        }
-        console.log('User logged in successfully: ', response);
-        this.authService.setTokens(response!.accessToken);
-        this.router.navigate(['home']);
+        console.log('User registered successfully: ', response);
+        this.authService.login(this.user).subscribe({
+          next: (response) => {
+            console.log(response);
+            if (!response && !response.accessToken) return;
+            this.authService.setTokens(response.accessToken);
+            const roleId = this.authService.getDecodedAccessToken(
+              response.accessToken
+            ).idRole;
+            this.authService.redirectBasedOnRole(roleId);
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
+        });
       },
       error: (e) => {
         this.messageService.add({
@@ -71,6 +79,7 @@ export class RegisterComponent {
           detail: e.error.message,
           life: 3000,
         });
+        this.submitted = false;
       },
     });
   }
