@@ -13,7 +13,7 @@ export const routes: Routes = [
     path: 'landing',
     loadComponent: () =>
       import('./pages/home/home.component').then((m) => m.HomePage),
-    canActivate: [loggedGuard] // Si el usuario ya está logueado, redirige según su rol
+    canActivate: [loggedGuard], // Si el usuario ya está logueado, redirige según su rol
   },
   {
     path: 'reservation',

@@ -6,6 +6,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { LayoutService } from '../service/layout.service';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
+import { AuthService } from '../../services';
 
 @Component({
   selector: 'app-topbar',
@@ -17,6 +18,7 @@ import { MenuModule } from 'primeng/menu';
     ButtonModule,
     MenuModule,
   ],
+  providers: [AuthService],
   template: ` <div class="layout-topbar">
     <div class="layout-topbar-logo-container">
       <button
@@ -76,7 +78,10 @@ import { MenuModule } from 'primeng/menu';
   </div>`,
 })
 export class AppTopbar {
-  constructor(public layoutService: LayoutService) {}
+  constructor(
+    public layoutService: LayoutService,
+    private authService: AuthService
+  ) {}
 
   toggleDarkMode() {
     this.layoutService.layoutConfig.update((state) => ({
@@ -93,6 +98,9 @@ export class AppTopbar {
     {
       label: 'Cerrar sesión',
       icon: 'pi pi-sign-out',
+      command: () => {
+        this.authService.logout();
+      },
     },
   ];
 }
