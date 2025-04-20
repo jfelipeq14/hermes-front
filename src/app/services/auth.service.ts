@@ -52,14 +52,7 @@ export class AuthService {
       this.router.navigate(['/landing']);
       return;
     }
-
-    // Redirige solo si no estás ya en la ruta objetivo
-    const currentRoute = this.router.url;
-    if (roleId === 3 && currentRoute !== '/home') {
-      this.router.navigate(['/home']);
-    } else if (roleId !== 3 && currentRoute !== '/admin') {
-      this.router.navigate(['/admin']);
-    }
+    this.router.navigate(['/home']);
   }
 
   getDecodedAccessToken(token: string | null): any {
@@ -72,8 +65,6 @@ export class AuthService {
           this.currentUserSubject.next(decodedToken);
         }
       });
-
-      console.log(this.currentUser$ + ' decoded token', decodedToken);
 
       return decodedToken;
     } catch (err) {
