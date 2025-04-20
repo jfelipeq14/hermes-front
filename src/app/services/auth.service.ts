@@ -52,7 +52,14 @@ export class AuthService {
       this.router.navigate(['/landing']);
       return;
     }
-    this.router.navigate(['/home']);
+
+    // Redirige solo si no estás ya en la ruta objetivo
+    const currentRoute = this.router.url;
+    if (roleId === 3 && currentRoute !== '/home') {
+      this.router.navigate(['/home']);
+    } else if (roleId !== 3 && currentRoute !== '/admin') {
+      this.router.navigate(['/admin']);
+    }
   }
 
   getDecodedAccessToken(token: string | null): any {
