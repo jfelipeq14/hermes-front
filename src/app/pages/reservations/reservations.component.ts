@@ -111,10 +111,6 @@ export class ReservationsPage implements OnInit {
     this.findProgramming(1);
   }
 
-  onGlobalFilter(table: Table, event: Event) {
-    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  }
-
   getAllReservations() {
     this.reservationService.getAll().subscribe({
       next: (reservations) => {
@@ -161,6 +157,72 @@ export class ReservationsPage implements OnInit {
         });
       },
     });
+  }
+
+  onGlobalFilter(table: Table, event: Event) {
+    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  onRowExpand(event: any) {
+    const reservationId = event.data.id;
+    // Cargar los viajeros si aún no están cargados
+    if (
+      !this.reservationTravelers.some((t) => t.idReservation === reservationId)
+    ) {
+      this.reservationService
+        .getAllTravelersByReservation(reservationId)
+        .subscribe({
+          next: (travelers) => {
+            // Agregar los nuevos viajeros al array existente
+            this.reservationTravelers = [
+              ...this.reservationTravelers,
+              ...travelers,
+            ];
+          },
+          error: () => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'No se pudieron cargar los viajeros de la reservación',
+              life: 3000,
+            });
+          },
+        });
+    }
+  }
+
+  onRowCollapse(event: any) {
+    console.log('Row collapsed:', event);
+  }
+
+  getTravelersByReservation(reservationId: number): ReservationTravelerModel[] {
+    return this.reservationTravelers.filter(
+      (traveler) => traveler.idReservation === reservationId
+    );
+  }
+
+  getTravelerName(travelerId: number): string {
+    const traveler = this.clients.find((c) => c.id === travelerId);
+    return traveler ? `${traveler.name} ${traveler.surName}` : 'N/A';
+  }
+
+  getTravelerDocument(travelerId: number): string {
+    const traveler = this.clients.find((c) => c.id === travelerId);
+    return traveler ? traveler.document : 'N/A';
+  }
+
+  getTravelerEmail(travelerId: number): string {
+    const traveler = this.clients.find((c) => c.id === travelerId);
+    return traveler ? traveler.email : 'N/A';
+  }
+
+  getTravelerPhone(travelerId: number): string {
+    const traveler = this.clients.find((c) => c.id === travelerId);
+    return traveler ? traveler.phone : 'N/A';
+  }
+
+  getSeverity(status: boolean): 'success' | 'danger' {
+    return status ? 'success' : 'danger';
   }
 
   findProgramming(id: number) {
@@ -243,6 +305,40 @@ export class ReservationsPage implements OnInit {
     }
   }
 
+  saveReservation() {
+    this.reservation.idDate = 1;
+    this.reservation.price = 1000;
+    console.log('Next step:', this.reservation);
+    if (this.reservation.idDate === 0 || this.reservation.idUser === 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Por favor, complete todos los campos requeridos',
+        life: 3000,
+      });
+      return;
+    }
+    this.reservationService.create(this.reservation).subscribe({
+      next: (reservation) => {
+        this.idReservation = reservation.id;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Reservación creada correctamente',
+          life: 3000,
+        });
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
   addTraveler() {
     this.travel = true;
     if (this.travel && this.traveler.document) {
@@ -256,66 +352,64 @@ export class ReservationsPage implements OnInit {
     }
   }
 
-  getSeverity(status: boolean): 'success' | 'danger' {
-    return status ? 'success' : 'danger';
+  getPrice(id: number) {
+    const dateFound = this.dates.find((d) => d.id === id);
+    if (!dateFound) return 0;
+    return this.packages.find((p) => p.id === dateFound.idPackage)?.price;
   }
 
-  onRowExpand(event: any) {
-    const reservationId = event.data.id;
-    // Cargar los viajeros si aún no están cargados
-    if (
-      !this.reservationTravelers.some((t) => t.idReservation === reservationId)
-    ) {
-      this.reservationService
-        .getAllTravelersByReservation(reservationId)
-        .subscribe({
-          next: (travelers) => {
-            // Agregar los nuevos viajeros al array existente
-            this.reservationTravelers = [
-              ...this.reservationTravelers,
-              ...travelers,
-            ];
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudieron cargar los viajeros de la reservación',
-              life: 3000,
-            });
-          },
-        });
+  createTraveler() {
+    if (this.selectedTraveler.length <= 0 || this.idReservation === 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Por favor, complete todos los campos requeridos',
+        life: 3000,
+      });
+      return;
     }
+
+    this.selectedTraveler.forEach((traveler) => {
+      if (traveler.idReservation !== this.idReservation) {
+        traveler.id = 0;
+        traveler.idReservation = this.idReservation;
+      }
+      console.log(traveler);
+    });
+
+    this.reservationService.createTraveler(this.selectedTraveler).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Viajero creado correctamente',
+          life: 3000,
+        });
+        this.refresh();
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+    this.refresh();
   }
 
-  getTravelersByReservation(reservationId: number): ReservationTravelerModel[] {
-    return this.reservationTravelers.filter(
-      (traveler) => traveler.idReservation === reservationId
-    );
-  }
-
-  getTravelerName(travelerId: number): string {
-    const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? `${traveler.name} ${traveler.surName}` : 'N/A';
-  }
-
-  getTravelerDocument(travelerId: number): string {
-    const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? traveler.document : 'N/A';
-  }
-
-  getTravelerEmail(travelerId: number): string {
-    const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? traveler.email : 'N/A';
-  }
-
-  getTravelerPhone(travelerId: number): string {
-    const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? traveler.phone : 'N/A';
-  }
-
-  onRowCollapse(event: any) {
-    console.log('Row collapsed:', event);
+  isStepValid(step: number): boolean {
+    switch (step) {
+      case 0:
+        return this.reservation.idUser > 0; // Validar que se haya seleccionado un cliente
+      case 1:
+        return this.travelers.length > 0; // Validar que se haya agregado al menos un viajero
+      case 2:
+        return this.reservation.idUser > 0 && this.travelers.length > 0; // Validar que todo esté completo
+      default:
+        return false;
+    }
   }
 
   previousStep() {
@@ -349,101 +443,6 @@ export class ReservationsPage implements OnInit {
     }
   }
 
-  isStepValid(step: number): boolean {
-    switch (step) {
-      case 0:
-        return this.reservation.idUser > 0; // Validar que se haya seleccionado un cliente
-      case 1:
-        return this.travelers.length > 0; // Validar que se haya agregado al menos un viajero
-      case 2:
-        return this.reservation.idUser > 0 && this.travelers.length > 0; // Validar que todo esté completo
-      default:
-        return false;
-    }
-  }
-
-  saveReservation() {
-    this.reservation.idDate = 2;
-    this.reservation.price = 1000;
-    console.log('Next step:', this.reservation);
-    if (this.reservation.idDate === 0 || this.reservation.idUser === 0) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Por favor, complete todos los campos requeridos',
-        life: 3000,
-      });
-      return;
-    }
-    this.reservationService.create(this.reservation).subscribe({
-      next: (reservation) => {
-        this.idReservation = reservation.id;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Reservación creada correctamente',
-          life: 3000,
-        });
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
-        });
-      },
-    });
-  }
-
-  createTraveler() {
-    if (this.selectedTraveler.length <= 0 ||
-      this.idReservation === 0
-    ) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Por favor, complete todos los campos requeridos',
-        life: 3000,
-      });
-      return;
-    }
-
-    this.selectedTraveler.forEach((traveler) => {
-      if(traveler.idReservation !== this.idReservation) {
-        traveler.id = 0;
-        traveler.idReservation = this.idReservation;
-      }
-      console.log(traveler);
-    });
-
-    this.reservationService.createTraveler(this.selectedTraveler).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Viajero creado correctamente',
-          life: 3000,
-        });
-        this.idReservation = 0;
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
-        });
-      },
-    });
-  }
-
-  getPrice(id: number) {
-    const dateFound = this.dates.find((d) => d.id === id);
-    if (!dateFound) return 0;
-    return this.packages.find((p) => p.id === dateFound.idPackage)?.price;
-  }
-
   showPopup() {
     this.reservation = new ReservationModel();
     this.reservationDialog = true;
@@ -456,24 +455,31 @@ export class ReservationsPage implements OnInit {
   }
 
   refresh() {
+    this.reservation = new ReservationModel();
+    this.reservations = [];
+
+    this.client = new UserModel();
+    this.clients = [];
+
+    this.traveler = new UserModel();
+    this.travelers = [];
+    this.selectedTraveler = [];
+
+    this.payment = new PaymentModel();
+    this.packages = [];
+
+    this.dates = [];
+
+    this.idReservation = 0;
+    this.travel = false;
+    this.activeStepIndex = 0;
+    this.submitted = false;
+    this.reservationDialog = false;
+
     this.getAllReservations();
     this.getAllDates();
     this.getAllUsers();
+
     this.closePopup();
-    this.reservation = new ReservationModel();
-    this.reservations = [];
-    this.reservationDialog = false;
-    this.submitted = false;
-    this.selectedTraveler = [];
-    this.dates = [];
-    this.clients = [];
-    this.client = new UserModel();
-    this.travel = false;
-    this.traveler = new UserModel();
-    this.travelers = [];
-    this.payment = new PaymentModel();
-    this.packages = [];
-    this.activeStepIndex = 0;
-    this.submitted = false;
   }
 }

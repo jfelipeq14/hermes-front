@@ -268,6 +268,7 @@ export class PackagesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     } else {
       this.package.price = parseInt(this.package.price.toString());
       this.package.reserve = parseInt(this.package.reserve.toString());
@@ -292,6 +293,7 @@ export class PackagesPage implements OnInit {
           });
         },
       });
+      this.refresh();
     }
   }
 
@@ -322,6 +324,7 @@ export class PackagesPage implements OnInit {
         });
       },
     });
+    this.refresh();
   }
 
   // modifyServicePackage(packageService: PackageServiceModel) {}
@@ -379,6 +382,7 @@ export class PackagesPage implements OnInit {
             });
           },
         });
+        this.refresh();
       },
     });
   }
@@ -453,7 +457,6 @@ export class PackagesPage implements OnInit {
   }
 
   refresh() {
-    this.getAllPackages();
     this.package = new PackageModel();
     this.packages = [];
     this.packageServices = [];
@@ -465,6 +468,12 @@ export class PackagesPage implements OnInit {
 
     this.selectedServices = [];
     this.currentService = new PackageServiceModel();
+
+    this.getAllPackages();
+    this.getAllServices();
+    this.getAllActivities();
+    this.getAllMunicipalities();
+    this.getAllDates();
 
     this.packageDialog = false;
     this.submitted = false;
