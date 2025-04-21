@@ -1,1 +1,137 @@
-<app-calendar></app-calendar>
+<div class="relative">
+    <full-calendar
+      *ngIf="calendarVisible()"
+      [options]="calendarOptions()"
+      class="w-full"
+    >
+      <ng-template #eventContent let-arg>
+          <div class="event-container">
+            <p-menu #menu [popup]="true" [model]="menuItems" appendTo="body"></p-menu>
+            <p-button
+              type="button"
+              icon="pi pi-chevron-down"
+              label="{{ arg.event.title }}"
+              (click)="menu.toggle($event)"
+              class="event-button"
+            ></p-button>
+          </div>
+      </ng-template>
+    </full-calendar>
+</div>
+
+<p-dialog
+  [(visible)]="dateDialog"
+  [style]="{ width: '450px' }"
+  header="Programación"
+  [modal]="true"
+  class="p-fluid"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closePopup()"
+>
+  <ng-template pTemplate="content">
+    <div class="field flex flex-column">
+      <label for="package">Paquete</label>
+      <p-dropdown
+        id="package"
+        [(ngModel)]="date.idPackage"
+        [options]="packages"
+        [showClear]="true"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Seleccione un paquete"
+        [required]="true"
+      ></p-dropdown>
+      <small class="p-error" *ngIf="submitted && !date.idPackage"
+        >El paquete es obligatorio.</small>
+    </div>
+
+    <div class="field flex flex-column">
+      <label for="amount">Cantidad</label>
+      <input
+        type="number"
+        pInputText
+        id="amount"
+        [(ngModel)]="date.amount"
+        required
+      />
+      <small class="p-error" *ngIf="submitted && !date.amount"
+        >La cantidad es obligatoria.</small>
+    </div>
+
+    <div class="field flex flex-column">
+      <div class="flex gap-2">
+        <div class="flex-1">
+          <label for="start">Fecha inicio</label>
+          <p-calendar
+            [(ngModel)]="date.start"
+            [showIcon]="true"
+            inputId="start"
+            [required]="true"
+            dateFormat="yy-mm-dd"
+          ></p-calendar>
+          <small class="p-error" *ngIf="submitted && !date.start"
+            >La fecha de inicio es obligatoria.</small>
+        </div>
+        <div class="flex-1">
+          <label for="end">Fin</label>
+          <p-calendar
+            id="end"
+            [(ngModel)]="date.end"
+            [showTime]="true"
+            dateFormat="dd/mm/yy"
+            [required]="true"
+          ></p-calendar>
+          <small class="p-error" *ngIf="submitted && !date.end"
+            >La fecha de fin es obligatoria.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="field flex flex-column">
+      <div class="flex gap-2">
+        <div class="flex-1">
+          <label for="startRegistration">Inicio</label>
+          <p-calendar
+            id="startRegistration"
+            [(ngModel)]="date.startRegistration"
+            [showTime]="true"
+            dateFormat="dd/mm/yy"
+            [required]="true"
+          ></p-calendar>
+          <small class="p-error" *ngIf="submitted && !date.startRegistration"
+            >La fecha de inicio de registro es obligatoria.</small>
+        </div>
+        <div class="flex-1">
+          <label for="endRegistration">Fin</label>
+          <p-calendar
+            id="endRegistration"
+            [(ngModel)]="date.endRegistration"
+            [showTime]="true"
+            dateFormat="dd/mm/yy"
+            [required]="true"
+          ></p-calendar>
+          <small class="p-error" *ngIf="submitted && !date.endRegistration"
+            >La fecha de fin de registro es obligatoria.</small>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      styleClass="p-button-text"
+      (click)="closePopup()"
+    ></p-button>
+    <p-button
+      label="Guardar"
+      icon="pi pi-check"
+      (click)="createDate()"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
