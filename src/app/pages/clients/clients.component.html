@@ -43,6 +43,7 @@
         Estado
         <p-sortIcon field="status" />
       </th>
+      <th style="min-width: 12rem"></th>
     </tr>
   </ng-template>
 
@@ -66,6 +67,20 @@
         <p-tag
           [value]="client.status ? 'Activo' : 'Inactivo'"
           [severity]="client.status ? 'success' : 'danger'"
+        />
+      </td>
+      <td>
+        <p-button
+          icon="pi pi-pencil"
+          class="mr-2"
+          [rounded]="true"
+          [outlined]="true"
+        />
+        <p-button
+          icon="pi pi-sync"
+          severity="info"
+          [rounded]="true"
+          [outlined]="true"
         />
       </td>
     </tr>
