@@ -29,9 +29,12 @@ export class AuthService {
   constructor() {
     if (this.hasToken()) {
       const token = this.getAccessToken();
-      if (!token && this.isTokenExpired(token)) {
+      if (!this.isValidTokenFormat(token) || this.isTokenExpired(token)) {
+        console.error('Invalid or expired token during initialization');
         this.clearSession();
+        return;
       }
+
       const decodedToken = this.getDecodedAccessToken(token);
       if (decodedToken) {
         this.currentUserSubject.next(decodedToken);
@@ -55,17 +58,26 @@ export class AuthService {
     this.router.navigate(['/home']);
   }
 
-  getDecodedAccessToken(token: string | null): any {
-    try {
-      if (!token) return null;
-      const decodedToken = jwtDecode(token);
+  isValidTokenFormat(token: string | null): boolean {
+    if (!token) return false;
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.error('Invalid token format: Token does not have 3 parts');
+      return false;
+    }
+    return true;
+  }
 
+  getDecodedAccessToken(token: string | null): any {
+    if (!this.isValidTokenFormat(token)) return null;
+
+    try {
+      const decodedToken = jwtDecode(token!);
       this.currentUser$.subscribe((decodedToken) => {
         if (decodedToken) {
           this.currentUserSubject.next(decodedToken);
         }
       });
-
       return decodedToken;
     } catch (err) {
       console.error('Error decoding token:', err);
@@ -86,14 +98,30 @@ export class AuthService {
     return localStorage.getItem(ACCESS_TOKEN_KEY);
   }
 
+  private decodeBase64(base64: string): string {
+    try {
+      // Add padding if missing
+      const paddedBase64 = base64.padEnd(
+        base64.length + ((4 - (base64.length % 4)) % 4),
+        '='
+      );
+      return atob(paddedBase64);
+    } catch (error) {
+      console.error('Error decoding Base64:', error);
+      throw new Error('Invalid token format');
+    }
+  }
+
   isTokenExpired(token: string | null): boolean {
-    if (!token) return true;
+    if (!this.isValidTokenFormat(token)) return true;
 
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const parts = token!.split('.');
+      const payloadBase64 = parts[1];
+      const payload = JSON.parse(this.decodeBase64(payloadBase64));
       return payload.exp < Date.now() / 1000;
     } catch (error) {
-      console.error(error);
+      console.error('Error checking token expiration:', error);
       return true;
     }
   }
@@ -128,13 +156,13 @@ export class AuthService {
 
   clearSession(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
-    this.router.navigate(['/landing']);
     this.isAuthenticated$.next(false);
     this.currentUserSubject.next(null);
-    console.log('User logged out');
+    this.router.navigate(['/landing']);
   }
 
   logout(): void {
     this.clearSession();
+    this.router.navigate(['/landing']);
   }
 }

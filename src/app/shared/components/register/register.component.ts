@@ -51,16 +51,12 @@ export class RegisterComponent {
     this.user.idRole = 3;
     this.authService.register(this.user).subscribe({
       next: (response) => {
-        console.log('User registered successfully: ', response);
+        if (!response) return;
         this.authService.login(this.user).subscribe({
           next: (response) => {
-            console.log(response);
             if (!response && !response.accessToken) return;
             this.authService.setTokens(response.accessToken);
-            const roleId = this.authService.getDecodedAccessToken(
-              response.accessToken
-            ).idRole;
-            this.authService.redirectBasedOnRole(roleId);
+            this.router.navigate(['/home']);
           },
           error: (e) => {
             this.messageService.add({

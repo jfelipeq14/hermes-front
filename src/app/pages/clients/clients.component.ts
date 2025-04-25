@@ -58,8 +58,7 @@ export class ClientsPage implements OnInit {
   }
 
   getReservationsByClient(id: number) {
-    console.log(id);
-    return [];
+    return [id];
   }
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');

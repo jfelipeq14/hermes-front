@@ -17,8 +17,12 @@ export class ReservationsService {
   getAll(): Observable<ReservationModel[]> {
     return this.http.get<ReservationModel[]>(this.urlReservation);
   }
-  getAllTravelersByReservation(idReservation:number): Observable<ReservationTravelerModel[]> {
-    return this.http.get<ReservationTravelerModel[]>(this.urlTraveler + `reservation/${idReservation}`);
+  getAllTravelersByReservation(
+    idReservation: number
+  ): Observable<ReservationTravelerModel[]> {
+    return this.http.get<ReservationTravelerModel[]>(
+      this.urlTraveler + `reservation/${idReservation}`
+    );
   }
 
   // Obtener una reservación por ID
@@ -28,7 +32,6 @@ export class ReservationsService {
 
   // Crear una nueva reservación
   create(reservation: ReservationModel): Observable<ReservationModel> {
-    console.log('create', reservation);
     return this.http.post<ReservationModel>(this.urlReservation, reservation);
   }
 
@@ -55,7 +58,11 @@ export class ReservationsService {
   }
 
   // Obtener viajeros por reservación
-  getTravelersByReservation(reservationId: number): Observable<ReservationTravelerModel[]> {
-    return this.http.get<ReservationTravelerModel[]>(`${this.urlTraveler}by-reservation/${reservationId}`);
+  getTravelersByReservation(
+    reservationId: number
+  ): Observable<ReservationTravelerModel[]> {
+    return this.http.get<ReservationTravelerModel[]>(
+      `${this.urlTraveler}by-reservation/${reservationId}`
+    );
   }
 }

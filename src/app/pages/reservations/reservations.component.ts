@@ -191,10 +191,6 @@ export class ReservationsPage implements OnInit {
     }
   }
 
-  onRowCollapse(event: any) {
-    console.log('Row collapsed:', event);
-  }
-
   getTravelersByReservation(reservationId: number): ReservationTravelerModel[] {
     return this.reservationTravelers.filter(
       (traveler) => traveler.idReservation === reservationId
@@ -273,8 +269,6 @@ export class ReservationsPage implements OnInit {
   }
 
   createClient(event: any) {
-    console.log('Client created:', event);
-
     if (!event.value) {
       return;
     }
@@ -308,7 +302,6 @@ export class ReservationsPage implements OnInit {
   saveReservation() {
     this.reservation.idDate = 1;
     this.reservation.price = 1000;
-    console.log('Next step:', this.reservation);
     if (this.reservation.idDate === 0 || this.reservation.idUser === 0) {
       this.messageService.add({
         severity: 'error',
@@ -374,7 +367,6 @@ export class ReservationsPage implements OnInit {
         traveler.id = 0;
         traveler.idReservation = this.idReservation;
       }
-      console.log(traveler);
     });
 
     this.reservationService.createTraveler(this.selectedTraveler).subscribe({

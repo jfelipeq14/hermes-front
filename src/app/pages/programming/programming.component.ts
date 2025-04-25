@@ -28,7 +28,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 @Component({
   selector: 'app-programming',
   templateUrl: './programming.component.html',
-  styleUrl: './programming.component.css',
+  styleUrls: ['./programming.component.css'], // Fixed typo: changed "styleUrl" to "styleUrls"
   imports: [
     CommonModule,
     FullCalendarModule,
@@ -44,9 +44,13 @@ import { InputNumberModule } from 'primeng/inputnumber';
     IconFieldModule,
     CalendarModule,
     DropdownModule,
-    InputNumberModule,
+  ], // Removed duplicate "InputNumberModule"
+  providers: [
+    ProgrammingService,
+    PackageService,
+    MessageService,
+    ConfirmationService,
   ],
-  providers: [ProgrammingService, PackageService, MessageService, ConfirmationService],
 })
 export class ProgrammingPage implements OnInit {
   @ViewChild('eventMenu') eventMenu: any;
@@ -60,10 +64,8 @@ export class ProgrammingPage implements OnInit {
   menuItems: MenuItem[] = [
     {
       label: 'Editar programación',
-      icon: 'pi pi-fw pi-pencil',
-      command: () => {
-        this.editDate(this.date);
-      },
+      icon: 'pi pi-pencil',
+      command: () => this.editProgramming(),
     },
     {
       label: 'Cambiar estado',
@@ -103,14 +105,17 @@ export class ProgrammingPage implements OnInit {
     eventClassNames: ['calendar-event'],
     dateClick: (info) => {
       this.date = new DateModel();
-      this.date.start = new Date(info.dateStr).toISOString();
+      this.date.start = new Date(info.dateStr);
       this.dateDialog = true;
     },
     events: this.dates.map((date) => ({
-      title: `Paquete ${date.id}`,
+      id: date.id.toString(),
+      title: `Paquete ${date.idPackage}`,
       start: date.start,
+      startStr: date.start,
       end: date.end,
-      allDay: true,
+      endStr: date.end,
+      allDay: false,
       backgroundColor: 'transparent',
     })),
   });
@@ -135,21 +140,21 @@ export class ProgrammingPage implements OnInit {
         this.calendarOptions.update((options) => ({
           ...options,
           events: dates.map((date) => ({
+            id: date.id.toString(),
             title: `Paquete ${date.idPackage}`,
             start: date.start,
+            startStr: date.start,
             end: date.end,
-            allDay: true,
+            endStr: date.end,
+            allDay: false,
             backgroundColor: 'transparent',
           })),
         }));
       },
-      error: (e) => {
-        console.log(e);
-      },
     });
   }
 
-  getAllPackages(){
+  getAllPackages() {
     this.packageService.getAll().subscribe({
       next: (packages) => {
         this.packages = packages;
@@ -168,17 +173,12 @@ export class ProgrammingPage implements OnInit {
   createDate() {
     this.submitted = true;
     if (this.date.start && this.date.end) {
-      // Format dates to YYYY-MM-DD
-      const formatDate = (date: Date) => {
-        return date.toISOString().split('T')[0];
-      };
-
       const dateToSend = {
         ...this.date,
-        start: formatDate(new Date(this.date.start)),
-        end: formatDate(new Date(this.date.end)),
-        startRegistration: formatDate(new Date(this.date.startRegistration)),
-        endRegistration: formatDate(new Date(this.date.endRegistration))
+        start: new Date(this.date.start),
+        end: new Date(this.date.end),
+        startRegistration: new Date(this.date.startRegistration),
+        endRegistration: new Date(this.date.endRegistration),
       };
 
       this.programmingService.create(dateToSend).subscribe({
@@ -203,12 +203,28 @@ export class ProgrammingPage implements OnInit {
     }
   }
 
-  editDate(date: DateModel): void {
-    this.date = { ...date };
+  editProgramming() {
+    const id = this.selectedEvent?.id; // Use the selected event to get the ID
+    console.log(id);
 
-    // Show the dialog
-    this.dateDialog = true;
-    this.submitted = false;
+    if (id) {
+      const programming = this.getProgrammingById(+id); // Fetch programming details by ID
+      if (programming) {
+        this.date = {
+          ...programming,
+          start: new Date(programming.start), // Convert to Date object
+          end: new Date(programming.end), // Convert to Date object
+          startRegistration: new Date(programming.startRegistration), // Convert to Date object
+          endRegistration: new Date(programming.endRegistration), // Convert to Date object
+        };
+        this.dateDialog = true; // Open the dialog for editing
+      }
+    }
+  }
+
+  getProgrammingById(id: number) {
+    // Replace with actual logic to fetch programming details by ID
+    return this.dates.find((item) => item.id === id) || new DateModel();
   }
 
   changeStatusDate(date: DateModel): void {
@@ -249,7 +265,9 @@ export class ProgrammingPage implements OnInit {
       return;
     }
 
-    this.router.navigate(['/home/reservations'], { queryParams: { idDate: this.date.id } });
+    this.router.navigate(['/home/reservations'], {
+      queryParams: { idDate: this.date.id },
+    });
   }
 
   showPopup() {

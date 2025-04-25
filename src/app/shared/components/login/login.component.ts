@@ -42,22 +42,14 @@ export class LoginComponent {
 
   onSubmit() {
     this.submitted = true;
-    console.log('on submit', this.user);
 
     this.authService.login(this.user).subscribe({
       next: (response) => {
-        console.log(response);
-        // this.router.navigate(['/home']);
-
         if (!response && !response.accessToken) return;
 
         this.authService.setTokens(response.accessToken);
 
-        const roleId = this.authService.getDecodedAccessToken(
-          response.accessToken
-        ).idRole;
-
-        this.authService.redirectBasedOnRole(roleId);
+        this.router.navigate(['/home']);
       },
       error: (e) => {
         this.messageService.add({

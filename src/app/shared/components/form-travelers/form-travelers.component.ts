@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { FormClientsComponent } from '../form-clients/form-clients.component';
@@ -15,7 +15,7 @@ import { MessageService } from 'primeng/api';
   imports: [TableModule, ButtonModule, CommonModule, FormClientsComponent],
   providers: [MunicipalityService, MessageService],
 })
-export class FormTravelersComponent implements OnInit {
+export class FormTravelersComponent {
   constructor(
     private readonly municipalityService: MunicipalityService,
     private readonly messageService: MessageService
@@ -30,11 +30,6 @@ export class FormTravelersComponent implements OnInit {
   @Output() searchClient = new EventEmitter<any>();
   @Output() createClient = new EventEmitter<any>();
   @Output() addTraveler = new EventEmitter<any>();
-
-  ngOnInit(): void {
-    // this.getAllMunicipalities();
-    console.log('travelers');
-  }
 
   onSearchClient(document: string) {
     this.searchClient.emit(document);
