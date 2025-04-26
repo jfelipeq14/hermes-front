@@ -105,16 +105,18 @@ export class ProgrammingPage implements OnInit {
     eventClassNames: ['calendar-event'],
     dateClick: (info) => {
       this.date = new DateModel();
-      this.date.start = new Date(info.dateStr);
+      const localDate = new Date(info.dateStr); // Convertir a fecha local
+      localDate.setMinutes(
+        localDate.getMinutes() + localDate.getTimezoneOffset()
+      ); // Ajustar desfase de zona horaria
+      this.date.start = localDate;
       this.dateDialog = true;
     },
     events: this.dates.map((date) => ({
       id: date.id.toString(),
       title: `Paquete ${date.idPackage}`,
       start: date.start,
-      startStr: date.start,
       end: date.end,
-      endStr: date.end,
       allDay: false,
       backgroundColor: 'transparent',
     })),
@@ -143,9 +145,7 @@ export class ProgrammingPage implements OnInit {
             id: date.id.toString(),
             title: `Paquete ${date.idPackage}`,
             start: date.start,
-            startStr: date.start,
             end: date.end,
-            endStr: date.end,
             allDay: false,
             backgroundColor: 'transparent',
           })),
@@ -200,6 +200,7 @@ export class ProgrammingPage implements OnInit {
           });
         },
       });
+      this.refresh();
     }
   }
 

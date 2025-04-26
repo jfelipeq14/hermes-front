@@ -2,7 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ACCESS_TOKEN_KEY } from '../shared/helpers';
 import { jwtDecode } from 'jwt-decode';
@@ -21,6 +21,8 @@ export class AuthService {
   private isAuthenticated$ = new BehaviorSubject<boolean>(this.hasToken());
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
+  private authErrorSubject = new Subject<void>();
+  authError$ = this.authErrorSubject.asObservable();
 
   private http: HttpClient = inject(HttpClient);
   private router: Router = inject(Router);
@@ -131,38 +133,17 @@ export class AuthService {
     return !!user && allowedRoleIds.includes(user.idRole);
   }
 
-  refreshToken() {
-    const accessToken = this.getAccessToken();
-    if (!accessToken) {
-      this.logout();
-      return;
-    }
-
-    return this.http
-      .post<any>(`${this.url}/refreshToken`, {
-        expiredAccessToken: accessToken,
-      })
-      .pipe(
-        tap((response) => {
-          this.setTokens(response.accessToken);
-        }),
-        catchError(() => {
-          this.logout();
-          this.clearSession();
-          throw new Error('Session expired');
-        })
-      );
-  }
-
   clearSession(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     this.isAuthenticated$.next(false);
     this.currentUserSubject.next(null);
-    this.router.navigate(['/landing']);
+    this.authErrorSubject.next(); // Emitir evento de error de autenticación
   }
 
-  logout(): void {
+  logout(redirectToLanding = true): void {
     this.clearSession();
-    this.router.navigate(['/landing']);
+    if (redirectToLanding) {
+      this.router.navigate(['/landing']);
+    }
   }
 }
