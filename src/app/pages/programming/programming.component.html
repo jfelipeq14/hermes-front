@@ -16,6 +16,8 @@
           type="button"
           icon="pi pi-chevron-down"
           class="event-button"
+          severity="secondary"
+          [style]="{ width: '100%', padding: '2px' }"
           label="{{ arg.event.title }}"
           id="{{ arg.event.id }}"
           (click)="selectedEvent = arg.event; menu.toggle($event)"

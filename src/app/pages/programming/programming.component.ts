@@ -71,7 +71,7 @@ export class ProgrammingPage implements OnInit {
       label: 'Cambiar estado',
       icon: 'pi pi-fw pi-sync',
       command: () => {
-        this.changeStatusDate(this.date);
+        this.changeStatusDate();
       },
     },
     {
@@ -118,7 +118,7 @@ export class ProgrammingPage implements OnInit {
       start: date.start,
       end: date.end,
       allDay: false,
-      backgroundColor: 'transparent',
+      classNames: ['bg-primary'],
     })),
   });
 
@@ -147,7 +147,7 @@ export class ProgrammingPage implements OnInit {
             start: date.start,
             end: date.end,
             allDay: false,
-            backgroundColor: 'transparent',
+            classNames: [date.status ? 'bg-primary' : 'bg-danger', 'border-0'],
           })),
         }));
       },
@@ -206,7 +206,6 @@ export class ProgrammingPage implements OnInit {
 
   editProgramming() {
     const id = this.selectedEvent?.id; // Use the selected event to get the ID
-    console.log(id);
 
     if (id) {
       const programming = this.getProgrammingById(+id); // Fetch programming details by ID
@@ -228,37 +227,44 @@ export class ProgrammingPage implements OnInit {
     return this.dates.find((item) => item.id === id) || new DateModel();
   }
 
-  changeStatusDate(date: DateModel): void {
-    this.confirmationService.confirm({
-      message: `¿Está seguro de que desea ${
-        date.status ? 'desactivar' : 'activar'
-      } la programación ${date.id}?`,
-      header: 'Confirmación',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.programmingService.changeStatus(date.id).subscribe({
-          next: (updatedDate) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: `Programación ${updatedDate.id} ${
-                updatedDate.status ? 'activada' : 'desactivada'
-              }`,
-              life: 3000,
-            });
-            this.refresh();
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
+  changeStatusDate(): void {
+    const id = this.selectedEvent?.id; // Use the selected event to get the ID
+
+    if (id) {
+      const programming = this.getProgrammingById(+id); // Fetch programming details by ID
+      if (programming) {
+        this.confirmationService.confirm({
+          message: `¿Está seguro de que desea ${
+            programming.status ? 'desactivar' : 'activar'
+          } la programación ${programming.id}?`,
+          header: 'Confirmación',
+          icon: 'pi pi-exclamation-triangle',
+          accept: () => {
+            this.programmingService.changeStatus(programming.id).subscribe({
+              next: (updatedDate) => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Éxito',
+                  detail: `Programación ${updatedDate.id} ${
+                    updatedDate.status ? 'activada' : 'desactivada'
+                  }`,
+                  life: 3000,
+                });
+                this.refresh();
+              },
+              error: (e) => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: e.error.message,
+                  life: 3000,
+                });
+              },
             });
           },
         });
-      },
-    });
+      }
+    }
   }
 
   goToReservation(idDate: number) {
