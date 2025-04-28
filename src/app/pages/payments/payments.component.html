@@ -38,9 +38,15 @@
     <tr>
       <th style="width: 3rem"></th>
       <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
-      <th pSortableColumn="date">Fecha <p-sortIcon field="date"></p-sortIcon></th>
-      <th pSortableColumn="price">Precio Total <p-sortIcon field="price"></p-sortIcon></th>
-      <th pSortableColumn="status">Estado <p-sortIcon field="status"></p-sortIcon></th>
+      <th pSortableColumn="date">
+        Fecha <p-sortIcon field="date"></p-sortIcon>
+      </th>
+      <th pSortableColumn="price">
+        Precio Total <p-sortIcon field="price"></p-sortIcon>
+      </th>
+      <th pSortableColumn="status">
+        Estado <p-sortIcon field="status"></p-sortIcon>
+      </th>
       <th>Cliente</th>
       <th>Pagos Realizados</th>
     </tr>
@@ -59,19 +65,19 @@
           [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
         ></p-button>
       </td>
-      <td>{{reservation.id}}</td>
-      <td>{{reservation.date | date:'shortDate'}}</td>
-      <td>{{reservation.price | currency:'USD'}}</td>
+      <td>{{ reservation.id }}</td>
+      <td>{{ reservation.date | date : "shortDate" }}</td>
+      <td>{{ reservation.price | currency : "USD" }}</td>
       <td>
         <p-tag
           [value]="reservation.status ? 'Activo' : 'Inactivo'"
           [severity]="getSeverity(reservation.status)"
         ></p-tag>
       </td>
-      <td>{{reservation.idUser}}</td>
+      <td>{{ reservation.idUser }}</td>
       <td>
-        {{getPaymentsTotal(reservation.id) | currency:'USD'}} 
-        <small>({{getPaymentsCount(reservation.id)}} pagos)</small>
+        {{ getPaymentsTotal(reservation.id) | currency : "USD" }}
+        <small>({{ getPaymentsCount(reservation.id) }} pagos)</small>
       </td>
     </tr>
   </ng-template>
@@ -80,9 +86,12 @@
     <tr>
       <td colspan="7">
         <div class="p-3">
-          <h5>Detalle de Pagos - Reservación #{{reservation.id}}</h5>
-          
-          <p-table [value]="getPaymentsByReservation(reservation.id)" styleClass="p-datatable-sm">
+          <h5>Detalle de Pagos - Reservación #{{ reservation.id }}</h5>
+
+          <p-table
+            [value]="getPaymentsByReservation(reservation.id)"
+            styleClass="p-datatable-sm"
+          >
             <ng-template pTemplate="header">
               <tr>
                 <th>ID Pago</th>
@@ -95,19 +104,19 @@
             </ng-template>
             <ng-template pTemplate="body" let-payment>
               <tr>
-                <td>{{payment.id}}</td>
-                <td>{{payment.date | date:'short'}}</td>
-                <td>{{payment.price | currency:'USD'}}</td>
-                <td>{{payment.voucher || 'N/A'}}</td>
+                <td>{{ payment.id }}</td>
+                <td>{{ payment.date | date : "short" }}</td>
+                <td>{{ payment.price | currency : "USD" }}</td>
+                <td>{{ payment.voucher || "N/A" }}</td>
                 <td>
-                  <p-dropdown 
+                  <p-dropdown
                     [options]="statuses"
                     [(ngModel)]="payment.status"
                     optionLabel="name"
                     optionValue="value"
-                    (onChange)="changeStatusPayment(payment.id,$event)"
+                    (onChange)="changeStatusPayment(payment.id, $event)"
                     styleClass="p-dropdown-sm"
-                    [style]="{'width': '150px'}"
+                    [style]="{ width: '150px' }"
                   >
                     <ng-template pTemplate="selectedItem">
                       <p-tag
@@ -123,7 +132,6 @@
                     </ng-template>
                   </p-dropdown>
                 </td>
-
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
@@ -145,11 +153,11 @@
   [style]="{ width: '500px', height: '500px' }"
   header="Pago"
   [modal]="true"
-  class="p-fluid "
+  class="p-fluid"
 >
   <ng-template pTemplate="content">
     <div class="field">
-      <label for="idReservation">Reserva *</label>
+      <label for="idReservation">Reserva</label>
       <p-dropdown
         id="idReservation"
         [options]="reservations"
@@ -165,9 +173,8 @@
       </small>
     </div>
 
-
     <div class="field">
-      <label for="date">Fecha *</label>
+      <label for="date">Fecha</label>
       <p-calendar
         id="date"
         [(ngModel)]="payment.date"
@@ -182,7 +189,7 @@
     </div>
 
     <div class="field">
-      <label for="price">Precio *</label>
+      <label for="price">Precio</label>
       <input
         type="number"
         pInputText
@@ -227,6 +234,7 @@
     <p-button
       label="Cancelar"
       icon="pi pi-times"
+      severity="danger"
       (click)="closePopup()"
       [text]="true"
     ></p-button>

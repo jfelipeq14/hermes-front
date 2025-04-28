@@ -150,7 +150,7 @@
     <div class="flex justify-content-between">
       <div>
         <div class="field flex flex-column">
-          <label for="name">Nombre *</label>
+          <label for="name" class="required">Nombre</label>
           <input
             id="name"
             type="text"
@@ -164,7 +164,7 @@
         </div>
 
         <div class="field flex flex-column">
-          <label for="idActivity">Actividades *</label>
+          <label for="idActivity" class="required">Actividades</label>
           <p-dropdown
             id="idActivity"
             [options]="activities"
@@ -180,7 +180,7 @@
         </div>
 
         <div class="field flex flex-column">
-          <label for="idMunicipality">Municipio *</label>
+          <label for="idMunicipality" class="required">Municipio</label>
           <p-dropdown
             id="idMunicipality"
             [options]="municipalities"
@@ -197,7 +197,7 @@
         </div>
 
         <div class="field flex flex-column">
-          <label for="idService">Servicios *</label>
+          <label for="idService">Servicios</label>
           <p-dropdown
             id="idService"
             [options]="services"
@@ -209,7 +209,7 @@
         </div>
 
         <div class="field flex flex-column">
-          <label for="level">Nivel *</label>
+          <label for="level" class="required">Nivel</label>
           <p-dropdown
             id="level"
             [options]="levels"
@@ -246,7 +246,7 @@
         </div>
 
         <div class="field flex flex-column">
-          <label for="price">Precio *</label>
+          <label for="price" class="required">Precio</label>
           <p-inputNumber
             id="price"
             [(ngModel)]="package.price"
@@ -261,7 +261,7 @@
         </div>
 
         <div class="field flex flex-column">
-          <label for="reserve">Reserva *</label>
+          <label for="reserve" class="required">Reserva</label>
           <p-inputNumber
             id="price"
             [(ngModel)]="package.reserve"
@@ -319,6 +319,7 @@
       <p-button
         label="Cancelar"
         icon="pi pi-times"
+        severity="danger"
         (onClick)="closePopup()"
         text
       />

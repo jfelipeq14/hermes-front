@@ -89,10 +89,10 @@
 >
   <ng-template #content>
     <div class="field flex flex-column">
-      <label for="name">Nombre</label>
+      <label for="name" class="required">Nombre</label>
       <input
-        type="text"
         pInputText
+        type="text"
         id="name"
         [(ngModel)]="category.name"
         required
@@ -107,6 +107,7 @@
     <p-button
       label="Cancelar"
       icon="pi pi-times"
+      severity="danger"
       styleClass="p-button-text"
       (click)="closePopup()"
     ></p-button>

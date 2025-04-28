@@ -135,6 +135,10 @@ export class ActivitiesPage implements OnInit {
         '¿Está seguro de que desea cambiar el estado de ' + activity.name + '?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.activityService.changeStatus(activity.id).subscribe({
           next: (a) => {

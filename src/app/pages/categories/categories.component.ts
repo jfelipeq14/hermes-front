@@ -131,6 +131,10 @@ export class CategoriesPage implements OnInit {
         '¿Está seguro de que desea cambiar el estado de ' + category.name + '?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.categoryService.changeStatus(category.id).subscribe({
           next: (c) => {

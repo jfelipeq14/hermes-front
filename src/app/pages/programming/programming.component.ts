@@ -1,34 +1,43 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit, signal, ViewChild } from '@angular/core';
-import { PackageService, ProgrammingService } from '../../services';
-import { DateModel, PackageModel } from '../../models';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
 import { CalendarOptions } from '@fullcalendar/core/index.js';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import { CommonModule } from '@angular/common';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { MenuModule } from 'primeng/menu';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { ToastModule } from 'primeng/toast';
+
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { MenuModule } from 'primeng/menu';
+
+import { PackageService, ProgrammingService } from '../../services';
+import {
+  DateModel,
+  MeetingModel,
+  PackageModel,
+  ResponsibleModel,
+} from '../../models';
+import { ZONE } from '../../shared/constants';
 
 @Component({
   selector: 'app-programming',
   templateUrl: './programming.component.html',
-  styleUrls: ['./programming.component.css'], // Fixed typo: changed "styleUrl" to "styleUrls"
+  styleUrls: ['./programming.component.css'],
   imports: [
     CommonModule,
     FullCalendarModule,
@@ -44,7 +53,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     IconFieldModule,
     CalendarModule,
     DropdownModule,
-  ], // Removed duplicate "InputNumberModule"
+  ],
   providers: [
     ProgrammingService,
     PackageService,
@@ -57,7 +66,10 @@ export class ProgrammingPage implements OnInit {
 
   date: DateModel = new DateModel();
   dates: DateModel[] = [];
+  meeting: MeetingModel = new MeetingModel();
+  responsible: ResponsibleModel = new ResponsibleModel();
   packages: PackageModel[] = [];
+  zones = ZONE;
   dateDialog = false;
   submitted = false;
   selectedEvent: any;
@@ -239,6 +251,10 @@ export class ProgrammingPage implements OnInit {
           } la programación ${programming.id}?`,
           header: 'Confirmación',
           icon: 'pi pi-exclamation-triangle',
+          acceptLabel: 'Sí',
+          rejectLabel: 'No',
+          acceptButtonStyleClass: 'p-button-primary',
+          rejectButtonStyleClass: 'p-button-secondary',
           accept: () => {
             this.programmingService.changeStatus(programming.id).subscribe({
               next: (updatedDate) => {

@@ -159,6 +159,10 @@ export class ServicesPage implements OnInit {
         '¿Está seguro de que desea cambiar el estado de ' + service.name + '?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.serviceService.changeStatus(service.id).subscribe({
           next: (s) => {
