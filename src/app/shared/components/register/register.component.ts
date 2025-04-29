@@ -44,6 +44,8 @@ export class RegisterComponent {
   @Input() user: UserModel = new UserModel();
   @Input() municipalities: MunicipalityModel[] = [];
 
+  // @Output() close = new EventEmitter<void>();
+
   typesDocument = typesDocument;
 
   onSubmit() {
@@ -80,8 +82,9 @@ export class RegisterComponent {
     });
   }
 
-  onClose() {
-    this.registerDialog = false;
-    this.submitted = false;
-  }
+  // onCancel() {
+  //   this.close.emit(); // Emite el evento al cancelar
+  //   this.submitted = false; // Reinicia el estado de enviado
+  //   this.user = new UserModel(); // Reinicia el modelo de usuario
+  // }
 }

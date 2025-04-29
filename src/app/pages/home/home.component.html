@@ -286,11 +286,9 @@
 <p-dialog
   [(visible)]="dialogVisible"
   [style]="{ width: '450px' }"
-  header="{{ dialogType === 'login' ? 'Login' : 'Registro' }}"
   [modal]="true"
   [closable]="true"
   [dismissableMask]="true"
-  styleClass="p-fluid"
 >
   <ng-container *ngIf="dialogType === 'login'">
     <app-login
