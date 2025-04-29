@@ -10,12 +10,11 @@
 
       <div *ngIf="!loading" class="formgrid grid p-fluid">
         <!-- Información Personal -->
-        <div class="col-12">
-          <div class="card">
-            <h6>Información Personal</h6>
+        <fieldset class="col-12">
+            <legend class="my-5 font-bold">Información Personal</legend>
             <div class="grid">
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="typeDocument">Tipo de Documento</label>
                   <p-dropdown 
                     id="typeDocument" 
@@ -31,7 +30,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="document">Número de Documento</label>
                   <input 
                     id="document"
@@ -43,7 +42,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="name">Nombre</label>
                   <input 
                     id="name"
@@ -55,7 +54,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="surName">Apellido</label>
                   <input 
                     id="surName"
@@ -67,7 +66,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="dateBirth">Fecha de Nacimiento</label>
                   <p-calendar 
                     id="dateBirth"
@@ -80,7 +79,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="sex">Sexo</label>
                   <p-dropdown 
                     id="sex" 
@@ -95,16 +94,15 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          
+        </fieldset>
 
         <!-- Información de Contacto -->
-        <div class="col-12">
-          <div class="card">
-            <h6>Información de Contacto</h6>
+        <fieldset class="col-12">     
+            <legend>Información de Contacto</legend>
             <div class="grid">
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="email">Correo Electrónico</label>
                   <input 
                     id="email"
@@ -116,7 +114,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="phone">Teléfono</label>
                   <input 
                     id="phone"
@@ -128,7 +126,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="emergency">Contacto de Emergencia</label>
                   <input 
                     id="emergency"
@@ -140,7 +138,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="idMunicipality">Municipio</label>
                   <p-dropdown 
                     id="idMunicipality" 
@@ -156,7 +154,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-8">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="address">Dirección</label>
                   <input 
                     id="address"
@@ -167,16 +165,15 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          
+        </fieldset>
 
         <!-- Información Médica -->
-        <div class="col-12">
-          <div class="card">
-            <h6>Información Médica</h6>
+        <fieldset class="col-12">         
+            <legend>Información Médica</legend>
             <div class="grid">
               <div class="col-12 md:col-6 lg:col-4">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="bloodType">Tipo de Sangre</label>
                   <p-dropdown 
                     id="bloodType" 
@@ -192,7 +189,7 @@
               </div>
 
               <div class="col-12 md:col-6 lg:col-8">
-                <div class="field">
+                <div class="field flex flex-column">
                   <label for="eps">EPS</label>
                   <p-dropdown 
                     id="eps" 
@@ -207,8 +204,8 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          
+        </fieldset>
 
         <!-- Botones de acción -->
         <div class="col-12 flex justify-content-end gap-2">

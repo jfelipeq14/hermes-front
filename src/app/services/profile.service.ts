@@ -13,9 +13,6 @@ export class ProfileService {
 
   private url = environment.SERVER_URL + 'users/';
 
-  /**
-   * Obtiene los datos del usuario actual desde el backend
-   */
   getCurrentUser(): Observable<UserModel> {
     // Obtener el ID del usuario desde el servicio de autenticación
     const currentUser = this.authService.currentUserSubject.getValue();
@@ -28,9 +25,6 @@ export class ProfileService {
     return this.http.get<UserModel>(`${this.url}${userId}`);
   }
 
-  /**
-   * Actualiza los datos del perfil de usuario
-   */
   updateProfile(user: UserModel): Observable<UserModel> {
     // Asegurar que se envía el objeto correcto para update
     const updateUserDto: UserModel = {
