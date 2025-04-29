@@ -1,0 +1,33 @@
+/* Estilos específicos para el componente Profile */
+
+/* Estilo para secciones de información */
+.card h6 {
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: 0.5rem;
+}
+
+/* Estilo para los campos en modo lectura */
+:host ::ng-deep .p-inputtext:disabled,
+:host ::ng-deep .p-dropdown.p-disabled {
+  opacity: 0.8;
+  background-color: var(--surface-100);
+  color: var(--text-color);
+  cursor: default;
+}
+
+/* Estilo para los campos en modo edición */
+:host ::ng-deep .p-inputtext:enabled:focus,
+:host ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  box-shadow: 0 0 0 1px var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Estilo para optimizar visualización en dispositivos móviles */
+@media screen and (max-width: 576px) {
+  .p-fluid .p-button {
+    width: 100%;
+  }
+}

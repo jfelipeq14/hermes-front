@@ -8,6 +8,7 @@ export * from './municipality.service';
 export * from './package.service';
 export * from './payment.service';
 export * from './permits.service';
+export * from './profile.service';
 export * from './programming.service';
 export * from './reservations.service';
 export * from './roles.service';

@@ -213,9 +213,8 @@
         [(ngModel)]="user.dateBirth"
         [showIcon]="true"
         dateFormat="dd/mm/yy"
-        required
-        class="w-full md:w-14rem"
-      ></p-calendar>
+      >
+      </p-calendar>
       <small class="p-error" *ngIf="submitted && !user.dateBirth"
         >La fecha de nacimiento es obligatoria.</small
       >
