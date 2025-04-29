@@ -19,7 +19,7 @@ export interface User {
 })
 export class AuthService {
   private isAuthenticated$ = new BehaviorSubject<boolean>(this.hasToken());
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUserSubject = new BehaviorSubject<User | null>(null); // Cambiado a public para acceso desde ProfileService
   currentUser$ = this.currentUserSubject.asObservable();
   private authErrorSubject = new Subject<void>();
   authError$ = this.authErrorSubject.asObservable();
@@ -75,11 +75,8 @@ export class AuthService {
 
     try {
       const decodedToken = jwtDecode(token!);
-      this.currentUser$.subscribe((decodedToken) => {
-        if (decodedToken) {
-          this.currentUserSubject.next(decodedToken);
-        }
-      });
+      // Aquí ya no nos suscribimos para evitar un ciclo
+      // Solo actualizamos el BehaviorSubject
       return decodedToken;
     } catch (err) {
       console.error('Error decoding token:', err);
@@ -90,9 +87,15 @@ export class AuthService {
   setTokens(accessToken: string): void {
     localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
     this.isAuthenticated$.next(true);
+
+    // Actualizar el usuario actual cuando se establece un nuevo token
+    const decodedToken = this.getDecodedAccessToken(accessToken);
+    if (decodedToken) {
+      this.currentUserSubject.next(decodedToken);
+    }
   }
 
-  private hasToken(): boolean {
+  hasToken(): boolean {
     return !!localStorage.getItem(ACCESS_TOKEN_KEY);
   }
 

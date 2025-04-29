@@ -5,7 +5,7 @@ export class UserModel {
   document = '';
   name = '';
   surName = '';
-  dateBirth: Date | null = null;
+  dateBirth = new Date();
   email = '';
   password = '';
   idMunicipality = 0;

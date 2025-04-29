@@ -188,6 +188,9 @@ export class UsersPage implements OnInit {
 
   editUser(user: UserModel) {
     this.user = { ...user };
+    const date = new Date(this.user.dateBirth);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajustar desfase de zona horaria
+    this.user.dateBirth = date;
     this.userDialog = true;
   }
 

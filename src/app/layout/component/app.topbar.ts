@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { LayoutService } from '../service/layout.service';
@@ -80,7 +80,8 @@ import { AuthService } from '../../services';
 export class AppTopbar {
   constructor(
     public layoutService: LayoutService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   toggleDarkMode() {
@@ -94,6 +95,9 @@ export class AppTopbar {
     {
       label: 'Perfil',
       icon: 'pi pi-user',
+      command: () => {
+        this.router.navigate(['/home/profile']);
+      },
     },
     {
       label: 'Cerrar sesión',
