@@ -1,11 +1,11 @@
-<div class="field">
+<div class="flex flex-column">
   <label for="name">Gmail</label>
   <input type="email" pInputText id="name" [(ngModel)]="user.email" required />
   <small class="p-error" *ngIf="submitted && !user.email"
     >El nombre es obligatorio.</small
   >
 </div>
-<div class="field">
+<div class="flex flex-column">
   <label for="name">Password</label>
   <input
     type="password"
@@ -19,12 +19,13 @@
   >
 </div>
 
-<p-button
-  label="Cancel"
-  icon="pi pi-times"
-  severity="danger"
-  styleClass="p-button-text"
-  (click)="onClose()"
-></p-button>
-<p-button label="Save" icon="pi pi-check" (click)="onSubmit()"></p-button>
+<div class="flex align-items-center justify-content-end gap-2">
+  <p-button
+    label="Ingresar"
+    icon="pi pi-user"
+    severity="primary"
+    (click)="onSubmit()"
+  ></p-button>
+</div>
+
 <p-toast />
