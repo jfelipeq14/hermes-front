@@ -85,7 +85,7 @@
 >
   <ng-template pTemplate="content">
     <div class="field mb-4">
-      <label for="name" class="font-bold">Nombre</label>
+      <label for="name" class="font-bold required">Nombre</label>
       <input
         type="text"
         pInputText
@@ -160,6 +160,7 @@
     <p-button
       label="Cancelar"
       icon="pi pi-times"
+      severity="danger"
       [rounded]="true"
       [outlined]="true"
       (click)="hideDialog()"

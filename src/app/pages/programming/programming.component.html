@@ -39,7 +39,7 @@
 >
   <ng-template pTemplate="content">
     <div class="field flex flex-column">
-      <label for="package">Paquete</label>
+      <label for="package" class="required">Paquete</label>
       <p-dropdown
         id="package"
         [(ngModel)]="date.idPackage"
@@ -56,7 +56,7 @@
     </div>
 
     <div class="field flex flex-column">
-      <label for="amount">Cantidad</label>
+      <label for="amount" class="required">Cantidad</label>
       <input
         type="number"
         pInputText
@@ -72,7 +72,7 @@
     <div class="field flex flex-column">
       <div class="flex gap-2">
         <div class="flex-1">
-          <label for="start">Fecha inicio</label>
+          <label for="start" class="required">Fecha inicio</label>
           <p-calendar
             [(ngModel)]="date.start"
             [showIcon]="true"
@@ -87,7 +87,7 @@
           >
         </div>
         <div class="flex-1">
-          <label for="end">Fecha fin</label>
+          <label for="end" class="required">Fecha fin</label>
           <p-calendar
             [(ngModel)]="date.end"
             [showIcon]="true"
@@ -107,7 +107,9 @@
     <div class="field flex flex-column">
       <div class="flex gap-2">
         <div class="flex-1">
-          <label for="startRegistration">Inicio registro</label>
+          <label for="startRegistration" class="required"
+            >Inicio registro</label
+          >
           <p-calendar
             [(ngModel)]="date.startRegistration"
             [showIcon]="true"
@@ -122,7 +124,43 @@
           >
         </div>
         <div class="flex-1">
-          <label for="endRegistration">Fin registro</label>
+          <label for="endRegistration" class="required">Fin registro</label>
+          <p-calendar
+            [(ngModel)]="date.endRegistration"
+            [showIcon]="true"
+            inputId="endRegistration"
+            [required]="true"
+            dateFormat="yy-mm-dd"
+            [dataType]="'date'"
+            [appendTo]="'body'"
+          ></p-calendar>
+          <small class="p-error" *ngIf="submitted && !date.endRegistration"
+            >La fecha de fin de registro es obligatoria.</small
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="field flex flex-column">
+      <div class="flex gap-2">
+        <div class="flex-1">
+          <label for="meeting" class="required">Encuentro</label>
+          <p-dropdown
+            id="meeting"
+            [(ngModel)]="meeting.zone"
+            [options]="zones"
+            [showClear]="true"
+            optionLabel="name"
+            optionValue="value"
+            placeholder="Seleccione una zona"
+            [required]="true"
+          ></p-dropdown>
+          <small class="p-error" *ngIf="submitted && !meeting.zone"
+            >La zona de encuentro es obligatoria.</small
+          >
+        </div>
+        <div class="flex-1">
+          <label for="endRegistration">Hora</label>
           <p-calendar
             [(ngModel)]="date.endRegistration"
             [showIcon]="true"
@@ -144,6 +182,7 @@
     <p-button
       label="Cancelar"
       icon="pi pi-times"
+      severity="danger"
       styleClass="p-button-text"
       (click)="closePopup()"
     ></p-button>

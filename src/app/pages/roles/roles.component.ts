@@ -371,6 +371,10 @@ export class RolesPage implements OnInit {
       } el rol "${role.name}"?`,
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.roleService.changeStatus(role.id).subscribe({
           next: (updatedRole) => {

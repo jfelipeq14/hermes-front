@@ -360,6 +360,10 @@ export class PackagesPage implements OnInit {
       } el paquete ${pkg.name}?`,
       header: 'Confirmación',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.packageService.changeStatus(pkg.id).subscribe({
           next: (updatedPackage) => {

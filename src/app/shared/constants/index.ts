@@ -5,3 +5,4 @@ export * from './levels';
 export * from './payments-status';
 export * from './sex';
 export * from './roles';
+export * from './zone';

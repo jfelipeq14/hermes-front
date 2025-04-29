@@ -8,3 +8,7 @@
 * {
   scrollbar-width: thin;
 }
+
+.required::after {
+  content: ": *";
+}

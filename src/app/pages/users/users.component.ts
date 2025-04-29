@@ -196,6 +196,10 @@ export class UsersPage implements OnInit {
       message: `¿Está seguro de que desea cambiar el estado de ${user.name}?`,
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.userService.changeStatus(user.id).subscribe({
           next: (updatedUser) => {
