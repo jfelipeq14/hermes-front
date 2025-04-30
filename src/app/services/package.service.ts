@@ -50,15 +50,6 @@ export class PackageService {
     );
   }
 
-  updateServicePackage(
-    servicePackage: PackageServiceModel[]
-  ): Observable<PackageServiceModel[]> {
-    return this.http.patch<PackageServiceModel[]>(
-      this.urlPackageService,
-      servicePackage
-    );
-  }
-
   deleteServicePackage(id: number): Observable<PackageServiceModel[]> {
     return this.http.delete<PackageServiceModel[]>(this.urlPackageService + id);
   }

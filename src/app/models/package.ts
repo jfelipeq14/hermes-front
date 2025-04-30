@@ -1,3 +1,5 @@
+import { PackageServiceModel } from './package-service';
+
 export class PackageModel {
   id = 0;
   name = '';
@@ -9,4 +11,5 @@ export class PackageModel {
   description = '';
   image = null;
   status = true;
+  detailPackagesServices: PackageServiceModel[] = [];
 }

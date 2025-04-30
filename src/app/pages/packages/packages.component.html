@@ -108,7 +108,7 @@
       <td colspan="12">
         <div class="p-2">
           <h5>Servicios de {{ package.name }}</h5>
-          <p-table [value]="getPackageServices(package.id)">
+          <p-table [value]="package.detailPackagesServices">
             <ng-template pTemplate="header">
               <tr>
                 <th>Servicio</th>
@@ -174,7 +174,7 @@
             placeholder="Seleccione una actividad"
             required
           ></p-dropdown>
-          <small class="p-error" *ngIf="submitted && !package.idMunicipality">
+          <small class="p-error" *ngIf="submitted && !package.idActivity">
             La actividad es obligatoria.
           </small>
         </div>
@@ -263,7 +263,7 @@
         <div class="field flex flex-column">
           <label for="reserve" class="required">Reserva</label>
           <p-inputNumber
-            id="price"
+            id="reserve"
             [(ngModel)]="package.reserve"
             mode="currency"
             currency="COP"
@@ -276,7 +276,7 @@
         </div>
       </div>
 
-      <p-table [value]="selectedServices">
+      <p-table [value]="package.detailPackagesServices">
         <ng-template pTemplate="header">
           <tr>
             <th>Servicio</th>
@@ -298,7 +298,7 @@
                 severity="danger"
                 [rounded]="true"
                 [text]="true"
-                (onClick)="removeServiceFromSelection(i)"
+                (onClick)="removeServiceFromSelection(service.idService)"
               ></p-button>
             </td>
           </tr>

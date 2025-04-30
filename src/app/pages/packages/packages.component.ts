@@ -72,8 +72,6 @@ export class PackagesPage implements OnInit {
   activities: ActivityModel[] = [];
   municipalities: MunicipalityModel[] = [];
   dates: DateModel[] = [];
-
-  selectedServices: PackageServiceModel[] = [];
   currentService: PackageServiceModel = new PackageServiceModel();
 
   packageDialog = false;
@@ -110,7 +108,7 @@ export class PackagesPage implements OnInit {
         this.packages.forEach((pkg) => {
           this.packageService.getServicePackages(pkg.id).subscribe({
             next: (services) => {
-              this.packageServices = services;
+              this.packageServices = [...this.packageServices, ...services];
             },
           });
         });
@@ -224,12 +222,6 @@ export class PackagesPage implements OnInit {
     }
   }
 
-  getPackageServices(idPackage: number): PackageServiceModel[] {
-    return this.packageServices.filter(
-      (service) => service.idPackage === idPackage
-    );
-  }
-
   getSeverity(status: boolean): 'success' | 'danger' {
     return status ? 'success' : 'danger';
   }
@@ -237,7 +229,21 @@ export class PackagesPage implements OnInit {
   savePackage() {
     this.submitted = true;
 
-    if (this.selectedServices.length === 0) {
+    if (!this.package.name?.trim()) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'El nombre del paquete es requerido',
+        life: 3000,
+      });
+      return;
+    }
+
+    if (
+      !this.package.detailPackagesServices.some(
+        (service) => service.quantity > 0
+      )
+    ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -247,70 +253,25 @@ export class PackagesPage implements OnInit {
       return;
     }
 
-    if (!this.package.id) {
-      this.packageService.create(this.package).subscribe({
-        next: (pkg) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: `${pkg.name} creado`,
-            life: 3000,
-          });
-
-          this.addServicesToPackage(pkg.id);
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
-      this.refresh();
-    } else {
-      this.package.price = parseInt(this.package.price.toString());
-      this.package.reserve = parseInt(this.package.reserve.toString());
-
-      this.packageService.update(this.package).subscribe({
-        next: (pkg) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: `${pkg.name} actualizado`,
-            life: 3000,
-          });
-
-          this.addServicesToPackage(pkg.id);
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
-      this.refresh();
-    }
-  }
-
-  addServicesToPackage(idPackage: number) {
-    this.selectedServices.forEach((service) => {
-      service.id = 0;
-      service.idPackage = idPackage;
+    // Convert prices to integers
+    this.package.price = Math.round(this.package.price);
+    this.package.reserve = Math.round(this.package.reserve);
+    this.package.detailPackagesServices.forEach((service) => {
+      service.price = Math.round(service.price);
     });
 
-    if (this.selectedServices.length <= 0) return;
+    const savePackage$ = this.package.id
+      ? this.packageService.update(this.package)
+      : this.packageService.create(this.package);
 
-    this.packageService.createServicePackage(this.selectedServices).subscribe({
-      next: () => {
+    savePackage$.subscribe({
+      next: (pkg) => {
         this.messageService.add({
           severity: 'success',
-          summary: 'Exito',
-          detail: 'Servicios agregados correctamente',
+          summary: 'Éxito',
+          detail: `${pkg.name} ${
+            this.package.id ? 'actualizado' : 'creado'
+          } correctamente`,
           life: 3000,
         });
         this.refresh();
@@ -324,33 +285,6 @@ export class PackagesPage implements OnInit {
         });
       },
     });
-    this.refresh();
-  }
-
-  // modifyServicePackage(packageService: PackageServiceModel) {}
-
-  editPackage(pkg: PackageModel): void {
-    // Create a deep copy of the package to avoid direct reference modification
-    this.package = { ...pkg };
-
-    // Load the services associated with this package
-    this.packageService.getServicePackages(pkg.id).subscribe({
-      next: (services) => {
-        this.selectedServices = services;
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
-        });
-      },
-    });
-
-    // Show the dialog
-    this.packageDialog = true;
-    this.submitted = false;
   }
 
   changeStatusPackage(pkg: PackageModel): void {
@@ -391,6 +325,28 @@ export class PackagesPage implements OnInit {
     });
   }
 
+  editPackage(pkg: PackageModel): void {
+    this.package = { ...pkg };
+
+    // Asegúrate de que detailPackagesServices esté inicializado
+    this.package.detailPackagesServices = pkg.detailPackagesServices.map(
+      (service) => ({
+        idService: service.idService,
+        quantity: service.quantity,
+        price: Math.round(service.price), // Asegúrate de que el precio sea un entero
+      })
+    );
+
+    // Asigna el nivel correspondiente al valor del dropdown
+    const selectedLevel = this.levels.find(
+      (level) => level.value === pkg.level
+    );
+    this.package.level = selectedLevel ? selectedLevel.value : 0;
+
+    this.packageDialog = true;
+    this.submitted = false;
+  }
+
   addServiceToSelection(event: any) {
     if (!event.value) {
       return;
@@ -408,48 +364,33 @@ export class PackagesPage implements OnInit {
       return;
     }
 
-    const serviceExists = this.selectedServices.find(
+    const existingService = this.package.detailPackagesServices.find(
       (s) => s.idService === serviceFound.id
     );
 
-    if (serviceExists) {
-      serviceExists.quantity++;
-      return;
+    if (existingService) {
+      existingService.quantity++;
+    } else {
+      this.package.detailPackagesServices.push({
+        idService: serviceFound.id,
+        quantity: 1,
+        price: serviceFound.price,
+      });
     }
-
-    this.selectedServices.push({
-      id: 0,
-      idPackage: 0,
-      idService: serviceFound.id,
-      quantity: 1,
-      price: serviceFound.price,
-    });
   }
 
-  removeServiceFromSelection(index: number) {
-    this.packageService
-      .deleteServicePackage(this.selectedServices[index].id)
-      .subscribe({
-        next: (deleted) => {
-          if (!deleted) this.selectedServices.splice(index, 1);
+  removeServiceFromSelection(serviceId: number) {
+    const serviceIndex = this.package.detailPackagesServices.findIndex(
+      (s) => s.idService === serviceId
+    );
 
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Servicio eliminado correctamente',
-            life: 3000,
-          });
-        },
-        error: () => {
-          this.selectedServices.splice(index, 1);
-        },
-      });
+    if (serviceIndex !== -1) {
+      this.package.detailPackagesServices.splice(serviceIndex, 1);
+    }
   }
 
   showPopup() {
     this.package = new PackageModel();
-    this.currentService = new PackageServiceModel();
-    this.selectedServices = [];
     this.packageDialog = true;
     this.submitted = false;
   }
@@ -457,7 +398,6 @@ export class PackagesPage implements OnInit {
   closePopup() {
     this.packageDialog = false;
     this.package = new PackageModel();
-    this.selectedServices = [];
   }
 
   refresh() {
@@ -470,7 +410,6 @@ export class PackagesPage implements OnInit {
     this.municipalities = [];
     this.dates = [];
 
-    this.selectedServices = [];
     this.currentService = new PackageServiceModel();
 
     this.getAllPackages();
