@@ -1,3 +1,5 @@
+import { ResponsibleModel } from './responsible';
+
 export class MeetingModel {
   id = 0;
   idDate = 0;
@@ -5,4 +7,5 @@ export class MeetingModel {
   hour = '';
   description = '';
   status = true;
+  responsibles: ResponsibleModel[] = [];
 }

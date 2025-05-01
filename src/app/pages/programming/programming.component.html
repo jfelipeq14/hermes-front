@@ -38,116 +38,110 @@
   (onHide)="closePopup()"
 >
   <ng-template pTemplate="content">
-    <div class="field flex flex-column">
-      <label for="package" class="required">Paquete</label>
-      <p-dropdown
-        id="package"
-        [(ngModel)]="date.idPackage"
-        [options]="packages"
-        [showClear]="true"
-        optionLabel="name"
-        optionValue="id"
-        placeholder="Seleccione un paquete"
-        [required]="true"
-      ></p-dropdown>
-      <small class="p-error" *ngIf="submitted && !date.idPackage"
-        >El paquete es obligatorio.</small
-      >
-    </div>
-
-    <div class="field flex flex-column">
-      <label for="amount" class="required">Cantidad</label>
-      <input
-        type="number"
-        pInputText
-        id="amount"
-        [(ngModel)]="date.amount"
-        required
-      />
-      <small class="p-error" *ngIf="submitted && !date.amount"
-        >La cantidad es obligatoria.</small
-      >
-    </div>
-
-    <div class="field flex flex-column">
-      <div class="flex gap-2">
-        <div class="flex-1">
-          <label for="start" class="required">Fecha inicio</label>
-          <p-calendar
-            [(ngModel)]="date.start"
-            [showIcon]="true"
-            inputId="start"
-            [required]="true"
-            dateFormat="yy-mm-dd"
-            [dataType]="'date'"
-            [appendTo]="'body'"
-          ></p-calendar>
-          <small class="p-error" *ngIf="submitted && !date.start"
-            >La fecha de inicio es obligatoria.</small
-          >
-        </div>
-        <div class="flex-1">
-          <label for="end" class="required">Fecha fin</label>
-          <p-calendar
-            [(ngModel)]="date.end"
-            [showIcon]="true"
-            inputId="end"
-            [required]="true"
-            dateFormat="yy-mm-dd"
-            [dataType]="'date'"
-            [appendTo]="'body'"
-          ></p-calendar>
-          <small class="p-error" *ngIf="submitted && !date.end"
-            >La fecha de fin es obligatoria.</small
-          >
-        </div>
+    <fieldset class="flex flex-row">
+      <div class="field flex-1 flex flex-column">
+        <label for="package" class="required">Paquete</label>
+        <p-dropdown
+          id="package"
+          [(ngModel)]="date.idPackage"
+          [options]="packages"
+          [showClear]="true"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Seleccione un paquete"
+          [required]="true"
+        ></p-dropdown>
+        <small class="p-error" *ngIf="submitted && !date.idPackage">
+          El paquete es obligatorio.
+        </small>
       </div>
-    </div>
-
-    <div class="field flex flex-column">
-      <div class="flex gap-2">
-        <div class="flex-1">
-          <label for="startRegistration" class="required"
-            >Inicio registro</label
-          >
-          <p-calendar
-            [(ngModel)]="date.startRegistration"
-            [showIcon]="true"
-            inputId="startRegistration"
-            [required]="true"
-            dateFormat="yy-mm-dd"
-            [dataType]="'date'"
-            [appendTo]="'body'"
-          ></p-calendar>
-          <small class="p-error" *ngIf="submitted && !date.startRegistration"
-            >La fecha de inicio de registro es obligatoria.</small
-          >
-        </div>
-        <div class="flex-1">
-          <label for="endRegistration" class="required">Fin registro</label>
-          <p-calendar
-            [(ngModel)]="date.endRegistration"
-            [showIcon]="true"
-            inputId="endRegistration"
-            [required]="true"
-            dateFormat="yy-mm-dd"
-            [dataType]="'date'"
-            [appendTo]="'body'"
-          ></p-calendar>
-          <small class="p-error" *ngIf="submitted && !date.endRegistration"
-            >La fecha de fin de registro es obligatoria.</small
-          >
-        </div>
+      <div class="field flex-1 flex flex-column">
+        <label for="amount" class="required">Cantidad</label>
+        <input
+          type="number"
+          pInputText
+          id="amount"
+          [(ngModel)]="date.amount"
+          required
+        />
+        <small class="p-error" *ngIf="submitted && !date.amount">
+          La cantidad es obligatoria.
+        </small>
       </div>
-    </div>
+    </fieldset>
+
+    <fieldset class="flex flex-row">
+      <div class="field flex-1 flex flex-column">
+        <label for="start" class="required">Fecha inicio</label>
+        <p-datepicker
+          [(ngModel)]="date.start"
+          [showIcon]="true"
+          inputId="start"
+          [required]="true"
+          dateFormat="yy-mm-dd"
+          [dataType]="'date'"
+          [appendTo]="'body'"
+        ></p-datepicker>
+        <small class="p-error" *ngIf="submitted && !date.start">
+          La fecha de inicio es obligatoria.
+        </small>
+      </div>
+      <div class="field flex-1 flex flex-column">
+        <label for="end" class="required">Fecha fin</label>
+        <p-datepicker
+          [(ngModel)]="date.end"
+          [showIcon]="true"
+          inputId="end"
+          [required]="true"
+          dateFormat="yy-mm-dd"
+          [dataType]="'date'"
+          [appendTo]="'body'"
+        ></p-datepicker>
+        <small class="p-error" *ngIf="submitted && !date.end">
+          La fecha de fin es obligatoria.
+        </small>
+      </div>
+    </fieldset>
+
+    <fieldset class="flex flex-row">
+      <div class="field flex-1 flex flex-column">
+        <label for="startRegistration" class="required">Inicio registro</label>
+        <p-datepicker
+          [(ngModel)]="date.startRegistration"
+          [showIcon]="true"
+          inputId="startRegistration"
+          [required]="true"
+          dateFormat="yy-mm-dd"
+          [dataType]="'date'"
+          [appendTo]="'body'"
+        ></p-datepicker>
+        <small class="p-error" *ngIf="submitted && !date.startRegistration">
+          La fecha de inicio de registro es obligatoria.
+        </small>
+      </div>
+      <div class="field flex-1 flex flex-column">
+        <label for="endRegistration" class="required">Fin registro</label>
+        <p-datepicker
+          [(ngModel)]="date.endRegistration"
+          [showIcon]="true"
+          inputId="endRegistration"
+          [required]="true"
+          dateFormat="yy-mm-dd"
+          [dataType]="'date'"
+          [appendTo]="'body'"
+        ></p-datepicker>
+        <small class="p-error" *ngIf="submitted && !date.endRegistration">
+          La fecha de fin de registro es obligatoria.
+        </small>
+      </div>
+    </fieldset>
 
     <fieldset class="field flex flex-column">
-      <legend>Encuentro</legend>
-      <div class="flex flex- gap-2">
-        <div class="flex-1">
-          <label for="meeting" class="required">Encuentro</label>
+      <div class="flex gap-2">
+        <div class="field flex-1 flex flex-column">
+          <label for="meetingZone" class="required">Zona</label>
           <p-dropdown
-            id="meeting"
+            id="meetingZone"
             [(ngModel)]="meeting.zone"
             [options]="zones"
             [showClear]="true"
@@ -155,25 +149,79 @@
             optionValue="value"
             placeholder="Seleccione una zona"
             [required]="true"
+            [appendTo]="'body'"
           ></p-dropdown>
-          <small class="p-error" *ngIf="submitted && !meeting.zone"
-            >La zona de encuentro es obligatoria.</small
-          >
+          <small class="p-error" *ngIf="submitted && !meeting.zone">
+            La zona de encuentro es obligatoria.
+          </small>
         </div>
-        <div class="flex-1">
-          <label for="hour">Hora</label>
-          <p-calendar
+        <div class="field flex-1 flex flex-column">
+          <label for="hour" class="required">Hora</label>
+          <p-datepicker
             [(ngModel)]="meeting.hour"
             [showIcon]="true"
             inputId="hour"
+            [timeOnly]="true"
+            hourFormat="24"
             [required]="true"
-            [dataType]="'hour'"
             [appendTo]="'body'"
-          ></p-calendar>
-          <small class="p-error" *ngIf="submitted && !date.endRegistration"
-            >La hora es obligatoria.</small
-          >
+          ></p-datepicker>
+          <small class="p-error" *ngIf="submitted && !meeting.hour">
+            La hora es obligatoria.
+          </small>
         </div>
+      </div>
+      <div class="field flex flex-column">
+        <label for="description">Descripción</label>
+        <textarea
+          id="description"
+          [(ngModel)]="meeting.description"
+          pTextarea
+          placeholder="Descripción"
+          [autoResize]="true"
+          rows="3"
+          cols="30"
+        ></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="field flex flex-column">
+        <label for="responsibleList">Responsables</label>
+        <p-multiselect
+          id="responsibleList"
+          [options]="responsibles"
+          placeholder="Seleccione responsables"
+          optionLabel="name"
+          optionValue="id"
+          display="chip"
+          [filter]="true"
+          [filterBy]="'name,surName'"
+          (onChange)="onResponsibleChange($event)"
+        >
+          <ng-template #selectedItems let-selected>
+            <div
+              *ngFor="let responsible of selected"
+              class="inline-flex items-center py-1 px-2 bg-primary text-primary-contrast rounded-border mr-2"
+            >
+              <div>{{ responsible.name }} {{ responsible.surName }}</div>
+            </div>
+          </ng-template>
+          <ng-template #item let-responsible>
+            <div class="flex items-center">
+              <div>{{ responsible.name }} {{ responsible.surName }}</div>
+            </div>
+          </ng-template>
+        </p-multiselect>
+        <small
+          class="p-error"
+          *ngIf="
+            submitted &&
+            (!meeting.responsibles || meeting.responsibles.length === 0)
+          "
+        >
+          La lista de responsables es obligatoria.
+        </small>
       </div>
     </fieldset>
   </ng-template>

@@ -17,20 +17,29 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
+import { TextareaModule } from 'primeng/textarea';
+import { MultiSelectModule } from 'primeng/multiselect';
+
 import { IconFieldModule } from 'primeng/iconfield';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 
-import { PackageService, ProgrammingService } from '../../services';
+import {
+  MeetingService,
+  PackageService,
+  ProgrammingService,
+  ResponsibleService,
+} from '../../services';
 import {
   DateModel,
   MeetingModel,
   PackageModel,
   ResponsibleModel,
+  UserModel,
 } from '../../models';
 import { ZONE } from '../../shared/constants';
 
@@ -50,13 +59,17 @@ import { ZONE } from '../../shared/constants';
     InputTextModule,
     InputNumberModule,
     InputIconModule,
+    MultiSelectModule,
+    TextareaModule,
     IconFieldModule,
-    CalendarModule,
+    DatePickerModule,
     DropdownModule,
   ],
   providers: [
     ProgrammingService,
     PackageService,
+    ResponsibleService,
+    MeetingService,
     MessageService,
     ConfirmationService,
   ],
@@ -69,6 +82,7 @@ export class ProgrammingPage implements OnInit {
   meeting: MeetingModel = new MeetingModel();
   responsible: ResponsibleModel = new ResponsibleModel();
   packages: PackageModel[] = [];
+  responsibles: UserModel[] = [];
   zones = ZONE;
   dateDialog = false;
   submitted = false;
@@ -137,6 +151,8 @@ export class ProgrammingPage implements OnInit {
   constructor(
     private programmingService: ProgrammingService,
     private packageService: PackageService,
+    private responsibleService: ResponsibleService,
+    private meetingService: MeetingService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private router: Router
@@ -145,6 +161,7 @@ export class ProgrammingPage implements OnInit {
   ngOnInit(): void {
     this.getAllDates();
     this.getAllPackages();
+    this.getAllResponsibles();
   }
 
   getAllDates() {
@@ -182,6 +199,25 @@ export class ProgrammingPage implements OnInit {
     });
   }
 
+  getAllResponsibles() {
+    this.responsibleService.getAll().subscribe({
+      next: (responsibles) => {
+        this.responsibles = responsibles.map((responsible) => ({
+          ...responsible,
+          fullName: `${responsible.name} ${responsible.surName}`,
+        }));
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
   createDate() {
     this.submitted = true;
     if (this.date.start && this.date.end) {
@@ -201,7 +237,8 @@ export class ProgrammingPage implements OnInit {
             detail: `Programación ${date.id} creada`,
             life: 3000,
           });
-          this.refresh();
+
+          this.createMeeting(date.id); // Create meeting after programming creation
         },
         error: (e) => {
           this.messageService.add({
@@ -214,6 +251,42 @@ export class ProgrammingPage implements OnInit {
       });
       this.refresh();
     }
+  }
+
+  createMeeting(idDate: number) {
+    if (!idDate) return;
+
+    this.meeting.idDate = idDate;
+    const hourFormated = this.formatTime(this.meeting.hour);
+    this.meeting.hour = hourFormated;
+    this.meetingService.create(this.meeting).subscribe({
+      next: (meeting) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Encuentro creado con ID ${meeting.id}`,
+          life: 3000,
+        });
+        this.refresh();
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  // Helper function to format a Date object to HH:mm
+  private formatTime(date: string): string {
+    const d = new Date(date);
+    const hours = d.getHours().toString().padStart(2, '0'); // Get hours and pad with leading zero
+    const minutes = d.getMinutes().toString().padStart(2, '0'); // Get minutes and pad with leading zero
+    // Return formatted time as HH:mm
+    return `${hours}:${minutes}`;
   }
 
   editProgramming() {
@@ -283,6 +356,14 @@ export class ProgrammingPage implements OnInit {
     }
   }
 
+  onResponsibleChange(event: any): void {
+    if (!event.value) return;
+
+    this.meeting.responsibles = event.value.map((responsible: any) => ({
+      idUser: responsible,
+    }));
+  }
+
   goToReservation(idDate: number) {
     if (!idDate) {
       return;
@@ -301,12 +382,23 @@ export class ProgrammingPage implements OnInit {
 
   closePopup() {
     this.dateDialog = false;
+    this.submitted = false;
     this.date = new DateModel();
+    this.meeting = new MeetingModel();
   }
 
   refresh() {
-    this.getAllDates();
-    this.closePopup();
+    this.date = new DateModel();
+    this.dates = [];
+    this.meeting = new MeetingModel();
+    this.responsible = new ResponsibleModel();
+    this.packages = [];
+    this.responsibles = [];
+    this.dateDialog = false;
     this.submitted = false;
+
+    this.getAllDates();
+    this.getAllPackages();
+    this.getAllResponsibles();
   }
 }
