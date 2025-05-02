@@ -363,8 +363,10 @@ export class ProgrammingPage implements OnInit {
 
             this.meeting = {
               ...meeting,
-              hour: new Date(`1970-01-01T${meeting.hour}`).toString(), // Convert hour to Date object
+              hour: this.formatTime(meeting.hour),
+              responsibles: meeting.responsibles.map((r: any) => r.idUser), // Ensure it's a list of IDs
             };
+
             this.dateDialog = true; // Open the dialog for editing
           },
           error: (e) => {
@@ -407,7 +409,7 @@ export class ProgrammingPage implements OnInit {
           this.programmingService.changeStatus(programming.id).subscribe({
             next: (updatedDate) => {
               this.messageService.add({
-                severity: 'success',
+                severity: updatedDate.status ? 'success' : 'warn',
                 summary: 'Éxito',
                 detail: `Programación ${updatedDate.id} ${
                   updatedDate.status ? 'activada' : 'desactivada'
@@ -428,14 +430,6 @@ export class ProgrammingPage implements OnInit {
         },
       });
     }
-  }
-
-  onResponsibleChange(event: any): void {
-    if (!event.value) return;
-
-    this.meeting.responsibles = event.value.map((responsible: any) => ({
-      idUser: responsible,
-    }));
   }
 
   goToReservation(idDate: number) {

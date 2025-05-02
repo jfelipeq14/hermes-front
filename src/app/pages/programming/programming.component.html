@@ -180,14 +180,14 @@
         <label for="responsibleList">Responsables</label>
         <p-multiselect
           id="responsibleList"
+          [(ngModel)]="meeting.responsibles"
           [options]="responsibles"
           placeholder="Seleccione responsables"
-          optionLabel="name"
+          optionLabel="fullName"
           optionValue="id"
           display="chip"
           [filter]="true"
-          [filterBy]="'name,surName'"
-          (onChange)="onResponsibleChange($event)"
+          [filterBy]="'fullName'"
           appendTo="body"
         >
           <ng-template #selectedItems let-selected>
@@ -195,12 +195,12 @@
               *ngFor="let responsible of selected"
               class="inline-flex items-center py-1 px-2 bg-primary text-primary-contrast rounded-border mr-2"
             >
-              <div>{{ responsible.name }} {{ responsible.surName }}</div>
+              <div>{{ responsible.fullName }}</div>
             </div>
           </ng-template>
           <ng-template #item let-responsible>
             <div class="flex items-center">
-              <div>{{ responsible.name }} {{ responsible.surName }}</div>
+              <div>{{ responsible.fullName }}</div>
             </div>
           </ng-template>
         </p-multiselect>
