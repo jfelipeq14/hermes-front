@@ -239,7 +239,7 @@ export class ProgrammingPage implements OnInit {
               detail: `Programación ${updatedDate.id} actualizada`,
               life: 3000,
             });
-            this.refresh();
+            this.createMeeting(updatedDate.id);
           },
           error: (e) => {
             this.messageService.add({
@@ -261,7 +261,7 @@ export class ProgrammingPage implements OnInit {
               life: 3000,
             });
 
-            this.createMeeting(date.id); // Create meeting after programming creation
+            this.createMeeting(date.id);
           },
           error: (e) => {
             this.messageService.add({
@@ -273,7 +273,6 @@ export class ProgrammingPage implements OnInit {
           },
         });
       }
-      this.refresh();
     }
   }
 
@@ -283,25 +282,49 @@ export class ProgrammingPage implements OnInit {
     this.meeting.idDate = idDate;
     const hourFormated = this.formatTime(this.meeting.hour);
     this.meeting.hour = hourFormated;
-    this.meetingService.create(this.meeting).subscribe({
-      next: (meeting) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: `Encuentro creado con ID ${meeting.id}`,
-          life: 3000,
-        });
-        this.refresh();
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
-        });
-      },
-    });
+    console.log(this.meeting);
+
+    if (this.meeting.id) {
+      this.meetingService.update(this.meeting).subscribe({
+        next: (meeting) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: `Encuentro actualizado con ID ${meeting.id}`,
+            life: 3000,
+          });
+          this.refresh();
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
+      });
+    } else {
+      this.meetingService.create(this.meeting).subscribe({
+        next: (meeting) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: `Encuentro creado con ID ${meeting.id}`,
+            life: 3000,
+          });
+          this.refresh();
+        },
+        error: (e) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error.message,
+            life: 3000,
+          });
+        },
+      });
+    }
   }
 
   // Helper function to format a Date object to HH:mm
@@ -332,7 +355,27 @@ export class ProgrammingPage implements OnInit {
           startRegistration: new Date(programming.startRegistration), // Convert to Date object
           endRegistration: new Date(programming.endRegistration), // Convert to Date object
         };
-        this.dateDialog = true; // Open the dialog for editing
+
+        // Fetch the meeting related to the programming
+        this.meetingService.getByIdDate(programming.id).subscribe({
+          next: (meeting) => {
+            console.log(meeting);
+
+            this.meeting = {
+              ...meeting,
+              hour: new Date(`1970-01-01T${meeting.hour}`).toString(), // Convert hour to Date object
+            };
+            this.dateDialog = true; // Open the dialog for editing
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
+        });
       }
     }
   }

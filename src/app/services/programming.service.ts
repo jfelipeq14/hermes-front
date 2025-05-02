@@ -23,10 +23,10 @@ export class ProgrammingService {
   }
 
   update(date: DateModel): Observable<DateModel> {
-    return this.http.patch<DateModel>(`${this.url}`, date);
+    return this.http.patch<DateModel>(`${this.url}${date.id}`, date);
   }
 
   changeStatus(id: number): Observable<DateModel> {
-    return this.http.patch<DateModel>(`${this.url}${id}`, {});
+    return this.http.patch<DateModel>(`${this.url}changeStatus/${id}`, {});
   }
 }
