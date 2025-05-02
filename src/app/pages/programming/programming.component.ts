@@ -27,6 +27,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 import {
   MeetingService,
@@ -62,6 +63,7 @@ import { ZONE } from '../../shared/constants';
     MultiSelectModule,
     TextareaModule,
     IconFieldModule,
+    SplitButtonModule,
     DatePickerModule,
     DropdownModule,
   ],
@@ -132,8 +134,8 @@ export class ProgrammingPage implements OnInit {
     eventClassNames: ['calendar-event'],
     dateClick: (info) => {
       this.date = new DateModel();
-      this.date.start = this.formatDate(info.date);
-      this.date.end = this.formatDate(info.date);
+      this.date.start = info.date;
+      this.date.end = info.date;
       this.dateDialog = true;
     },
     events: this.dates.map((date) => ({
@@ -311,10 +313,9 @@ export class ProgrammingPage implements OnInit {
   }
 
   private formatDate(date: Date): Date {
-    // Formatear la fecha a 'yyyy-MM-dd' para que sea compatible con el modelo
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
     return new Date(`${year}-${month}-${day}`);
   }
 
@@ -337,51 +338,52 @@ export class ProgrammingPage implements OnInit {
   }
 
   getProgrammingById(id: number) {
-    // Replace with actual logic to fetch programming details by ID
     return this.dates.find((item) => item.id === id) || new DateModel();
   }
 
   changeStatusDate(): void {
-    const id = this.selectedEvent?.id; // Use the selected event to get the ID
+    const id = this.selectedEvent?.id;
 
-    if (id) {
-      const programming = this.getProgrammingById(+id); // Fetch programming details by ID
-      if (programming) {
-        this.confirmationService.confirm({
-          message: `¿Está seguro de que desea ${
-            programming.status ? 'desactivar' : 'activar'
-          } la programación ${programming.id}?`,
-          header: 'Confirmación',
-          icon: 'pi pi-exclamation-triangle',
-          acceptLabel: 'Sí',
-          rejectLabel: 'No',
-          acceptButtonStyleClass: 'p-button-primary',
-          rejectButtonStyleClass: 'p-button-secondary',
-          accept: () => {
-            this.programmingService.changeStatus(programming.id).subscribe({
-              next: (updatedDate) => {
-                this.messageService.add({
-                  severity: 'success',
-                  summary: 'Éxito',
-                  detail: `Programación ${updatedDate.id} ${
-                    updatedDate.status ? 'activada' : 'desactivada'
-                  }`,
-                  life: 3000,
-                });
-                this.refresh();
-              },
-              error: (e) => {
-                this.messageService.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: e.error.message,
-                  life: 3000,
-                });
-              },
-            });
-          },
-        });
-      }
+    if (!id) {
+      return;
+    }
+
+    const programming = this.getProgrammingById(+id); // Fetch programming details by ID
+    if (programming) {
+      this.confirmationService.confirm({
+        message: `¿Está seguro de que desea ${
+          programming.status ? 'desactivar' : 'activar'
+        } la programación ${programming.id}?`,
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Sí',
+        rejectLabel: 'No',
+        acceptButtonStyleClass: 'p-button-primary',
+        rejectButtonStyleClass: 'p-button-secondary',
+        accept: () => {
+          this.programmingService.changeStatus(programming.id).subscribe({
+            next: (updatedDate) => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Éxito',
+                detail: `Programación ${updatedDate.id} ${
+                  updatedDate.status ? 'activada' : 'desactivada'
+                }`,
+                life: 3000,
+              });
+              this.refresh();
+            },
+            error: (e) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: e.error.message,
+                life: 3000,
+              });
+            },
+          });
+        },
+      });
     }
   }
 

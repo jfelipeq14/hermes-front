@@ -5,24 +5,14 @@
     class="w-full"
   >
     <ng-template #eventContent let-arg>
-      <div class="event-container">
-        <p-menu
-          #menu
-          [popup]="true"
-          [model]="menuItems"
-          appendTo="body"
-        ></p-menu>
-        <p-button
-          type="button"
-          icon="pi pi-chevron-down"
-          class="event-button"
-          severity="secondary"
-          [style]="{ width: '100%', padding: '2px' }"
-          label="{{ arg.event.title }}"
-          id="{{ arg.event.id }}"
-          (click)="selectedEvent = arg.event; menu.toggle($event)"
-        ></p-button>
-      </div>
+      <p-splitbutton
+        label="{{ arg.event.title }}"
+        [model]="menuItems"
+        [style]="{ width: '100%', padding: '2px' }"
+        severity="secondary"
+        id="{{ arg.event.id }}"
+        (click)="selectedEvent = arg.event"
+      ></p-splitbutton>
     </ng-template>
   </full-calendar>
 </div>
@@ -198,6 +188,7 @@
           [filter]="true"
           [filterBy]="'name,surName'"
           (onChange)="onResponsibleChange($event)"
+          appendTo="body"
         >
           <ng-template #selectedItems let-selected>
             <div
