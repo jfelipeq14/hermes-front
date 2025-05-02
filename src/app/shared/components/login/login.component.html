@@ -1,9 +1,9 @@
 <div class="flex flex-column">
   <label for="name">Gmail</label>
   <input type="email" pInputText id="name" [(ngModel)]="user.email" required />
-  <small class="p-error" *ngIf="submitted && !user.email"
-    >El nombre es obligatorio.</small
-  >
+  <small class="p-error" *ngIf="submitted && !user.email">
+    El nombre es obligatorio.
+  </small>
 </div>
 <div class="flex flex-column">
   <label for="name">Password</label>
@@ -14,9 +14,9 @@
     [(ngModel)]="user.password"
     required
   />
-  <small class="p-error" *ngIf="submitted && !user.password"
-    >El nombre es obligatorio.</small
-  >
+  <small class="p-error" *ngIf="submitted && !user.password">
+    El nombre es obligatorio.
+  </small>
 </div>
 
 <div class="flex align-items-center justify-content-end gap-2">
@@ -26,6 +26,26 @@
     severity="primary"
     (click)="onSubmit()"
   ></p-button>
+
+  <p-button
+    label="Restablecer contraseña"
+    severity="secondary"
+    (click)="openResetPasswordPopup()"
+  ></p-button>
 </div>
 
 <p-toast />
+
+<p-dialog
+  [(visible)]="resetPasswordDialog"
+  [style]="{ width: '450px' }"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+>
+    <app-reset-password
+      [resetPasswordDialog]="resetPasswordDialog"
+      [submitted]="submitted"
+      [user]="user"
+    ></app-reset-password>
+</p-dialog>
