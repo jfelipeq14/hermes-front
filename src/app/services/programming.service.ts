@@ -22,8 +22,8 @@ export class ProgrammingService {
     return this.http.post<DateModel>(`${this.url}`, date);
   }
 
-  update(dates: DateModel[]): Observable<DateModel[]> {
-    return this.http.patch<DateModel[]>(`${this.url}`, dates);
+  update(date: DateModel): Observable<DateModel> {
+    return this.http.patch<DateModel>(`${this.url}`, date);
   }
 
   changeStatus(id: number): Observable<DateModel> {

@@ -86,6 +86,7 @@ export class ProgrammingPage implements OnInit {
   zones = ZONE;
   dateDialog = false;
   submitted = false;
+  dateNow = this.formatDate(new Date());
   selectedEvent: any;
   menuItems: MenuItem[] = [
     {
@@ -131,11 +132,8 @@ export class ProgrammingPage implements OnInit {
     eventClassNames: ['calendar-event'],
     dateClick: (info) => {
       this.date = new DateModel();
-      const localDate = new Date(info.dateStr); // Convertir a fecha local
-      localDate.setMinutes(
-        localDate.getMinutes() + localDate.getTimezoneOffset()
-      ); // Ajustar desfase de zona horaria
-      this.date.start = localDate;
+      this.date.start = this.formatDate(info.date);
+      this.date.end = this.formatDate(info.date);
       this.dateDialog = true;
     },
     events: this.dates.map((date) => ({
@@ -229,26 +227,50 @@ export class ProgrammingPage implements OnInit {
         endRegistration: new Date(this.date.endRegistration),
       };
 
-      this.programmingService.create(dateToSend).subscribe({
-        next: (date) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: `Programación ${date.id} creada`,
-            life: 3000,
-          });
+      if (this.date.id) {
+        // Edit existing programming
+        this.programmingService.update(dateToSend).subscribe({
+          next: (updatedDate) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: `Programación ${updatedDate.id} actualizada`,
+              life: 3000,
+            });
+            this.refresh();
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
+        });
+      } else {
+        // Create new programming
+        this.programmingService.create(dateToSend).subscribe({
+          next: (date) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: `Programación ${date.id} creada`,
+              life: 3000,
+            });
 
-          this.createMeeting(date.id); // Create meeting after programming creation
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
+            this.createMeeting(date.id); // Create meeting after programming creation
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
+        });
+      }
       this.refresh();
     }
   }
@@ -282,11 +304,18 @@ export class ProgrammingPage implements OnInit {
 
   // Helper function to format a Date object to HH:mm
   private formatTime(date: string): string {
-    const d = new Date(date);
-    const hours = d.getHours().toString().padStart(2, '0'); // Get hours and pad with leading zero
-    const minutes = d.getMinutes().toString().padStart(2, '0'); // Get minutes and pad with leading zero
-    // Return formatted time as HH:mm
+    const parsedDate = new Date(date);
+    const hours = String(parsedDate.getUTCHours()).padStart(2, '0');
+    const minutes = String(parsedDate.getUTCMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
+  }
+
+  private formatDate(date: Date): Date {
+    // Formatear la fecha a 'yyyy-MM-dd' para que sea compatible con el modelo
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return new Date(`${year}-${month}-${day}`);
   }
 
   editProgramming() {
