@@ -11,6 +11,8 @@ import { UserModel } from '../../../models';
 import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +28,8 @@ import { ToastModule } from 'primeng/toast';
     RouterModule,
     RippleModule,
     CommonModule,
+    DialogModule,
+    ResetPasswordComponent
   ],
   providers: [AuthService, MessageService],
 })
@@ -39,6 +43,9 @@ export class LoginComponent {
   @Input() loginDialog!: boolean;
   @Input() submitted!: boolean;
   @Input() user: UserModel = new UserModel();
+  // @Output() openResetPassword = new EventEmitter<boolean>();
+  
+  resetPasswordDialog = false;
 
   onSubmit() {
     this.submitted = true;
@@ -66,4 +73,9 @@ export class LoginComponent {
     this.loginDialog = false;
     this.submitted = false;
   }
+
+  openResetPasswordPopup() {
+    this.resetPasswordDialog= !this.resetPasswordDialog
+  }
+
 }
