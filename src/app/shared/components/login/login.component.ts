@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
-import { CommonModule } from '@angular/common';
 import { UserModel } from '../../../models';
 import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
