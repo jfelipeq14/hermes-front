@@ -83,8 +83,8 @@ export class ProgrammingPage implements OnInit {
   dates: DateModel[] = [];
   meeting: MeetingModel = new MeetingModel();
   responsible: ResponsibleModel = new ResponsibleModel();
-  packages: PackageModel[] = [];
   responsibles: UserModel[] = [];
+  packages: PackageModel[] = [];
   zones = ZONE;
   dateDialog = false;
   submitted = false;
@@ -179,6 +179,28 @@ export class ProgrammingPage implements OnInit {
             classNames: [date.status ? 'bg-primary' : 'bg-danger', 'border-0'],
           })),
         }));
+      },
+    });
+  }
+
+  getAllMeetings() {
+    this.meetingService.getAll().subscribe({
+      next: (meetings) => {
+        this.dates = this.dates.map((date) => {
+          const meeting = meetings.find((m) => m.idDate === date.id);
+          return {
+            ...date,
+            meeting: meeting ? meeting : null,
+          };
+        });
+      },
+      error: (e) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: e.error.message,
+          life: 3000,
+        });
       },
     });
   }
@@ -359,23 +381,21 @@ export class ProgrammingPage implements OnInit {
         // Fetch the meeting related to the programming
         this.meetingService.getByIdDate(programming.id).subscribe({
           next: (meeting) => {
-            console.log(meeting);
+            if (!meeting) {
+              this.meeting = new MeetingModel();
+            }
 
             this.meeting = {
               ...meeting,
               hour: this.formatTime(meeting.hour),
-              responsibles: meeting.responsibles.map((r: any) => r.idUser), // Ensure it's a list of IDs
+              responsibles: meeting.responsibles.map((r: any) => r.idUser),
             };
 
-            this.dateDialog = true; // Open the dialog for editing
+            this.dateDialog = true;
           },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
-            });
+          error: () => {
+            this.meeting = new MeetingModel();
+            this.dateDialog = true;
           },
         });
       }
