@@ -180,7 +180,6 @@
         <label for="responsibleList">Responsables</label>
         <p-multiselect
           id="responsibleList"
-          [(ngModel)]="meeting.responsibles"
           [options]="responsibles"
           placeholder="Seleccione responsables"
           optionLabel="fullName"
@@ -189,6 +188,7 @@
           [filter]="true"
           [filterBy]="'fullName'"
           appendTo="body"
+          (onChange)="onChangeResponsible($event)"
         >
           <ng-template #selectedItems let-selected>
             <div

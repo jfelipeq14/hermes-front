@@ -381,9 +381,7 @@ export class ProgrammingPage implements OnInit {
         // Fetch the meeting related to the programming
         this.meetingService.getByIdDate(programming.id).subscribe({
           next: (meeting) => {
-            if (!meeting) {
-              this.meeting = new MeetingModel();
-            }
+            if (!meeting) this.meeting = new MeetingModel(); // Reset meeting if not found
 
             this.meeting = {
               ...meeting,
@@ -394,8 +392,8 @@ export class ProgrammingPage implements OnInit {
             this.dateDialog = true;
           },
           error: () => {
-            this.meeting = new MeetingModel();
-            this.dateDialog = true;
+            this.meeting = new MeetingModel(); // Reset meeting if not found
+            this.dateDialog = true; // Open the dialog for editing
           },
         });
       }
@@ -404,6 +402,14 @@ export class ProgrammingPage implements OnInit {
 
   getProgrammingById(id: number) {
     return this.dates.find((item) => item.id === id) || new DateModel();
+  }
+
+  onChangeResponsible(event: any) {
+    if (!event.value) return;
+
+    this.meeting.responsibles = event.value.map((id: number) => ({
+      idUser: id,
+    }));
   }
 
   changeStatusDate(): void {
