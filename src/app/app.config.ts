@@ -25,7 +25,15 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([jwtInterceptor])),
     provideAnimationsAsync(),
     providePrimeNG({
-      theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } },
+      theme: {
+        preset: Aura,
+        options: {
+          cssLayer: {
+            name: 'primeng',
+            order: 'theme, base, primeng',
+          },
+        },
+      },
     }),
   ],
 };

@@ -144,7 +144,7 @@ export class ProgrammingPage implements OnInit {
       start: date.start,
       end: date.end,
       allDay: false,
-      classNames: ['bg-primary'],
+      status: date.status,
     })),
   });
 
@@ -176,7 +176,7 @@ export class ProgrammingPage implements OnInit {
             start: date.start,
             end: date.end,
             allDay: false,
-            classNames: [date.status ? 'bg-primary' : 'bg-danger', 'border-0'],
+            status: date.status,
           })),
         }));
       },
