@@ -47,7 +47,7 @@ import { ZONE } from '../../shared/constants';
 @Component({
   selector: 'app-programming',
   templateUrl: './programming.component.html',
-  styleUrls: ['./programming.component.css'],
+  styleUrls: ['./programming.component.scss'],
   imports: [
     CommonModule,
     FullCalendarModule,

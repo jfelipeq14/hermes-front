@@ -17,7 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  styleUrls: ['./register.component.scss'],
   imports: [
     ButtonModule,
     CheckboxModule,

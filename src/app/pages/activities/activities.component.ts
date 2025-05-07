@@ -18,7 +18,7 @@ import { ActivityService } from '../../services';
 @Component({
   selector: 'app-activities',
   templateUrl: './activities.component.html',
-  styleUrl: './activities.component.css',
+  styleUrl: './activities.component.scss',
   imports: [
     CommonModule,
     TableModule,

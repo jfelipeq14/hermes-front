@@ -17,7 +17,7 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrls: ['./login.component.scss'],
   imports: [
     ButtonModule,
     CheckboxModule,

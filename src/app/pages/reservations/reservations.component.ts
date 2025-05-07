@@ -40,7 +40,7 @@ import {
 @Component({
   selector: 'app-reservations',
   templateUrl: './reservations.component.html',
-  styleUrls: ['./reservations.component.css'],
+  styleUrls: ['./reservations.component.scss'],
   imports: [
     CommonModule,
     TableModule,

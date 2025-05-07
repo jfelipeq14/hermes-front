@@ -21,7 +21,7 @@ import { MunicipalityService } from '../../../services';
 @Component({
   selector: 'app-form-clients',
   templateUrl: './form-clients.component.html',
-  styleUrls: ['./form-clients.component.css'],
+  styleUrls: ['./form-clients.component.scss'],
   imports: [
     CommonModule,
     FormsModule,

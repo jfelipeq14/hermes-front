@@ -18,7 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.css'],
+  styleUrls: ['./categories.component.scss'],
   imports: [
     CommonModule,
     TableModule,

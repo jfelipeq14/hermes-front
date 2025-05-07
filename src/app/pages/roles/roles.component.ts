@@ -44,7 +44,7 @@ type PermitPrivilegeMatrix = Record<
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html',
-  styleUrls: ['./roles.component.css'],
+  styleUrls: ['./roles.component.scss'],
   imports: [
     CommonModule,
     TableModule,

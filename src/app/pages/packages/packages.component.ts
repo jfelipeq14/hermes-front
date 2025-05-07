@@ -36,7 +36,7 @@ import { levels } from '../../shared/constants';
 @Component({
   selector: 'app-packages',
   templateUrl: './packages.component.html',
-  styleUrls: ['./packages.component.css'],
+  styleUrls: ['./packages.component.scss'],
   imports: [
     CommonModule,
     TableModule,

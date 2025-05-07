@@ -13,7 +13,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 @Component({
   selector: 'app-form-payments',
   templateUrl: './form-payments.component.html',
-  styleUrls: ['./form-payments.component.css'],
+  styleUrls: ['./form-payments.component.scss'],
   imports: [
     CommonModule,
     FormsModule,

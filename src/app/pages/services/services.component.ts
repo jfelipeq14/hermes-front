@@ -20,7 +20,7 @@ import { TagModule } from 'primeng/tag';
   standalone: true,
   selector: 'app-services',
   templateUrl: './services.component.html',
-  styleUrls: ['./services.component.css'],
+  styleUrls: ['./services.component.scss'],
   imports: [
     CommonModule,
     TableModule,
