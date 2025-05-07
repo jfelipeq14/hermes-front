@@ -39,7 +39,7 @@ import {
     ConfirmationService,
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
+  styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
   user: UserModel = new UserModel();

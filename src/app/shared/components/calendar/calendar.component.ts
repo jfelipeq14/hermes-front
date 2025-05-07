@@ -13,7 +13,7 @@ import { ProgrammingService } from '../../../services';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css'],
+  styleUrls: ['./calendar.component.scss'],
   imports: [CommonModule, FullCalendarModule, MenuModule, ButtonModule],
   providers: [ProgrammingService, MessageService],
 })

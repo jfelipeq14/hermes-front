@@ -11,7 +11,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-form-travelers',
   templateUrl: './form-travelers.component.html',
-  styleUrl: './form-travelers.component.css',
+  styleUrl: './form-travelers.component.scss',
   imports: [TableModule, ButtonModule, CommonModule, FormClientsComponent],
   providers: [MunicipalityService, MessageService],
 })

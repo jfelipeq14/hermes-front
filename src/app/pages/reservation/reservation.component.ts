@@ -28,7 +28,7 @@ import { CardModule } from 'primeng/card';
 @Component({
   selector: 'app-reservation',
   templateUrl: './reservation.component.html',
-  styleUrl: './reservation.component.css',
+  styleUrl: './reservation.component.scss',
   imports: [
     CommonModule,
     StepperModule,

@@ -24,7 +24,7 @@ import { TagModule } from 'primeng/tag';
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.component.html',
-  styleUrls: ['./payments.component.css'],
+  styleUrls: ['./payments.component.scss'],
   imports: [
     CommonModule,
     TableModule,

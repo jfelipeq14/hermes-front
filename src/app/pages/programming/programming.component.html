@@ -7,10 +7,9 @@
     <ng-template #eventContent let-arg>
       <p-splitbutton
         label="{{ arg.event.title }}"
-        [model]="menuItems"
-        [style]="{ width: '100%', padding: '2px' }"
-        severity="secondary"
         id="{{ arg.event.id }}"
+        [model]="menuItems"
+        [severity]="arg.event.extendedProps.status ? 'primary' : 'danger'"
         (click)="selectedEvent = arg.event"
         [appendTo]="'body'"
       ></p-splitbutton>

@@ -117,6 +117,7 @@
                     (onChange)="changeStatusPayment(payment.id, $event)"
                     styleClass="p-dropdown-sm"
                     [style]="{ width: '150px' }"
+                    [appendTo]="'body'"
                   >
                     <ng-template pTemplate="selectedItem">
                       <p-tag

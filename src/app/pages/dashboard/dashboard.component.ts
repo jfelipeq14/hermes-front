@@ -13,7 +13,7 @@ import { MockDataService } from '../../services';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
+  styleUrl: './dashboard.component.scss',
   imports: [CommonModule, TableModule, ButtonModule, RippleModule, ChartModule],
   providers: [MessageService],
 })

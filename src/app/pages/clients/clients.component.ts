@@ -15,7 +15,7 @@ import { UserModel } from '../../models';
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
-  styleUrl: './clients.component.css',
+  styleUrl: './clients.component.scss',
   imports: [
     CommonModule,
     TableModule,
