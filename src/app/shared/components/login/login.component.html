@@ -1,59 +1,53 @@
-<!-- login.component.html -->
-<div class="flex flex-column align-items-center justify-content-center min-h-screen">
-  <!-- Logo -->
-  <img src="/hermes.png" width="120" alt="Hermes" class="" />
+<div class="flex flex-column align-items-center justify-content-center">
+  <h2>Iniciar sesión</h2>
+  <img src="/hermes.png" width="120" alt="Hermes" />
 
-  <!-- Título y subtítulo -->
-  <h1 class="welcome-title">Vienvenido</h1>
-  <p class="sign-in-text">Ingresa los dtos para continuar</p>
-
-  <!-- Formulario -->
-  <div class="form-container">
-    <div class="p-field mb-3">
+  <div class="flex flex-column w-full">
+    <div class="field flex flex-column">
       <label for="email">Email</label>
       <input
-        type="email"
         pInputText
+        type="email"
         id="email"
         [(ngModel)]="user.email"
-        placeholder="Email address"
+        placeholder="Correo electrónico"
         required
-        class="w-full"
       />
       <small class="p-error" *ngIf="submitted && !user.email">
         Email is required.
       </small>
     </div>
 
-    <div class="p-field mb-3">
+    <div class="field flex flex-column">
       <label for="password">Password</label>
-      <p-password
+      <input
+        pInputText
+        type="password"
         id="password"
         [(ngModel)]="user.password"
-        [toggleMask]="true"
-        placeholder="Password"
-        [feedback]="false"
-        [style]="{ width: '100%' }"
+        placeholder="Contraseña"
         required
-      ></p-password>
+      />
       <small class="p-error" *ngIf="submitted && !user.password">
         Password is required.
       </small>
     </div>
-    <div class="flex flex-column align-items-center ">
-      <p-button
+  </div>
+
+  <div class="flex flex-column align-items-center justify-content-center gap-4">
+    <p-button
       label="Ingresar"
       icon="pi pi-user"
       severity="primary"
       (click)="onSubmit()"
-      ></p-button>
-      <p-button
-      href="#"
-      class="forgot-link"
+    />
+    <p-button
+      label="Restablecer contraseña"
+      icon="pi pi-times"
+      severity="secondary"
+      styleClass="p-button-text"
       (click)="openResetPasswordPopup()"
-      >Resbalecer contraseña</p-button
-    >
-    </div>
+    />
   </div>
 </div>
 
