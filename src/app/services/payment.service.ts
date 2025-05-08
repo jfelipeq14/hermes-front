@@ -14,8 +14,11 @@ export class PaymentService {
   getAll(): Observable<PaymentModel[]> {
     return this.http.get<PaymentModel[]>(this.urlPayment);
   }
+
   getAllReservationWhitPayments(): Observable<ReservationModel[]> {
-    return this.http.get<ReservationModel[]>(this.urlReservation + 'reservations-with-payments');
+    return this.http.get<ReservationModel[]>(
+      this.urlReservation + 'reservations-with-payments'
+    );
   }
 
   getById(id: number): Observable<PaymentModel> {
@@ -23,18 +26,23 @@ export class PaymentService {
   }
 
   getByReservation(idReservation: number): Observable<PaymentModel[]> {
-    return this.http.get<PaymentModel[]>(`${this.urlPayment}reservation/${idReservation}`);
+    return this.http.get<PaymentModel[]>(
+      `${this.urlPayment}reservation/${idReservation}`
+    );
   }
 
-  create(activity: PaymentModel): Observable<PaymentModel> {
-    return this.http.post<PaymentModel>(this.urlPayment, activity);
+  create(payment: PaymentModel): Observable<PaymentModel> {
+    return this.http.post<PaymentModel>(this.urlPayment, payment);
   }
 
-  update(activity: PaymentModel): Observable<PaymentModel> {
-    return this.http.patch<PaymentModel>(this.urlPayment + activity.id, activity);
+  update(payment: PaymentModel): Observable<PaymentModel> {
+    return this.http.patch<PaymentModel>(this.urlPayment + payment.id, payment);
   }
 
   changeStatus(id: number, status: string): Observable<PaymentModel> {
-    return this.http.patch<PaymentModel>(this.urlPayment + `changeStatus/${id}`,{status});
+    return this.http.patch<PaymentModel>(
+      this.urlPayment + `${id}/change-status`,
+      { status }
+    );
   }
 }

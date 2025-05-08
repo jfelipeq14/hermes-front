@@ -1,7 +1,9 @@
+// --ESTADO DE RESERVA: Pendiente(no pago `N`), Confirmada(pago 50% `C`), Pagada(pago completo `P`), Modificada (M), Cancelada(No pago, no va `R`), En ejecución y Finalizada
+
 export class ReservationModel {
   id = 0;
   idDate = 0;
   idUser = 0;
   price = 0;
-  status = true;
+  status: 'N' | 'C' | 'P' | 'M' | 'R' | 'E' | 'F' = 'N';
 }

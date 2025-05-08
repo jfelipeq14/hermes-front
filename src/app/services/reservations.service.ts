@@ -52,9 +52,11 @@ export class ReservationsService {
     );
   }
 
-  // Cambiar el estado de una reservación
-  changeStatus(id: number): Observable<ReservationModel> {
-    return this.http.patch<ReservationModel>(`${this.urlReservation}${id}`, {});
+  changeStatus(id: number, status: string): Observable<ReservationModel> {
+    return this.http.patch<ReservationModel>(
+      this.urlReservation + `${id}/change-status`,
+      { status }
+    );
   }
 
   // Obtener viajeros por reservación

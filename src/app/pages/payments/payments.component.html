@@ -70,8 +70,8 @@
       <td>{{ reservation.price | currency : "USD" }}</td>
       <td>
         <p-tag
-          [value]="reservation.status ? 'Activo' : 'Inactivo'"
-          [severity]="getSeverity(reservation.status)"
+          [value]="getValueReservation(reservation.status)"
+          [severity]="getSeverityReservation(reservation.status)"
         ></p-tag>
       </td>
       <td>{{ reservation.idUser }}</td>
@@ -114,21 +114,20 @@
                     [(ngModel)]="payment.status"
                     optionLabel="name"
                     optionValue="value"
-                    (onChange)="changeStatusPayment(payment.id, $event)"
+                    (onChange)="changeStatusPayment(payment)"
                     styleClass="p-dropdown-sm"
-                    [style]="{ width: '150px' }"
                     [appendTo]="'body'"
                   >
                     <ng-template pTemplate="selectedItem">
                       <p-tag
-                        [value]="payment.status"
-                        [severity]="getSeverity(payment.status)"
+                        [value]="getValuePayment(payment.status)"
+                        [severity]="getServerityPayment(payment.status)"
                       ></p-tag>
                     </ng-template>
                     <ng-template let-status pTemplate="item">
                       <p-tag
-                        [value]="status.name"
-                        [severity]="getSeverity(status.value)"
+                        [value]="getValuePayment(status.value)"
+                        [severity]="getServerityPayment(status.value)"
                       ></p-tag>
                     </ng-template>
                   </p-dropdown>
