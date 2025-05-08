@@ -15,11 +15,17 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TagModule } from 'primeng/tag';
 
 import { PaymentService, ReservationsService } from '../../services';
 import { PaymentModel, ReservationModel } from '../../models';
 import { paymentStatus } from '../../shared/constants';
-import { TagModule } from 'primeng/tag';
+import {
+  getSeverityPayment,
+  getSeverityReservation,
+  getValuePayment,
+  getValueReservation,
+} from '../../shared/helpers';
 
 @Component({
   selector: 'app-payments',
@@ -55,6 +61,10 @@ export class PaymentsPage implements OnInit {
   submitted = false;
   dateToday: Date = new Date();
   statuses = paymentStatus;
+  getServerityPayment = getSeverityPayment;
+  getSeverityReservation = getSeverityReservation;
+  getValuePayment = getValuePayment;
+  getValueReservation = getValueReservation;
   expandedRows: Record<string, boolean> = {};
 
   constructor(
@@ -89,12 +99,17 @@ export class PaymentsPage implements OnInit {
   }
 
   getPaymentsByReservation(reservationId: number): PaymentModel[] {
-    return this.payments.filter(payment => payment.idReservation === reservationId);
+    return this.payments.filter(
+      (payment) => payment.idReservation === reservationId
+    );
   }
 
   getPaymentsTotal(reservationId: number): number {
     const reservationPayments = this.getPaymentsByReservation(reservationId);
-    return reservationPayments.reduce((total, payment) => total + payment.price, 0);
+    return reservationPayments.reduce(
+      (total, payment) => total + payment.price,
+      0
+    );
   }
 
   getPaymentsCount(reservationId: number): number {
@@ -104,7 +119,7 @@ export class PaymentsPage implements OnInit {
   onRowExpand(event: any) {
     const reservationId = event.data.id;
     // Cargar los pagos si aún no están cargados
-    if (!this.payments.some(p => p.idReservation === reservationId)) {
+    if (!this.payments.some((p) => p.idReservation === reservationId)) {
       this.paymentService.getByReservation(reservationId).subscribe({
         next: (payments) => {
           this.payments = [...this.payments, ...payments];
@@ -114,30 +129,11 @@ export class PaymentsPage implements OnInit {
             severity: 'error',
             summary: 'Error',
             detail: 'No se pudieron cargar los pagos de la reservación',
-            life: 3000
+            life: 3000,
           });
-        }
+        },
       });
     }
-  }
-
-  getSeverity(status: boolean): 'success' | 'danger' {
-    return status ? 'success' : 'danger';
-  }
-
-  showPopup() {
-    this.payment = new PaymentModel();
-    this.submitted = false;
-    this.paymentDialog = true;
-  }
-
-  closePopup() {
-    this.paymentDialog = false;
-    this.submitted = false;
-  }
-
-  refresh() {
-    this.getAllReservations();
   }
 
   savePayment() {
@@ -191,30 +187,70 @@ export class PaymentsPage implements OnInit {
     this.paymentDialog = true;
   }
 
-  changeStatusPayment(idPayment: number, event:any) {
-    if (!event) return;
-    const status = event.value;
-    this.paymentService.changeStatus(idPayment,status).subscribe({
-      next: (p) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: `Pago con ID ${p.id} ${
-            p.status ? 'activado' : 'desactivado'
-          }`,
-          life: 3000,
+  changeStatusPayment(payment: PaymentModel) {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro de que desea cambiar el estado de ' + payment.id + '?',
+      header: 'Confirmar',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
+      accept: () => {
+        this.paymentService.changeStatus(payment.id, payment.status).subscribe({
+          next: (pay) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: `${pay.id} cambiado a ${this.getValuePayment(
+                pay.status
+              )}`,
+              life: 3000,
+            });
+            this.refresh();
+          },
+          error: (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: e.error.message,
+              life: 3000,
+            });
+          },
         });
       },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail:
-            e.error.message || 'No se pudo cambiar el estado del pago',
-          life: 3000,
-        });
+      reject: () => {
+        this.refresh();
       },
     });
   }
 
+  showPopup() {
+    this.payment = new PaymentModel();
+    this.submitted = false;
+    this.paymentDialog = true;
+  }
+
+  closePopup() {
+    this.paymentDialog = false;
+    this.submitted = false;
+  }
+
+  refresh() {
+    this.payments = [];
+    this.reservations = [];
+    this.payment = new PaymentModel();
+    this.paymentDialog = false;
+    this.submitted = false;
+    this.dateToday = new Date();
+    this.statuses = paymentStatus;
+    this.getServerityPayment = getSeverityPayment;
+    this.getSeverityReservation = getSeverityReservation;
+    this.getValuePayment = getValuePayment;
+    this.getValueReservation = getValueReservation;
+    this.expandedRows = {};
+
+    this.getAllReservations();
+  }
 }

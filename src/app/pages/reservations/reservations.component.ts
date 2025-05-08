@@ -36,6 +36,11 @@ import {
   FormPaymentsComponent,
   FormTravelersComponent,
 } from '../../shared/components';
+import { reservationStatus } from '../../shared/constants';
+import {
+  getSeverityReservation,
+  getValueReservation,
+} from '../../shared/helpers';
 
 @Component({
   selector: 'app-reservations',
@@ -81,6 +86,11 @@ export class ReservationsPage implements OnInit {
   travelers: UserModel[] = [];
   payment: PaymentModel = new PaymentModel();
   packages: PackageModel[] = [];
+  reservationTravelers: ReservationTravelerModel[] = [];
+  statuses = reservationStatus;
+  getValueReservation = getValueReservation;
+  getSeverityReservation = getSeverityReservation;
+  idReservation = 0;
   activeStepIndex = 0;
   steps = [
     { label: 'Crear Cliente', value: 0 },
@@ -88,12 +98,6 @@ export class ReservationsPage implements OnInit {
     { label: 'Confirmar Reserva', value: 2 },
   ];
   expandedRows: Record<string, boolean> = {};
-  statusOptions = [
-    { label: 'Activo', value: true },
-    { label: 'Inactivo', value: false },
-  ];
-  reservationTravelers: ReservationTravelerModel[] = [];
-  idReservation = 0;
 
   constructor(
     private reservationService: ReservationsService,
@@ -389,6 +393,49 @@ export class ReservationsPage implements OnInit {
       },
     });
     this.refresh();
+  }
+
+  changeStatusReservation(reservation: ReservationModel) {
+    this.confirmationService.confirm({
+      message:
+        '¿Está seguro de que desea cambiar el estado de ' +
+        reservation.id +
+        '?',
+      header: 'Confirmar',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-secondary',
+      accept: () => {
+        this.reservationService
+          .changeStatus(reservation.id, reservation.status)
+          .subscribe({
+            next: (reservation) => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Éxito',
+                detail: `${
+                  reservation.id
+                } cambiado a ${this.getValueReservation(reservation.status)}`,
+                life: 3000,
+              });
+              this.refresh();
+            },
+            error: (e) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: e.error.message,
+                life: 3000,
+              });
+            },
+          });
+      },
+      reject: () => {
+        this.refresh();
+      },
+    });
   }
 
   isStepValid(step: number): boolean {
