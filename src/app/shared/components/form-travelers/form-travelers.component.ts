@@ -4,7 +4,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { FormClientsComponent } from '../form-clients/form-clients.component';
-import { ReservationModel, UserModel } from '../../../models';
+import {
+  ReservationModel,
+  ReservationTravelerModel,
+  UserModel,
+} from '../../../models';
 import { MunicipalityService } from '../../../services';
 import { MessageService } from 'primeng/api';
 
@@ -23,7 +27,7 @@ export class FormTravelersComponent {
   @Input() reservation: ReservationModel = new ReservationModel();
   @Input() travel = false;
   @Input() traveler: UserModel = new UserModel();
-  @Input() travelers: UserModel[] = [];
+  @Input() travelers: ReservationTravelerModel[] = [];
   @Input() clients: UserModel[] = [];
   @Input() submitted = false;
 

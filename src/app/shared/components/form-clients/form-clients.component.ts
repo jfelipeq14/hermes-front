@@ -14,6 +14,7 @@ import { bloodTypes, epslist, sexlist, typesDocument } from '../../constants';
 import {
   MunicipalityModel,
   ReservationModel,
+  ReservationTravelerModel,
   UserModel,
 } from '../../../models';
 import { MunicipalityService } from '../../../services';
@@ -41,7 +42,7 @@ export class FormClientsComponent implements OnInit {
 
   @Input() reservation: ReservationModel = new ReservationModel();
   @Input() travel = false;
-  @Input() travelers: UserModel[] = [];
+  @Input() travelers: ReservationTravelerModel[] = [];
   @Input() clients: UserModel[] = [];
   @Input() client: UserModel = new UserModel();
   @Input() submitted = false;

@@ -23,6 +23,7 @@ import {
   ProgrammingService,
   ReservationsService,
 } from '../../services';
+
 import {
   DateModel,
   PackageModel,
@@ -31,14 +32,18 @@ import {
   ReservationTravelerModel,
   UserModel,
 } from '../../models';
+
 import {
   FormClientsComponent,
   FormPaymentsComponent,
   FormTravelersComponent,
 } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
+
 import {
+  getSeverity,
   getSeverityReservation,
+  getValue,
   getValueReservation,
 } from '../../shared/helpers';
 
@@ -77,20 +82,19 @@ export class ReservationsPage implements OnInit {
   reservations: ReservationModel[] = [];
   reservationDialog = false;
   submitted = false;
-  selectedTraveler: ReservationTravelerModel[] = [];
   dates: DateModel[] = [];
   clients: UserModel[] = [];
   client: UserModel = new UserModel();
   travel = false;
   traveler: UserModel = new UserModel();
-  travelers: UserModel[] = [];
   payment: PaymentModel = new PaymentModel();
   packages: PackageModel[] = [];
   reservationTravelers: ReservationTravelerModel[] = [];
   statuses = reservationStatus;
   getValueReservation = getValueReservation;
   getSeverityReservation = getSeverityReservation;
-  idReservation = 0;
+  getValue = getValue;
+  getSeverity = getSeverity;
   activeStepIndex = 0;
   steps = [
     { label: 'Crear Cliente', value: 0 },
@@ -168,61 +172,16 @@ export class ReservationsPage implements OnInit {
   }
 
   onRowExpand(event: any) {
-    const reservationId = event.data.id;
-    // Cargar los viajeros si aún no están cargados
-    if (
-      !this.reservationTravelers.some((t) => t.idReservation === reservationId)
-    ) {
-      this.reservationService
-        .getAllTravelersByReservation(reservationId)
-        .subscribe({
-          next: (travelers) => {
-            // Agregar los nuevos viajeros al array existente
-            this.reservationTravelers = [
-              ...this.reservationTravelers,
-              ...travelers,
-            ];
-          },
-          error: () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'No se pudieron cargar los viajeros de la reservación',
-              life: 3000,
-            });
-          },
-        });
-    }
+    if (!event) return;
+    console.log(event);
   }
 
-  getTravelersByReservation(reservationId: number): ReservationTravelerModel[] {
-    return this.reservationTravelers.filter(
-      (traveler) => traveler.idReservation === reservationId
-    );
-  }
-
-  getTravelerName(travelerId: number): string {
+  getTravelerInfo(travelerId: number): UserModel {
     const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? `${traveler.name} ${traveler.surName}` : 'N/A';
-  }
 
-  getTravelerDocument(travelerId: number): string {
-    const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? traveler.document : 'N/A';
-  }
+    if (!traveler) return new UserModel();
 
-  getTravelerEmail(travelerId: number): string {
-    const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? traveler.email : 'N/A';
-  }
-
-  getTravelerPhone(travelerId: number): string {
-    const traveler = this.clients.find((c) => c.id === travelerId);
-    return traveler ? traveler.phone : 'N/A';
-  }
-
-  getSeverity(status: boolean): 'success' | 'danger' {
-    return status ? 'success' : 'danger';
+    return traveler;
   }
 
   findProgramming(id: number) {
@@ -254,11 +213,7 @@ export class ReservationsPage implements OnInit {
       });
     }
 
-    if (
-      this.reservation.idUser !== 0 &&
-      this.idReservation !== 0 &&
-      clientFound
-    ) {
+    if (this.reservation.idUser !== 0 && clientFound) {
       this.traveler = clientFound;
     }
 
@@ -268,7 +223,9 @@ export class ReservationsPage implements OnInit {
     }
 
     if (this.travel && clientFound) {
-      this.travelers.push(clientFound);
+      this.reservation.detailReservationTravelers.push({
+        idTraveler: clientFound.id,
+      });
     }
   }
 
@@ -289,7 +246,9 @@ export class ReservationsPage implements OnInit {
             detail: 'Client created successfully',
             life: 3000,
           });
-          this.travelers.push(client);
+          this.reservation.detailReservationTravelers.push({
+            idTraveler: client.id,
+          });
         },
         error: (e) => {
           this.messageService.add({
@@ -304,9 +263,11 @@ export class ReservationsPage implements OnInit {
   }
 
   saveReservation() {
-    this.reservation.idDate = 1;
-    this.reservation.price = 1000;
-    if (this.reservation.idDate === 0 || this.reservation.idUser === 0) {
+    if (
+      this.reservation.idDate === 0 ||
+      this.reservation.idUser === 0 ||
+      this.reservation.detailReservationTravelers.length === 0
+    ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -315,9 +276,9 @@ export class ReservationsPage implements OnInit {
       });
       return;
     }
+
     this.reservationService.create(this.reservation).subscribe({
-      next: (reservation) => {
-        this.idReservation = reservation.id;
+      next: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
@@ -339,12 +300,8 @@ export class ReservationsPage implements OnInit {
   addTraveler() {
     this.travel = true;
     if (this.travel && this.traveler.document) {
-      this.travelers.push(this.traveler);
-      this.selectedTraveler.push({
-        id: 0,
-        idReservation: this.idReservation,
-        idTraveler: +this.traveler.id,
-        status: this.travel,
+      this.reservation.detailReservationTravelers.push({
+        idTraveler: this.traveler.id,
       });
     }
   }
@@ -353,46 +310,6 @@ export class ReservationsPage implements OnInit {
     const dateFound = this.dates.find((d) => d.id === id);
     if (!dateFound) return 0;
     return this.packages.find((p) => p.id === dateFound.idPackage)?.price;
-  }
-
-  createTraveler() {
-    if (this.selectedTraveler.length <= 0 || this.idReservation === 0) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Por favor, complete todos los campos requeridos',
-        life: 3000,
-      });
-      return;
-    }
-
-    this.selectedTraveler.forEach((traveler) => {
-      if (traveler.idReservation !== this.idReservation) {
-        traveler.id = 0;
-        traveler.idReservation = this.idReservation;
-      }
-    });
-
-    this.reservationService.createTraveler(this.selectedTraveler).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Viajero creado correctamente',
-          life: 3000,
-        });
-        this.refresh();
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
-        });
-      },
-    });
-    this.refresh();
   }
 
   changeStatusReservation(reservation: ReservationModel) {
@@ -441,11 +358,14 @@ export class ReservationsPage implements OnInit {
   isStepValid(step: number): boolean {
     switch (step) {
       case 0:
-        return this.reservation.idUser > 0; // Validar que se haya seleccionado un cliente
+        return this.reservation.idUser > 0;
       case 1:
-        return this.travelers.length > 0; // Validar que se haya agregado al menos un viajero
+        return this.reservation.detailReservationTravelers.length > 0;
       case 2:
-        return this.reservation.idUser > 0 && this.travelers.length > 0; // Validar que todo esté completo
+        return (
+          this.reservation.idUser > 0 &&
+          this.reservation.detailReservationTravelers.length > 0
+        );
       default:
         return false;
     }
@@ -458,22 +378,6 @@ export class ReservationsPage implements OnInit {
   }
 
   nextStep() {
-    if (this.activeStepIndex === 0) {
-      this.saveReservation();
-    } else if (this.activeStepIndex === 1) {
-      if (this.idReservation > 0) {
-        this.createTraveler();
-      } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se encontró la reservación',
-          life: 3000,
-        });
-        return;
-      }
-    }
-
     if (
       this.isStepValid(this.activeStepIndex) &&
       this.activeStepIndex < this.steps.length - 1
@@ -501,15 +405,12 @@ export class ReservationsPage implements OnInit {
     this.clients = [];
 
     this.traveler = new UserModel();
-    this.travelers = [];
-    this.selectedTraveler = [];
 
     this.payment = new PaymentModel();
     this.packages = [];
 
     this.dates = [];
 
-    this.idReservation = 0;
     this.travel = false;
     this.activeStepIndex = 0;
     this.submitted = false;

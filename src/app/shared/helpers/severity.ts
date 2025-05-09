@@ -1,3 +1,11 @@
+export const getSeverity = (status: boolean): string => {
+  return status ? 'success' : 'danger';
+};
+
+export const getValue = (status: boolean): string => {
+  return status ? 'Activo' : 'Inactivo';
+};
+
 // -- ESTADOS DE PAGO: REVISAR, PAGO, NO PAGO, ANULADO
 export const getSeverityPayment = (status: string): string => {
   if (status === 'R') return 'warn';

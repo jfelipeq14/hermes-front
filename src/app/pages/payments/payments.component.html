@@ -67,7 +67,7 @@
       </td>
       <td>{{ reservation.id }}</td>
       <td>{{ reservation.date | date : "shortDate" }}</td>
-      <td>{{ reservation.price | currency : "USD" }}</td>
+      <td>{{ reservation.price | currency : "COP" }}</td>
       <td>
         <p-tag
           [value]="getValueReservation(reservation.status)"
@@ -76,7 +76,7 @@
       </td>
       <td>{{ reservation.idUser }}</td>
       <td>
-        {{ getPaymentsTotal(reservation.id) | currency : "USD" }}
+        {{ getPaymentsTotal(reservation.id) | currency : "COP" }}
         <small>({{ getPaymentsCount(reservation.id) }} pagos)</small>
       </td>
     </tr>
@@ -106,7 +106,7 @@
               <tr>
                 <td>{{ payment.id }}</td>
                 <td>{{ payment.date | date : "short" }}</td>
-                <td>{{ payment.price | currency : "USD" }}</td>
+                <td>{{ payment.price | currency : "COP" }}</td>
                 <td>{{ payment.voucher || "N/A" }}</td>
                 <td>
                   <p-dropdown

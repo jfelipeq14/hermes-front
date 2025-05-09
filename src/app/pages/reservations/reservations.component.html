@@ -57,7 +57,7 @@
       </td>
       <td>{{ reservation.id }}</td>
       <td>{{ reservation.date | date : "short" }}</td>
-      <td>{{ reservation.price | currency : "USD" }}</td>
+      <td>{{ reservation.price | currency : "COP" }}</td>
       <td>
         <p-dropdown
           [options]="statuses"
@@ -92,7 +92,7 @@
           <div class="mt-3">
             <h6>Viajeros</h6>
             <p-table
-              [value]="getTravelersByReservation(reservation.id)"
+              [value]="reservation.detailReservationTravelers"
               styleClass="p-datatable-sm"
             >
               <ng-template pTemplate="header">
@@ -107,14 +107,14 @@
               </ng-template>
               <ng-template pTemplate="body" let-traveler>
                 <tr>
-                  <td>{{ traveler.id }}</td>
-                  <td>{{ getTravelerName(traveler.idTraveler) }}</td>
-                  <td>{{ getTravelerDocument(traveler.idTraveler) }}</td>
-                  <td>{{ getTravelerEmail(traveler.idTraveler) }}</td>
-                  <td>{{ getTravelerPhone(traveler.idTraveler) }}</td>
+                  <td>{{ traveler.idTraveler }}</td>
+                  <td>{{ getTravelerInfo(traveler.idTraveler).name }}</td>
+                  <td>{{ getTravelerInfo(traveler.idTraveler).document }}</td>
+                  <td>{{ getTravelerInfo(traveler.idTraveler).email }}</td>
+                  <td>{{ getTravelerInfo(traveler.idTraveler).phone }}</td>
                   <td>
                     <p-tag
-                      [value]="traveler.status ? 'Activo' : 'Inactivo'"
+                      [value]="getValue(traveler.status)"
                       [severity]="getSeverity(traveler.status)"
                     ></p-tag>
                   </td>
@@ -150,7 +150,7 @@
           <app-form-clients
             [reservation]="reservation"
             [travel]="travel"
-            [travelers]="travelers"
+            [travelers]="reservation.detailReservationTravelers"
             [clients]="clients"
             [client]="client"
             [submitted]="submitted"
@@ -167,7 +167,7 @@
           <app-form-travelers
             [reservation]="reservation"
             [travel]="travel"
-            [travelers]="travelers"
+            [travelers]="reservation.detailReservationTravelers"
             [clients]="clients"
             [traveler]="traveler"
             [submitted]="submitted"

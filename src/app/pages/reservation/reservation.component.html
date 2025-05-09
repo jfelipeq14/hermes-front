@@ -20,7 +20,7 @@
             <app-form-clients
               [reservation]="reservation"
               [travel]="travel"
-              [travelers]="travelers"
+              [travelers]="reservation.detailReservationTravelers"
               [clients]="clients"
               [client]="client"
               [submitted]="submitted"
@@ -35,7 +35,7 @@
             <app-form-travelers
               [reservation]="reservation"
               [travel]="travel"
-              [travelers]="travelers"
+              [travelers]="reservation.detailReservationTravelers"
               [clients]="clients"
               [traveler]="traveler"
               [submitted]="submitted"
