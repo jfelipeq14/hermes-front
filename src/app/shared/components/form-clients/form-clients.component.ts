@@ -33,9 +33,11 @@ export class FormClientsComponent implements OnInit {
     @Input() clients: UserModel[] = [];
     @Input() client: UserModel = new UserModel();
     @Input() submitted = false;
+    @Input() isPasswordDisable = false;
 
     @Output() searchClient = new EventEmitter<any>();
     @Output() createClient = new EventEmitter<any>();
+    @Output() handleTravel = new EventEmitter<any>();
 
     typesDocument = typesDocument;
     sexlist = sexlist;
@@ -74,6 +76,10 @@ export class FormClientsComponent implements OnInit {
         const birthDate = new Date(event.value);
         const today = new Date();
         this.age = today.getFullYear() - birthDate.getFullYear();
+    }
+
+    onHandleTravel(event: any) {
+        this.handleTravel.emit(event);
     }
 
     onSearchClient(document: string) {

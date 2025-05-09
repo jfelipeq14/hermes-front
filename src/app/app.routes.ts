@@ -12,20 +12,16 @@ export const routes: Routes = [
     {
         path: 'landing',
         loadComponent: () => import('./pages/home/home.component').then((m) => m.HomePage),
-        canActivate: [loggedGuard] // Si el usuario ya está logueado, redirige según su rol
-    },
-    {
-        path: 'reservation',
-        loadComponent: () => import('./pages/reservation/reservation.component').then((m) => m.ReservationComponent)
+        canActivate: [loggedGuard]
     },
     {
         path: 'home',
         component: AppLayout,
-        canActivate: [authGuard], // Protege todas las rutas internas con authGuard
-        loadChildren: () => import('./pages/pages.routes')
+        loadChildren: () => import('./pages/pages.routes'),
+        canActivate: [authGuard]
     },
     {
         path: '**',
-        redirectTo: 'landing'
+        redirectTo: 'home'
     }
 ];
