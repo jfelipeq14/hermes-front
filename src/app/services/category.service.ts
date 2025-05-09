@@ -6,30 +6,27 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class CategoryService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + 'category-services/';
+    private url = environment.SERVER_URL + 'category-services/';
 
-  getAll(): Observable<CategoryModel[]> {
-    return this.http.get<CategoryModel[]>(this.url);
-  }
+    getAll(): Observable<CategoryModel[]> {
+        return this.http.get<CategoryModel[]>(this.url);
+    }
 
-  getById(id: number): Observable<CategoryModel> {
-    return this.http.get<CategoryModel>(this.url + id);
-  }
+    getById(id: number): Observable<CategoryModel> {
+        return this.http.get<CategoryModel>(this.url + id);
+    }
 
-  create(categoryService: CategoryModel): Observable<CategoryModel> {
-    return this.http.post<CategoryModel>(this.url, categoryService);
-  }
+    create(categoryService: CategoryModel): Observable<CategoryModel> {
+        return this.http.post<CategoryModel>(this.url, categoryService);
+    }
 
-  update(categoryService: CategoryModel): Observable<CategoryModel> {
-    return this.http.patch<CategoryModel>(
-      this.url + categoryService.id,
-      categoryService
-    );
-  }
+    update(categoryService: CategoryModel): Observable<CategoryModel> {
+        return this.http.patch<CategoryModel>(this.url + categoryService.id, categoryService);
+    }
 
-  changeStatus(id: number): Observable<CategoryModel> {
-    return this.http.patch<CategoryModel>(this.url + `${id}/change-status`, {});
-  }
+    changeStatus(id: number): Observable<CategoryModel> {
+        return this.http.patch<CategoryModel>(this.url + `${id}/change-status`, {});
+    }
 }

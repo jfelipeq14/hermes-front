@@ -8,63 +8,44 @@ import { ReservationTravelerModel } from '../models';
 
 @Injectable()
 export class ReservationsService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private urlReservation = environment.SERVER_URL + 'reservations/';
-  private urlTraveler = environment.SERVER_URL + 'travelers/';
+    private urlReservation = environment.SERVER_URL + 'reservations/';
+    private urlTraveler = environment.SERVER_URL + 'travelers/';
 
-  // Obtener todas las reservaciones
-  getAll(): Observable<ReservationModel[]> {
-    return this.http.get<ReservationModel[]>(this.urlReservation);
-  }
-  getAllTravelersByReservation(
-    idReservation: number
-  ): Observable<ReservationTravelerModel[]> {
-    return this.http.get<ReservationTravelerModel[]>(
-      this.urlTraveler + `reservation/${idReservation}`
-    );
-  }
+    // Obtener todas las reservaciones
+    getAll(): Observable<ReservationModel[]> {
+        return this.http.get<ReservationModel[]>(this.urlReservation);
+    }
+    getAllTravelersByReservation(idReservation: number): Observable<ReservationTravelerModel[]> {
+        return this.http.get<ReservationTravelerModel[]>(this.urlTraveler + `reservation/${idReservation}`);
+    }
 
-  // Obtener una reservación por ID
-  getById(id: number): Observable<ReservationModel> {
-    return this.http.get<ReservationModel>(`${this.urlReservation}${id}`);
-  }
+    // Obtener una reservación por ID
+    getById(id: number): Observable<ReservationModel> {
+        return this.http.get<ReservationModel>(`${this.urlReservation}${id}`);
+    }
 
-  // Crear una nueva reservación
-  create(reservation: ReservationModel): Observable<ReservationModel> {
-    return this.http.post<ReservationModel>(this.urlReservation, reservation);
-  }
+    // Crear una nueva reservación
+    create(reservation: ReservationModel): Observable<ReservationModel> {
+        return this.http.post<ReservationModel>(this.urlReservation, reservation);
+    }
 
-  createTraveler(
-    travelers: ReservationTravelerModel[]
-  ): Observable<ReservationTravelerModel[]> {
-    return this.http.post<ReservationTravelerModel[]>(
-      this.urlTraveler,
-      travelers
-    );
-  }
+    createTraveler(travelers: ReservationTravelerModel[]): Observable<ReservationTravelerModel[]> {
+        return this.http.post<ReservationTravelerModel[]>(this.urlTraveler, travelers);
+    }
 
-  // Actualizar una reservación existente
-  update(reservation: ReservationModel): Observable<ReservationModel> {
-    return this.http.patch<ReservationModel>(
-      `${this.urlReservation}${reservation.id}`,
-      reservation
-    );
-  }
+    // Actualizar una reservación existente
+    update(reservation: ReservationModel): Observable<ReservationModel> {
+        return this.http.patch<ReservationModel>(`${this.urlReservation}${reservation.id}`, reservation);
+    }
 
-  changeStatus(id: number, status: string): Observable<ReservationModel> {
-    return this.http.patch<ReservationModel>(
-      this.urlReservation + `${id}/change-status`,
-      { status }
-    );
-  }
+    changeStatus(id: number, status: string): Observable<ReservationModel> {
+        return this.http.patch<ReservationModel>(this.urlReservation + `${id}/change-status`, { status });
+    }
 
-  // Obtener viajeros por reservación
-  getTravelersByReservation(
-    reservationId: number
-  ): Observable<ReservationTravelerModel[]> {
-    return this.http.get<ReservationTravelerModel[]>(
-      `${this.urlTraveler}by-reservation/${reservationId}`
-    );
-  }
+    // Obtener viajeros por reservación
+    getTravelersByReservation(reservationId: number): Observable<ReservationTravelerModel[]> {
+        return this.http.get<ReservationTravelerModel[]>(`${this.urlTraveler}by-reservation/${reservationId}`);
+    }
 }

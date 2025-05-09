@@ -6,27 +6,27 @@ import { PermitModel } from '../models';
 
 @Injectable()
 export class PermitsService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + 'permits/';
+    private url = environment.SERVER_URL + 'permits/';
 
-  getAll(): Observable<PermitModel[]> {
-    return this.http.get<PermitModel[]>(this.url);
-  }
+    getAll(): Observable<PermitModel[]> {
+        return this.http.get<PermitModel[]>(this.url);
+    }
 
-  getById(id: number): Observable<PermitModel> {
-    return this.http.get<PermitModel>(this.url + id);
-  }
+    getById(id: number): Observable<PermitModel> {
+        return this.http.get<PermitModel>(this.url + id);
+    }
 
-  create(role: PermitModel): Observable<PermitModel> {
-    return this.http.post<PermitModel>(this.url, role);
-  }
+    create(role: PermitModel): Observable<PermitModel> {
+        return this.http.post<PermitModel>(this.url, role);
+    }
 
-  update(role: PermitModel): Observable<PermitModel> {
-    return this.http.patch<PermitModel>(this.url + role.id, role);
-  }
+    update(role: PermitModel): Observable<PermitModel> {
+        return this.http.patch<PermitModel>(this.url + role.id, role);
+    }
 
-  changeStatus(id: number): Observable<PermitModel> {
-    return this.http.patch<PermitModel>(`${this.url}${id}/change-status`, {});
-  }
+    changeStatus(id: number): Observable<PermitModel> {
+        return this.http.patch<PermitModel>(`${this.url}${id}/change-status`, {});
+    }
 }

@@ -6,11 +6,11 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ResponsibleService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + 'users/responsibles/';
+    private url = environment.SERVER_URL + 'users/responsibles/';
 
-  getAll(): Observable<UserModel[]> {
-    return this.http.get<UserModel[]>(this.url);
-  }
+    getAll(): Observable<UserModel[]> {
+        return this.http.get<UserModel[]>(this.url);
+    }
 }

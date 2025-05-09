@@ -1,4 +1,4 @@
 export const ZONE = [
-  { name: 'Norte', value: 'N' },
-  { name: 'Sur', value: 'S' },
+    { name: 'Norte', value: 'N' },
+    { name: 'Sur', value: 'S' }
 ];

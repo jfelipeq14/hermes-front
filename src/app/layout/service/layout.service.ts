@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, effect, signal, computed } from '@angular/core';
 import { Subject } from 'rxjs';
+import { updatePreset } from '@primeng/themes';
 
 export interface layoutConfig {
     preset?: string;
@@ -82,13 +82,6 @@ export class LayoutService {
     constructor() {
         effect(() => {
             const config = this.layoutConfig();
-            if (config) {
-                this.onConfigUpdate();
-            }
-        });
-
-        effect(() => {
-            const config = this.layoutConfig();
 
             if (!this.initialized || !config) {
                 this.initialized = true;
@@ -117,7 +110,7 @@ export class LayoutService {
             .then(() => {
                 this.onTransitionEnd();
             })
-            .catch((e: any) => console.error(e));
+            .catch(() => {});
     }
 
     toggleDarkMode(config?: layoutConfig): void {
@@ -138,10 +131,7 @@ export class LayoutService {
 
     onMenuToggle() {
         if (this.isOverlay()) {
-            this.layoutState.update((prev) => ({
-                ...prev,
-                overlayMenuActive: !this.layoutState().overlayMenuActive
-            }));
+            this.layoutState.update((prev) => ({ ...prev, overlayMenuActive: !this.layoutState().overlayMenuActive }));
 
             if (this.layoutState().overlayMenuActive) {
                 this.overlayOpen.next(null);
@@ -149,15 +139,9 @@ export class LayoutService {
         }
 
         if (this.isDesktop()) {
-            this.layoutState.update((prev) => ({
-                ...prev,
-                staticMenuDesktopInactive: !this.layoutState().staticMenuDesktopInactive
-            }));
+            this.layoutState.update((prev) => ({ ...prev, staticMenuDesktopInactive: !this.layoutState().staticMenuDesktopInactive }));
         } else {
-            this.layoutState.update((prev) => ({
-                ...prev,
-                staticMenuMobileActive: !this.layoutState().staticMenuMobileActive
-            }));
+            this.layoutState.update((prev) => ({ ...prev, staticMenuMobileActive: !this.layoutState().staticMenuMobileActive }));
 
             if (this.layoutState().staticMenuMobileActive) {
                 this.overlayOpen.next(null);
@@ -174,8 +158,8 @@ export class LayoutService {
     }
 
     onConfigUpdate() {
-        // this._config = { ...this.layoutConfig() };
-        this.configUpdate.next(this.layoutConfig());
+        this._config = this.layoutConfig();
+        this.configUpdate.next(this._config);
     }
 
     onMenuStateChange(event: MenuChangeEvent) {

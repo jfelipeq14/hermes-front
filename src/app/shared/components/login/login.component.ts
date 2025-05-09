@@ -15,67 +15,54 @@ import { DialogModule } from 'primeng/dialog';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  imports: [
-    ButtonModule,
-    CheckboxModule,
-    InputTextModule,
-    PasswordModule,
-    FormsModule,
-    ToastModule,
-    RouterModule,
-    RippleModule,
-    CommonModule,
-    DialogModule,
-    ResetPasswordComponent
-  ],
-  providers: [AuthService, MessageService],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, ToastModule, RouterModule, RippleModule, CommonModule, DialogModule, ResetPasswordComponent],
+    providers: [AuthService, MessageService]
 })
 export class LoginComponent {
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private messageService: MessageService
-  ) {}
+    constructor(
+        private router: Router,
+        private authService: AuthService,
+        private messageService: MessageService
+    ) {}
 
-  @Input() loginDialog!: boolean;
-  @Input() submitted!: boolean;
-  @Input() user: UserModel = new UserModel();
-  // @Output() openResetPassword = new EventEmitter<boolean>();
-  
-  resetPasswordDialog = false;
+    @Input() loginDialog!: boolean;
+    @Input() submitted!: boolean;
+    @Input() user: UserModel = new UserModel();
+    // @Output() openResetPassword = new EventEmitter<boolean>();
 
-  onSubmit() {
-    this.submitted = true;
+    resetPasswordDialog = false;
 
-    this.authService.login(this.user).subscribe({
-      next: (response) => {
-        if (!response && !response.accessToken) return;
+    onSubmit() {
+        this.submitted = true;
 
-        this.authService.setTokens(response.accessToken);
+        this.authService.login(this.user).subscribe({
+            next: (response) => {
+                if (!response && !response.accessToken) return;
 
-        this.router.navigate(['/home']);
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
+                this.authService.setTokens(response.accessToken);
+
+                this.router.navigate(['/home']);
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
         });
-      },
-    });
-  }
+    }
 
-  onClose() {
-    this.loginDialog = false;
-    this.submitted = false;
-  }
+    onClose() {
+        this.loginDialog = false;
+        this.submitted = false;
+    }
 
-  openResetPasswordPopup() {
-    this.resetPasswordDialog= !this.resetPasswordDialog
-  }
-
+    openResetPasswordPopup() {
+        this.resetPasswordDialog = !this.resetPasswordDialog;
+    }
 }

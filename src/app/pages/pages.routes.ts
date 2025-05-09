@@ -16,74 +16,74 @@ import { isAuthenticatedGuard } from '../guards/is-authenticated.guard';
 
 // Definir constantes para los IDs de roles
 const ROLE_IDS = {
-  ADMIN: 1,
-  GUIDE: 2,
-  CLIENT: 3,
+    ADMIN: 1,
+    GUIDE: 2,
+    CLIENT: 3
 };
 
 export default [
-  {
-    path: 'dashboard',
-    component: DashboardPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'roles',
-    component: RolesPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'users',
-    component: UsersPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'categories',
-    component: CategoriesPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'services',
-    component: ServicesPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'activities',
-    component: ActivitiesPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'packages',
-    component: PackagesPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'programming',
-    component: ProgrammingPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.GUIDE])],
-  },
-  {
-    path: 'clients',
-    component: ClientsPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])],
-  },
-  {
-    path: 'payments',
-    component: PaymentsPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])],
-  },
-  {
-    path: 'reservations',
-    component: ReservationsPage,
-    canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])],
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [isAuthenticatedGuard], // No es necesario pasar argumentos aquí
-  },
-  {
-    path: '**',
-    redirectTo: '',
-  },
+    {
+        path: 'dashboard',
+        component: DashboardPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'roles',
+        component: RolesPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'users',
+        component: UsersPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'categories',
+        component: CategoriesPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'services',
+        component: ServicesPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'activities',
+        component: ActivitiesPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'packages',
+        component: PackagesPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'programming',
+        component: ProgrammingPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.GUIDE])]
+    },
+    {
+        path: 'clients',
+        component: ClientsPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    },
+    {
+        path: 'payments',
+        component: PaymentsPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])]
+    },
+    {
+        path: 'reservations',
+        component: ReservationsPage,
+        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])]
+    },
+    {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [isAuthenticatedGuard] // No es necesario pasar argumentos aquí
+    },
+    {
+        path: '**',
+        redirectTo: ''
+    }
 ] as Routes;

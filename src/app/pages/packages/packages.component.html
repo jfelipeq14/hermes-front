@@ -1,336 +1,191 @@
 <p-table
-  #dt
-  [value]="packages"
-  [rows]="10"
-  [paginator]="true"
-  [globalFilterFields]="['name', 'price', 'status']"
-  [tableStyle]="{ 'min-width': '75rem' }"
-  [rowHover]="true"
-  dataKey="id"
-  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} paquetes"
-  [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10, 20, 30]"
-  [expandedRowKeys]="expandedRows"
-  (onRowExpand)="onRowExpand($event)"
+    #dt
+    [value]="packages"
+    [rows]="10"
+    [paginator]="true"
+    [globalFilterFields]="['name', 'price', 'status']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} paquetes"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    [expandedRowKeys]="expandedRows"
+    (onRowExpand)="onRowExpand($event)"
 >
-  <ng-template pTemplate="caption">
-    <h3 class="m-0 p-0 text-center">Paquetes</h3>
-    <div class="flex justify-content-between align-items-center">
-      <p-button
-        label="Crear"
-        icon="pi pi-plus"
-        severity="secondary"
-        (onClick)="showPopup()"
-      />
-      <p-iconfield>
-        <p-inputicon styleClass="pi pi-search" />
-        <input
-          pInputText
-          type="text"
-          (input)="onGlobalFilter(dt, $event)"
-          placeholder="Buscar..."
-        />
-      </p-iconfield>
-    </div>
-  </ng-template>
-
-  <ng-template pTemplate="header">
-    <tr>
-      <th style="width: 3rem"></th>
-      <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
-      <th>Imagen</th>
-      <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
-      <th>Municipio</th>
-      <th>Nivel</th>
-      <th>Fecha</th>
-      <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
-      <th style="min-width: 8rem">Acciones</th>
-    </tr>
-  </ng-template>
-
-  <ng-template pTemplate="body" let-package let-expanded="expanded">
-    <tr>
-      <td>
-        <p-button
-          type="button"
-          pRipple
-          [pRowToggler]="package"
-          [text]="true"
-          [rounded]="true"
-          [plain]="true"
-          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-        />
-      </td>
-      <td>{{ package.name }}</td>
-      <td>
-        <img
-          [src]="
-            package.image
-              ? package.image
-              : 'https://primefaces.org/cdn/primeng/images/demo/product/default.jpg'
-          "
-          [alt]="package.name"
-          width="50"
-          class="shadow-lg"
-        />
-      </td>
-      <td>{{ package.price | currency : "COP" }}</td>
-      <td>{{ getMunicipalityName(package.idMunicipality) }}</td>
-      <td>{{ package.level }}</td>
-      <td>{{ getDate(package.id) }}</td>
-      <td>
-        <p-tag
-          [value]="package.status ? 'Activo' : 'Inactivo'"
-          [severity]="getSeverity(package.status)"
-        />
-      </td>
-      <td>
-        <p-button
-          icon="pi pi-pencil"
-          class="mr-2"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="editPackage(package)"
-        />
-        <p-button
-          icon="pi pi-sync"
-          severity="info"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="changeStatusPackage(package)"
-        />
-      </td>
-    </tr>
-  </ng-template>
-
-  <ng-template pTemplate="expandedrow" let-package>
-    <tr>
-      <td colspan="12">
-        <div class="p-2">
-          <h5>Servicios de {{ package.name }}</h5>
-          <p-table [value]="package.detailPackagesServices">
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Servicio</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-service>
-              <tr>
-                <td>
-                  {{ getServiceName(service.idService) }}
-                </td>
-                <td>{{ service.quantity }}</td>
-                <td>{{ service.price | currency : "COP" }}</td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td colspan="3" class="text-center">
-                  No hay servicios disponibles
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
+    <ng-template pTemplate="caption">
+        <h3 class="m-0 p-0 text-center">Paquetes</h3>
+        <div class="flex justify-content-between align-items-center">
+            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
+            </p-iconfield>
         </div>
-      </td>
-    </tr>
-  </ng-template>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 3rem"></th>
+            <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
+            <th>Imagen</th>
+            <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
+            <th>Municipio</th>
+            <th>Nivel</th>
+            <th>Fecha</th>
+            <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
+            <th style="min-width: 8rem">Acciones</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-package let-expanded="expanded">
+        <tr>
+            <td>
+                <p-button type="button" pRipple [pRowToggler]="package" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+            </td>
+            <td>{{ package.name }}</td>
+            <td>
+                <img [src]="package.image ? package.image : 'https://primefaces.org/cdn/primeng/images/demo/product/default.jpg'" [alt]="package.name" width="50" class="shadow-lg" />
+            </td>
+            <td>{{ package.price | currency: 'COP' }}</td>
+            <td>{{ getMunicipalityName(package.idMunicipality) }}</td>
+            <td>{{ package.level }}</td>
+            <td>{{ getDate(package.id) }}</td>
+            <td>
+                <p-tag [value]="package.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(package.status)" />
+            </td>
+            <td>
+                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editPackage(package)" />
+                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusPackage(package)" />
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="expandedrow" let-package>
+        <tr>
+            <td colspan="12">
+                <div class="p-2">
+                    <h5>Servicios de {{ package.name }}</h5>
+                    <p-table [value]="package.detailPackagesServices">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-service>
+                            <tr>
+                                <td>
+                                    {{ getServiceName(service.idService) }}
+                                </td>
+                                <td>{{ service.quantity }}</td>
+                                <td>{{ service.price | currency: 'COP' }}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="3" class="text-center">No hay servicios disponibles</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
 </p-table>
 
-<p-dialog
-  [(visible)]="packageDialog"
-  [style]="{ width: '800px' }"
-  header="Paquete"
-  [modal]="true"
-  class="p-fluid"
->
-  <ng-template pTemplate="content">
-    <div class="flex justify-content-between">
-      <div>
-        <div class="field flex flex-column">
-          <label for="name" class="required">Nombre</label>
-          <input
-            id="name"
-            type="text"
-            [(ngModel)]="package.name"
-            pInputText
-            required
-          />
-          <small class="p-error" *ngIf="submitted && !package.name">
-            El nombre es obligatorio.
-          </small>
+<p-dialog [(visible)]="packageDialog" [style]="{ width: '800px' }" header="Paquete" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="flex justify-content-between">
+            <div>
+                <div class="field flex flex-col">
+                    <label for="name" class="required">Nombre</label>
+                    <input id="name" type="text" [(ngModel)]="package.name" pInputText required />
+                    <small class="p-error" *ngIf="submitted && !package.name"> El nombre es obligatorio. </small>
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="idActivity" class="required">Actividades</label>
+                    <p-dropdown id="idActivity" [options]="activities" [(ngModel)]="package.idActivity" optionLabel="name" optionValue="id" placeholder="Seleccione una actividad" required></p-dropdown>
+                    <small class="p-error" *ngIf="submitted && !package.idActivity"> La actividad es obligatoria. </small>
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="idMunicipality" class="required">Municipio</label>
+                    <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="package.idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required></p-dropdown>
+                    <small class="p-error" *ngIf="submitted && !package.idMunicipality"> El municipio es obligatorio. </small>
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="idService">Servicios</label>
+                    <p-dropdown id="idService" [options]="services" optionLabel="name" optionValue="id" placeholder="Seleccione un servicio" (onChange)="addServiceToSelection($event)"></p-dropdown>
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="level" class="required">Nivel</label>
+                    <p-dropdown id="level" [options]="levels" [(ngModel)]="package.level" optionLabel="name" optionValue="value" placeholder="Seleccione un nivel" [showClear]="true" required></p-dropdown>
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" [(ngModel)]="package.description" pTextarea placeholder="Descripción" [autoResize]="true" rows="3" cols="30"></textarea>
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="image">Imagen</label>
+                    <input id="image" type="text" [(ngModel)]="package.image" pInputText />
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="price" class="required">Precio</label>
+                    <p-inputNumber id="price" [(ngModel)]="package.price" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
+                    <small class="p-error" *ngIf="submitted && !package.price"> El precio es obligatorio. </small>
+                </div>
+
+                <div class="field flex flex-col">
+                    <label for="reserve" class="required">Reserva</label>
+                    <p-inputNumber id="reserve" [(ngModel)]="package.reserve" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
+                    <small class="p-error" *ngIf="submitted && !package.reserve"> El precio de reserva es obligatorio. </small>
+                </div>
+            </div>
+
+            <p-table [value]="package.detailPackagesServices">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th style="width: 5rem"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-service let-i="rowIndex">
+                    <tr>
+                        <td>{{ getServiceName(service.idService) }}</td>
+                        <td>{{ service.quantity }}</td>
+                        <td>
+                            {{ service.price | currency: 'COP' : 'symbol' : '1.0-0' }}
+                        </td>
+                        <td>
+                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="removeServiceFromSelection(service.idService)"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="4" class="text-center">No se han agregado servicios</td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
+    </ng-template>
 
-        <div class="field flex flex-column">
-          <label for="idActivity" class="required">Actividades</label>
-          <p-dropdown
-            id="idActivity"
-            [options]="activities"
-            [(ngModel)]="package.idActivity"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Seleccione una actividad"
-            required
-          ></p-dropdown>
-          <small class="p-error" *ngIf="submitted && !package.idActivity">
-            La actividad es obligatoria.
-          </small>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end">
+            <p-button label="Cancelar" icon="pi pi-times" severity="danger" (onClick)="closePopup()" text />
+            <p-button label="Guardar" icon="pi pi-check" (onClick)="savePackage()" autofocus />
         </div>
-
-        <div class="field flex flex-column">
-          <label for="idMunicipality" class="required">Municipio</label>
-          <p-dropdown
-            id="idMunicipality"
-            [options]="municipalities"
-            [(ngModel)]="package.idMunicipality"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Seleccione un municipio"
-            [showClear]="true"
-            required
-          ></p-dropdown>
-          <small class="p-error" *ngIf="submitted && !package.idMunicipality">
-            El municipio es obligatorio.
-          </small>
-        </div>
-
-        <div class="field flex flex-column">
-          <label for="idService">Servicios</label>
-          <p-dropdown
-            id="idService"
-            [options]="services"
-            optionLabel="name"
-            optionValue="id"
-            placeholder="Seleccione un servicio"
-            (onChange)="addServiceToSelection($event)"
-          ></p-dropdown>
-        </div>
-
-        <div class="field flex flex-column">
-          <label for="level" class="required">Nivel</label>
-          <p-dropdown
-            id="level"
-            [options]="levels"
-            [(ngModel)]="package.level"
-            optionLabel="name"
-            optionValue="value"
-            placeholder="Seleccione un nivel"
-            [showClear]="true"
-            required
-          ></p-dropdown>
-        </div>
-
-        <div class="field flex flex-column">
-          <label for="description">Descripción</label>
-          <textarea
-            id="description"
-            [(ngModel)]="package.description"
-            pTextarea
-            placeholder="Descripción"
-            [autoResize]="true"
-            rows="3"
-            cols="30"
-          ></textarea>
-        </div>
-
-        <div class="field flex flex-column">
-          <label for="image">Imagen</label>
-          <input
-            id="image"
-            type="text"
-            [(ngModel)]="package.image"
-            pInputText
-          />
-        </div>
-
-        <div class="field flex flex-column">
-          <label for="price" class="required">Precio</label>
-          <p-inputNumber
-            id="price"
-            [(ngModel)]="package.price"
-            mode="currency"
-            currency="COP"
-            locale="es-CO"
-            required
-          ></p-inputNumber>
-          <small class="p-error" *ngIf="submitted && !package.price">
-            El precio es obligatorio.
-          </small>
-        </div>
-
-        <div class="field flex flex-column">
-          <label for="reserve" class="required">Reserva</label>
-          <p-inputNumber
-            id="reserve"
-            [(ngModel)]="package.reserve"
-            mode="currency"
-            currency="COP"
-            locale="es-CO"
-            required
-          ></p-inputNumber>
-          <small class="p-error" *ngIf="submitted && !package.reserve">
-            El precio de reserva es obligatorio.
-          </small>
-        </div>
-      </div>
-
-      <p-table [value]="package.detailPackagesServices">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Servicio</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th style="width: 5rem"></th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-service let-i="rowIndex">
-          <tr>
-            <td>{{ getServiceName(service.idService) }}</td>
-            <td>{{ service.quantity }}</td>
-            <td>
-              {{ service.price | currency : "COP" : "symbol" : "1.0-0" }}
-            </td>
-            <td>
-              <p-button
-                icon="pi pi-trash"
-                severity="danger"
-                [rounded]="true"
-                [text]="true"
-                (onClick)="removeServiceFromSelection(service.idService)"
-              ></p-button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="4" class="text-center">
-              No se han agregado servicios
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-  </ng-template>
-
-  <ng-template pTemplate="footer">
-    <div class="flex justify-content-end">
-      <p-button
-        label="Cancelar"
-        icon="pi pi-times"
-        severity="danger"
-        (onClick)="closePopup()"
-        text
-      />
-      <p-button
-        label="Guardar"
-        icon="pi pi-check"
-        (onClick)="savePackage()"
-        autofocus
-      />
-    </div>
-  </ng-template>
+    </ng-template>
 </p-dialog>
 
 <p-toast></p-toast>

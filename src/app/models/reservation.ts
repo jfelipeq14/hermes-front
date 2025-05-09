@@ -3,10 +3,10 @@
 import { ReservationTravelerModel } from './reservation-traveler';
 
 export class ReservationModel {
-  id = 0;
-  idDate = 0;
-  idUser = 0;
-  price = 0;
-  status: 'N' | 'C' | 'P' | 'M' | 'R' | 'E' | 'F' = 'N';
-  detailReservationTravelers: ReservationTravelerModel[] = [];
+    id = 0;
+    idDate = 0;
+    idUser = 0;
+    price = 0;
+    status: 'N' | 'C' | 'P' | 'M' | 'R' | 'E' | 'F' = 'N';
+    detailReservationTravelers: ReservationTravelerModel[] = [];
 }

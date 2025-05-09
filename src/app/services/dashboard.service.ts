@@ -6,19 +6,19 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class DashboardService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + 'dashboard/';
+    private url = environment.SERVER_URL + 'dashboard/';
 
-  getSales(): Observable<any> {
-    return this.http.get<any>(this.url);
-  }
+    getSales(): Observable<any> {
+        return this.http.get<any>(this.url);
+    }
 
-  getPackages(): Observable<any[]> {
-    return this.http.get<any[]>(this.url);
-  }
+    getPackages(): Observable<any[]> {
+        return this.http.get<any[]>(this.url);
+    }
 
-  getClients(): Observable<any[]> {
-    return this.http.get<any[]>(this.url);
-  }
+    getClients(): Observable<any[]> {
+        return this.http.get<any[]>(this.url);
+    }
 }

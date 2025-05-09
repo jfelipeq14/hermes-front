@@ -1,3 +1,3 @@
 export class ReservationTravelerModel {
-  idTraveler = 0;
+    idTraveler = 0;
 }

@@ -1,4 +1,4 @@
 export const sexlist = [
-  { name: 'Masculino', value: 'M' },
-  { name: 'Femenino', value: 'F' },
+    { name: 'Masculino', value: 'M' },
+    { name: 'Femenino', value: 'F' }
 ];

@@ -1,122 +1,73 @@
 <p-table
-  #dt
-  [value]="categories"
-  [rows]="10"
-  [paginator]="true"
-  [globalFilterFields]="['name', 'status']"
-  [tableStyle]="{ 'min-width': '75rem' }"
-  [rowHover]="true"
-  dataKey="id"
-  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
-  [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10, 20, 30]"
+    #dt
+    [value]="categories"
+    [rows]="10"
+    [paginator]="true"
+    [globalFilterFields]="['name', 'status']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 20, 30]"
 >
-  <ng-template pTemplate="caption">
-    <h3 class="m-0 p-0 text-center">Categorías</h3>
-    <div class="flex justify-content-between align-items-center">
-      <p-button
-        label="Crear"
-        icon="pi pi-plus"
-        severity="secondary"
-        (onClick)="showPopup()"
-      />
-      <p-iconfield>
-        <p-inputicon styleClass="pi pi-search" />
-        <input
-          pInputText
-          type="text"
-          (input)="onGlobalFilter(dt, $event)"
-          placeholder="Search..."
-        />
-      </p-iconfield>
-    </div>
-  </ng-template>
+    <ng-template pTemplate="caption">
+        <h3 class="m-0 p-0 text-center">Categorías</h3>
+        <div class="flex justify-content-between align-items-center">
+            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
+            </p-iconfield>
+        </div>
+    </ng-template>
 
-  <ng-template #header>
-    <tr>
-      <th pSortableColumn="id" style="min-width: 12rem">
-        Identificación
-        <p-sortIcon field="id" />
-      </th>
-      <th pSortableColumn="name" style="min-width: 16rem">
-        Nombre
-        <p-sortIcon field="name" />
-      </th>
-      <th pSortableColumn="status" style="min-width: 12rem">
-        Estado
-        <p-sortIcon field="status" />
-      </th>
-      <th style="min-width: 12rem"></th>
-    </tr>
-  </ng-template>
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="id" style="min-width: 12rem">
+                Identificación
+                <p-sortIcon field="id" />
+            </th>
+            <th pSortableColumn="name" style="min-width: 16rem">
+                Nombre
+                <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="status" style="min-width: 12rem">
+                Estado
+                <p-sortIcon field="status" />
+            </th>
+            <th style="min-width: 12rem"></th>
+        </tr>
+    </ng-template>
 
-  <ng-template #body let-category>
-    <tr>
-      <td>{{ category.id }}</td>
-      <td>{{ category.name }}</td>
-      <td>
-        <p-tag
-          [value]="category.status ? 'Activo' : 'Inactivo'"
-          [severity]="getSeverity(category.status)"
-        />
-      </td>
-      <td>
-        <p-button
-          icon="pi pi-pencil"
-          class="mr-2"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="editCategory(category)"
-        />
-        <p-button
-          icon="pi pi-sync"
-          severity="info"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="changeStatusCategory(category)"
-        />
-      </td>
-    </tr>
-  </ng-template>
+    <ng-template #body let-category>
+        <tr>
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>
+                <p-tag [value]="category.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(category.status)" />
+            </td>
+            <td>
+                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editCategory(category)" />
+                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusCategory(category)" />
+            </td>
+        </tr>
+    </ng-template>
 </p-table>
 
-<p-dialog
-  [(visible)]="categoryDialog"
-  [style]="{ width: '450px' }"
-  header="Categoría"
-  [modal]="true"
-  class="p-fluid"
->
-  <ng-template #content>
-    <div class="field flex flex-column">
-      <label for="name" class="required">Nombre</label>
-      <input
-        pInputText
-        type="text"
-        id="name"
-        [(ngModel)]="category.name"
-        required
-      />
-      <small class="p-error" *ngIf="submitted && !category.name"
-        >El nombre es obligatorio.</small
-      >
-    </div>
-  </ng-template>
+<p-dialog [(visible)]="categoryDialog" [style]="{ width: '450px' }" header="Categoría" [modal]="true" class="p-fluid">
+    <ng-template #content>
+        <div class="field flex flex-col">
+            <label for="name" class="required">Nombre</label>
+            <input pInputText type="text" id="name" [(ngModel)]="category.name" required />
+            <small class="p-error" *ngIf="submitted && !category.name">El nombre es obligatorio.</small>
+        </div>
+    </ng-template>
 
-  <ng-template pTemplate="footer">
-    <p-button
-      label="Cancelar"
-      icon="pi pi-times"
-      severity="danger"
-      styleClass="p-button-text"
-      (click)="closePopup()"
-    ></p-button>
-    <p-button
-      label="Guardar"
-      icon="pi pi-check"
-      (click)="saveCategory()"
-    ></p-button>
-  </ng-template>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
+        <p-button label="Guardar" icon="pi pi-check" (click)="saveCategory()"></p-button>
+    </ng-template>
 </p-dialog>
 
 <p-toast></p-toast>
