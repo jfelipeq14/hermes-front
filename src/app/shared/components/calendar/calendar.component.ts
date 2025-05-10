@@ -10,7 +10,7 @@ import listPlugin from '@fullcalendar/list';
 
 import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { SplitButtonModule } from 'primeng/splitbutton';
 
 import { ProgrammingService } from '../../../services';
@@ -97,14 +97,14 @@ export class CalendarComponent implements OnInit {
                 label: 'Crear reserva',
                 icon: 'pi pi-fw pi-calendar-plus',
                 command: () => {
-                    this.onHandleReservation(event.id);
+                    this.onHandleReservation();
                 }
             },
             {
                 label: 'Ver clientes',
                 icon: 'pi pi-fw pi-user',
                 command: () => {
-                    this.onHandleClients(event.id);
+                    this.onHandleClients();
                 }
             }
         ];
@@ -153,11 +153,11 @@ export class CalendarComponent implements OnInit {
         this.changeStatusDate.emit(date);
     }
 
-    onHandleReservation(id: any) {
+    onHandleReservation() {
         this.handleReservation.emit(!this.reservationDialog);
     }
 
-    onHandleClients(id: any) {
+    onHandleClients() {
         this.handleClients.emit(!this.clientsDialog);
     }
 

@@ -33,8 +33,8 @@ export class FormProgrammingComponent implements OnInit {
     @Input() zones = ZONE;
     @Input() submitted = false;
 
-    @Output() onSave = new EventEmitter<DateModel>();
-    @Output() onCancel = new EventEmitter<void>();
+    @Output() toSave = new EventEmitter<DateModel>();
+    @Output() toCancel = new EventEmitter<void>();
 
     onChangeResponsible(event: any) {
         if (!event.value) return;
@@ -46,10 +46,10 @@ export class FormProgrammingComponent implements OnInit {
 
     onCreateDate(date: DateModel) {
         if (!date) return;
-        this.onSave.emit(date);
+        this.toSave.emit(date);
     }
 
     onClosePopup() {
-        this.onCancel.emit();
+        this.toCancel.emit();
     }
 }
