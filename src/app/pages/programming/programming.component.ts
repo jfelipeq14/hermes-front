@@ -3,14 +3,7 @@
 import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-
-import { CalendarOptions } from '@fullcalendar/core/index.js';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import interactionPlugin from '@fullcalendar/interaction';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
+import { CommonModule, formatDate } from '@angular/common';
 
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -27,11 +20,12 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
-import { SplitButtonModule } from 'primeng/splitbutton';
 
 import { MeetingService, PackageService, ProgrammingService, ResponsibleService } from '../../services';
 import { DateModel, MeetingModel, PackageModel, ResponsibleModel, UserModel } from '../../models';
 import { ZONE } from '../../shared/constants';
+import { formatTime, getSeverity } from '../../shared/helpers';
+import { CalendarComponent, FormProgrammingComponent } from '../../shared/components';
 
 @Component({
     selector: 'app-programming',
@@ -39,7 +33,6 @@ import { ZONE } from '../../shared/constants';
     styleUrls: ['./programming.component.scss'],
     imports: [
         CommonModule,
-        FullCalendarModule,
         MenuModule,
         ButtonModule,
         DialogModule,
@@ -52,9 +45,10 @@ import { ZONE } from '../../shared/constants';
         MultiSelectModule,
         TextareaModule,
         IconFieldModule,
-        SplitButtonModule,
         DatePickerModule,
-        DropdownModule
+        DropdownModule,
+        CalendarComponent,
+        FormProgrammingComponent
     ],
     providers: [ProgrammingService, PackageService, ResponsibleService, MeetingService, MessageService, ConfirmationService]
 })
@@ -70,65 +64,6 @@ export class ProgrammingPage implements OnInit {
     zones = ZONE;
     dateDialog = false;
     submitted = false;
-    dateNow = this.formatDate(new Date());
-    selectedEvent: any;
-    menuItems: MenuItem[] = [
-        {
-            label: 'Editar programación',
-            icon: 'pi pi-pencil',
-            command: () => this.editProgramming()
-        },
-        {
-            label: 'Cambiar estado',
-            icon: 'pi pi-fw pi-sync',
-            command: () => {
-                this.changeStatusDate();
-            }
-        },
-        {
-            label: 'Crear reserva',
-            icon: 'pi pi-fw pi-calendar-plus',
-            command: () => {
-                this.goToReservation(this.date.id);
-            }
-        },
-        {
-            label: 'Ver clientes',
-            icon: 'pi pi-fw pi-user'
-        }
-    ];
-
-    calendarVisible = signal(true);
-    calendarOptions = signal<CalendarOptions>({
-        plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        initialView: 'dayGridMonth',
-        weekends: true,
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        eventDisplay: 'block',
-        eventClassNames: ['calendar-event'],
-        dateClick: (info) => {
-            this.date = new DateModel();
-            this.date.start = info.date;
-            this.date.end = info.date;
-            this.dateDialog = true;
-        },
-        events: this.dates.map((date) => ({
-            id: date.id.toString(),
-            title: `Paquete ${date.idPackage}`,
-            start: date.start,
-            end: date.end,
-            allDay: false,
-            status: date.status
-        }))
-    });
 
     constructor(
         private programmingService: ProgrammingService,
@@ -141,28 +76,9 @@ export class ProgrammingPage implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.getAllDates();
         this.getAllPackages();
         this.getAllResponsibles();
-    }
-
-    getAllDates() {
-        this.programmingService.getAll().subscribe({
-            next: (dates) => {
-                this.dates = dates;
-                this.calendarOptions.update((options) => ({
-                    ...options,
-                    events: dates.map((date) => ({
-                        id: date.id.toString(),
-                        title: `Paquete ${date.idPackage}`,
-                        start: date.start,
-                        end: date.end,
-                        allDay: false,
-                        status: date.status
-                    }))
-                }));
-            }
-        });
+        this.getAllMeetings();
     }
 
     getAllMeetings() {
@@ -284,7 +200,7 @@ export class ProgrammingPage implements OnInit {
         if (!idDate) return;
 
         this.meeting.idDate = idDate;
-        const hourFormated = this.formatTime(this.meeting.hour);
+        const hourFormated = formatTime(this.meeting.hour);
         this.meeting.hour = hourFormated;
         console.log(this.meeting);
 
@@ -331,124 +247,61 @@ export class ProgrammingPage implements OnInit {
         }
     }
 
-    // Helper function to format a Date object to HH:mm
-    private formatTime(date: string): string {
-        const parsedDate = new Date(date);
-        const hours = String(parsedDate.getUTCHours()).padStart(2, '0');
-        const minutes = String(parsedDate.getUTCMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
-    }
+    editProgramming(date: DateModel) {
+        this.date = {
+            ...date,
+            start: new Date(date.start),
+            end: new Date(date.end),
+            startRegistration: new Date(date.startRegistration),
+            endRegistration: new Date(date.endRegistration)
+        };
+        this.meetingService.getByIdDate(date.id).subscribe({
+            next: (meeting) => {
+                if (!meeting) this.meeting = new MeetingModel();
 
-    private formatDate(date: Date): Date {
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        return new Date(`${year}-${month}-${day}`);
-    }
-
-    editProgramming() {
-        const id = this.selectedEvent?.id; // Use the selected event to get the ID
-
-        if (id) {
-            const programming = this.getProgrammingById(+id); // Fetch programming details by ID
-            if (programming) {
-                this.date = {
-                    ...programming,
-                    start: new Date(programming.start), // Convert to Date object
-                    end: new Date(programming.end), // Convert to Date object
-                    startRegistration: new Date(programming.startRegistration), // Convert to Date object
-                    endRegistration: new Date(programming.endRegistration) // Convert to Date object
+                this.meeting = {
+                    ...meeting,
+                    hour: formatTime(meeting.hour)
                 };
+            },
+            error: () => {
+                this.meeting = new MeetingModel();
+            }
+        });
+        this.dateDialog = true;
+    }
 
-                // Fetch the meeting related to the programming
-                this.meetingService.getByIdDate(programming.id).subscribe({
-                    next: (meeting) => {
-                        if (!meeting) this.meeting = new MeetingModel(); // Reset meeting if not found
-
-                        this.meeting = {
-                            ...meeting,
-                            hour: this.formatTime(meeting.hour),
-                            responsibles: meeting.responsibles.map((r: any) => r.idUser)
-                        };
-
-                        this.dateDialog = true;
+    changeStatusDate(date: DateModel) {
+        this.confirmationService.confirm({
+            message: '¿Está seguro de que desea cambiar el estado de ' + date.id + '?',
+            header: 'Confirmar',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-secondary',
+            accept: () => {
+                this.programmingService.changeStatus(date.id).subscribe({
+                    next: (d) => {
+                        this.messageService.add({
+                            severity: getSeverity(d.status),
+                            summary: 'Éxito',
+                            detail: `${d.id} ${d.status ? 'activado' : 'desactivado'}`,
+                            life: 3000
+                        });
+                        this.refresh();
                     },
-                    error: () => {
-                        this.meeting = new MeetingModel(); // Reset meeting if not found
-                        this.dateDialog = true; // Open the dialog for editing
+                    error: (e) => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: e.error.message,
+                            life: 3000
+                        });
                     }
                 });
             }
-        }
-    }
-
-    getProgrammingById(id: number) {
-        return this.dates.find((item) => item.id === id) || new DateModel();
-    }
-
-    onChangeResponsible(event: any) {
-        if (!event.value) return;
-
-        this.meeting.responsibles = event.value.map((id: number) => ({
-            idUser: id
-        }));
-    }
-
-    changeStatusDate(): void {
-        const id = this.selectedEvent?.id;
-
-        if (!id) {
-            return;
-        }
-
-        const programming = this.getProgrammingById(+id); // Fetch programming details by ID
-        if (programming) {
-            this.confirmationService.confirm({
-                message: `¿Está seguro de que desea ${programming.status ? 'desactivar' : 'activar'} la programación ${programming.id}?`,
-                header: 'Confirmación',
-                icon: 'pi pi-exclamation-triangle',
-                acceptLabel: 'Sí',
-                rejectLabel: 'No',
-                acceptButtonStyleClass: 'p-button-primary',
-                rejectButtonStyleClass: 'p-button-secondary',
-                accept: () => {
-                    this.programmingService.changeStatus(programming.id).subscribe({
-                        next: (updatedDate) => {
-                            this.messageService.add({
-                                severity: updatedDate.status ? 'success' : 'warn',
-                                summary: 'Éxito',
-                                detail: `Programación ${updatedDate.id} ${updatedDate.status ? 'activada' : 'desactivada'}`,
-                                life: 3000
-                            });
-                            this.refresh();
-                        },
-                        error: (e) => {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail: e.error.message,
-                                life: 3000
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    }
-
-    goToReservation(idDate: number) {
-        if (!idDate) {
-            return;
-        }
-
-        this.router.navigate(['/home/reservations'], {
-            queryParams: { idDate: this.date.id }
         });
-    }
-
-    onClickEvent(event: any, selectEvent: any) {
-        if (!event || !selectEvent) return;
-        this.selectedEvent = selectEvent;
     }
 
     showPopup() {
@@ -474,7 +327,6 @@ export class ProgrammingPage implements OnInit {
         this.dateDialog = false;
         this.submitted = false;
 
-        this.getAllDates();
         this.getAllPackages();
         this.getAllResponsibles();
     }
