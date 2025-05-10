@@ -62,7 +62,9 @@ export class ProgrammingPage implements OnInit {
     responsibles: UserModel[] = [];
     packages: PackageModel[] = [];
     zones = ZONE;
-    dateDialog = false;
+    programmingDialog = false;
+    reservationDialog = false;
+    clientsDialog = false;
     submitted = false;
 
     constructor(
@@ -268,7 +270,7 @@ export class ProgrammingPage implements OnInit {
                 this.meeting = new MeetingModel();
             }
         });
-        this.dateDialog = true;
+        this.programmingDialog = true;
     }
 
     changeStatusDate(date: DateModel) {
@@ -304,14 +306,26 @@ export class ProgrammingPage implements OnInit {
         });
     }
 
-    showPopup() {
+    clickPackage(event: any) {
+        console.log('click paackage', event);
+    }
+
+    handleProgramming() {
         this.date = new DateModel();
-        this.dateDialog = true;
+        this.programmingDialog = true;
         this.submitted = false;
     }
 
+    handleReservation() {
+        this.reservationDialog = true;
+    }
+
+    handleClients() {
+        this.clientsDialog = true;
+    }
+
     closePopup() {
-        this.dateDialog = false;
+        this.programmingDialog = false;
         this.submitted = false;
         this.date = new DateModel();
         this.meeting = new MeetingModel();
@@ -324,7 +338,7 @@ export class ProgrammingPage implements OnInit {
         this.responsible = new ResponsibleModel();
         this.packages = [];
         this.responsibles = [];
-        this.dateDialog = false;
+        this.programmingDialog = false;
         this.submitted = false;
 
         this.getAllPackages();

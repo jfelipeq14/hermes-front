@@ -1,8 +1,18 @@
 <div class="container">
-    <app-calendar />
+    <app-calendar
+        [reservationDialog]="reservationDialog"
+        [clientsDialog]="clientsDialog"
+        [programmingDialog]="programmingDialog"
+        (clickPackage)="clickPackage($event)"
+        (editProgramming)="editProgramming($event)"
+        (changeStatusDate)="changeStatusDate($event)"
+        (handleReservation)="handleReservation()"
+        (handleClients)="handleClients()"
+        (handleProgramming)="handleProgramming()"
+    />
 </div>
 
-<p-dialog [(visible)]="dateDialog" [style]="{ width: '600px', height: 'auto', 'max-width': '100dvw', 'max-height': '100dvh' }" header="Programación" [modal]="true" (onHide)="closePopup()">
+<p-dialog [(visible)]="programmingDialog" [style]="{ width: '600px', height: 'auto', 'max-width': '100dvw', 'max-height': '100dvh' }" header="Programación" [modal]="true" (onHide)="closePopup()">
     <app-form-programming [date]="date" [meeting]="meeting" [submitted]="submitted" [packages]="packages" [zones]="zones" (editProgramming)="editProgramming(date)" (changeStatusDate)="changeStatusDate(date)" />
 </p-dialog>
 
