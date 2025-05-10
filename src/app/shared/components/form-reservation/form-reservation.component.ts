@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } from '..';
 import { CommonModule } from '@angular/common';
-import { PaymentModel, ReservationModel, UserModel } from '../../../models';
+import { PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MessageService } from 'primeng/api';
 import { AuthService, ClientsService, ReservationsService } from '../../../services';
 import { ButtonModule } from 'primeng/button';
@@ -89,6 +89,18 @@ export class FormReservationComponent implements OnInit {
         this.isPasswordDisable = true;
     }
 
+    handleTravel(travel: boolean) {
+        this.travel = travel;
+        if (travel) {
+            this.reservation.detailReservationTravelers.push({
+                idTraveler: this.client.id
+            });
+        } else {
+            //remove traveler
+            this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((traveler) => traveler.idTraveler !== this.client.id);
+        }
+    }
+
     createClient(event: any) {
         if (!event.value) {
             return;
@@ -161,9 +173,10 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
-    handleTravel(event: any) {
-        if (!event) return;
-        console.log(event.value);
+    deleteTraveler(traveler: ReservationTravelerModel) {
+        if (!traveler) return;
+
+        this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((t) => t.idTraveler !== traveler.idTraveler);
     }
 
     isStepValid(step: number): boolean {

@@ -79,7 +79,7 @@ export class FormClientsComponent implements OnInit {
     }
 
     onHandleTravel(event: any) {
-        this.handleTravel.emit(event);
+        this.handleTravel.emit(event.target.checked);
     }
 
     onSearchClient(document: string) {

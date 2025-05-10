@@ -137,8 +137,8 @@ export class ReservationsPage implements OnInit {
         if (!event) return;
     }
 
-    getInfoUser(travelerId: number): UserModel {
-        const traveler = this.clients.find((c) => c.id === travelerId);
+    getInfoUser(idUser: number): UserModel {
+        const traveler = this.clients.find((c) => c.id === idUser);
 
         if (!traveler) return new UserModel();
 

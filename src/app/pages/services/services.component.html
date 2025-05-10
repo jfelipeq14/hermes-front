@@ -64,7 +64,7 @@
     <ng-template pTemplate="content">
         <div class="flex flex-col field">
             <label for="category" class="required">Categoría</label>
-            <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" class="w-full md:w-14rem"></p-dropdown>
+            <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" [appendTo]="'body'"></p-dropdown>
             <small class="p-error" *ngIf="submitted && !service.idCategoryServices"> La categoría es obligatoria. </small>
         </div>
 

@@ -30,6 +30,15 @@ export class FormTravelersComponent {
     @Output() searchClient = new EventEmitter<any>();
     @Output() createClient = new EventEmitter<any>();
     @Output() addTraveler = new EventEmitter<any>();
+    @Output() deleteTraveler = new EventEmitter<any>();
+
+    getInfoUser(idUser: number): UserModel {
+        const traveler = this.clients.find((c) => c.id === idUser);
+
+        if (!traveler) return new UserModel();
+
+        return traveler;
+    }
 
     onSearchClient(document: string) {
         this.searchClient.emit(document);
@@ -41,5 +50,9 @@ export class FormTravelersComponent {
 
     onAddTraveler() {
         this.addTraveler.emit();
+    }
+
+    onDeleteTraveler(traveler: ReservationTravelerModel) {
+        this.deleteTraveler.emit(traveler);
     }
 }
