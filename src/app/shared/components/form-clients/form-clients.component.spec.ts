@@ -3,21 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormClientsComponent } from './form-clients.component';
 
 describe('FormClientsComponent', () => {
-  let component: FormClientsComponent;
-  let fixture: ComponentFixture<FormClientsComponent>;
+    let component: FormClientsComponent;
+    let fixture: ComponentFixture<FormClientsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormClientsComponent]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [FormClientsComponent]
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(FormClientsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(FormClientsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

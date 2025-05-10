@@ -1,0 +1,58 @@
+<p-stepper [value]="activeStepIndex">
+    <p-step-list>
+        <p-step [value]="0" label="Crear Cliente"></p-step>
+        <p-step [value]="1" label="Agregar Viajeros"></p-step>
+        <p-step [value]="2" label="Confirmar Reserva"></p-step>
+    </p-step-list>
+
+    <!-- Contenido del Step 1 -->
+    <div *ngIf="activeStepIndex === 0" class="step-content">
+        <!-- Aquí irá el contenido del primer paso -->
+        <ng-container>
+            <app-form-clients
+                [reservation]="reservation"
+                [travel]="travel"
+                [travelers]="reservation.detailReservationTravelers"
+                [clients]="clients"
+                [client]="client"
+                [submitted]="submitted"
+                [isPasswordDisable]="isPasswordDisable"
+                (searchClient)="searchClient($event)"
+                (createClient)="createClient($event)"
+                (handleTravel)="handleTravel($event)"
+            />
+        </ng-container>
+    </div>
+
+    <!-- Contenido del Step 2 -->
+    <div *ngIf="activeStepIndex === 1" class="step-content">
+        <!-- Aquí irá el contenido del segundo paso -->
+        <ng-container>
+            <app-form-travelers
+                [reservation]="reservation"
+                [travel]="travel"
+                [travelers]="reservation.detailReservationTravelers"
+                [clients]="clients"
+                [traveler]="traveler"
+                [submitted]="submitted"
+                (searchClient)="searchClient($event)"
+                (createClient)="createClient($event)"
+                (addTraveler)="addTraveler()"
+            />
+        </ng-container>
+    </div>
+
+    <!-- Contenido del Step 3 -->
+    <div *ngIf="activeStepIndex === 2" class="step-content">
+        <!-- Aquí irá el contenido del tercer paso -->
+        <ng-container>
+            <app-form-payments [payment]="payment" [submitted]="submitted" />
+        </ng-container>
+    </div>
+</p-stepper>
+
+<div class="flex justify-content-between">
+    <p-button label="Anterior" icon="pi pi-arrow-left" (onClick)="previousStep()" [disabled]="activeStepIndex === 0"></p-button>
+    <p-button *ngIf="activeStepIndex !== 2" label="Siguiente" icon="pi pi-arrow-right" (onClick)="nextStep()" [disabled]="!isStepValid(activeStepIndex)"></p-button>
+    <p-button *ngIf="activeStepIndex === 2" label="Guardar" icon="pi pi-check" (onClick)="saveReservation()" [disabled]="!isStepValid(activeStepIndex)"></p-button>
+</div>

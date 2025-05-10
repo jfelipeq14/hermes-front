@@ -1,217 +1,97 @@
 <p-table
-  #dt
-  [value]="reservations"
-  [rows]="10"
-  [paginator]="true"
-  [globalFilterFields]="['id', 'date', 'price', 'status']"
-  [tableStyle]="{ 'min-width': '75rem' }"
-  [rowHover]="true"
-  dataKey="id"
-  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservaciones"
-  [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10, 20, 30]"
-  [expandedRowKeys]="expandedRows"
-  (onRowExpand)="onRowExpand($event)"
+    #dt
+    [value]="reservations"
+    [rows]="10"
+    [paginator]="true"
+    [globalFilterFields]="['id', 'date', 'price', 'status']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservaciones"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    [expandedRowKeys]="expandedRows"
+    (onRowExpand)="onRowExpand($event)"
 >
-  <ng-template #caption>
-    <h3 class="m-0 p-0 text-center">Reservaciones</h3>
-    <div class="flex justify-content-between align-items-center">
-      <p-button
-        label="Crear"
-        icon="pi pi-plus"
-        severity="secondary"
-        (onClick)="showPopup()"
-      />
-      <p-iconfield>
-        <p-inputicon styleClass="pi pi-search" />
-        <input
-          pInputText
-          type="text"
-          (input)="onGlobalFilter(dt, $event)"
-          placeholder="Buscar..."
-        />
-      </p-iconfield>
-    </div>
-  </ng-template>
-  <ng-template #header>
-    <tr>
-      <th style="width: 5rem"></th>
-      <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
-      <th pSortableColumn="date">Fecha <p-sortIcon field="date" /></th>
-      <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
-      <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
-    </tr>
-  </ng-template>
-  <ng-template #body let-reservation let-expanded="expanded">
-    <tr>
-      <td>
-        <p-button
-          type="button"
-          pRipple
-          [pRowToggler]="reservation"
-          [text]="true"
-          [rounded]="true"
-          [plain]="true"
-          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-        />
-      </td>
-      <td>{{ reservation.id }}</td>
-      <td>{{ reservation.date | date : "short" }}</td>
-      <td>{{ reservation.price | currency : "USD" }}</td>
-      <td>
-        <p-dropdown
-          [options]="statuses"
-          [(ngModel)]="reservation.status"
-          optionLabel="name"
-          optionValue="value"
-          (onChange)="changeStatusReservation(reservation)"
-          styleClass="p-dropdown-sm"
-          [appendTo]="'body'"
-        >
-          <ng-template pTemplate="selectedItem">
-            <p-tag
-              [value]="getValueReservation(reservation.status)"
-              [severity]="getSeverityReservation(reservation.status)"
-            ></p-tag>
-          </ng-template>
-          <ng-template let-status pTemplate="item">
-            <p-tag
-              [value]="getValueReservation(status.value)"
-              [severity]="getSeverityReservation(status.value)"
-            ></p-tag>
-          </ng-template>
-        </p-dropdown>
-      </td>
-    </tr>
-  </ng-template>
-  <ng-template #expandedrow let-reservation>
-    <tr>
-      <td colspan="12">
-        <div class="p-3">
-          <!-- Tabla de viajeros -->
-          <div class="mt-3">
-            <h6>Viajeros</h6>
-            <p-table
-              [value]="getTravelersByReservation(reservation.id)"
-              styleClass="p-datatable-sm"
-            >
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Documento</th>
-                  <th>Email</th>
-                  <th>Teléfono</th>
-                  <th>Estado</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-traveler>
-                <tr>
-                  <td>{{ traveler.id }}</td>
-                  <td>{{ getTravelerName(traveler.idTraveler) }}</td>
-                  <td>{{ getTravelerDocument(traveler.idTraveler) }}</td>
-                  <td>{{ getTravelerEmail(traveler.idTraveler) }}</td>
-                  <td>{{ getTravelerPhone(traveler.idTraveler) }}</td>
-                  <td>
-                    <p-tag
-                      [value]="traveler.status ? 'Activo' : 'Inactivo'"
-                      [severity]="getSeverity(traveler.status)"
-                    ></p-tag>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
+    <ng-template #caption>
+        <h3 class="p-0 m-0 text-center">Reservaciones</h3>
+        <div class="flex justify-content-between align-items-center">
+            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
+            </p-iconfield>
         </div>
-      </td>
-    </tr>
-  </ng-template>
+    </ng-template>
+    <ng-template #header>
+        <tr>
+            <th style="width: 5rem"></th>
+            <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+            <th pSortableColumn="date">Fecha <p-sortIcon field="date" /></th>
+            <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
+            <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-reservation let-expanded="expanded">
+        <tr>
+            <td>
+                <p-button type="button" pRipple [pRowToggler]="reservation" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+            </td>
+            <td>{{ reservation.id }}</td>
+            <td>{{ reservation.date | date: 'short' }}</td>
+            <td>{{ reservation.price | currency: 'COP' }}</td>
+            <td>
+                <p-dropdown [options]="statuses" [(ngModel)]="reservation.status" optionLabel="name" optionValue="value" (onChange)="changeStatusReservation(reservation)" styleClass="p-dropdown-sm" [appendTo]="'body'">
+                    <ng-template pTemplate="selectedItem">
+                        <p-tag [value]="getValueReservation(reservation.status)" [severity]="getSeverityReservation(reservation.status)"></p-tag>
+                    </ng-template>
+                    <ng-template let-status pTemplate="item">
+                        <p-tag [value]="getValueReservation(status.value)" [severity]="getSeverityReservation(status.value)"></p-tag>
+                    </ng-template>
+                </p-dropdown>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template #expandedrow let-reservation>
+        <tr>
+            <td colspan="12">
+                <div class="p-3">
+                    <!-- Tabla de viajeros -->
+                    <div class="mt-3">
+                        <h6>Viajeros</h6>
+                        <p-table [value]="reservation.detailReservationTravelers" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Documento</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-traveler>
+                                <tr>
+                                    <td>{{ traveler.idTraveler }}</td>
+                                    <td>{{ getTravelerInfo(traveler.idTraveler).name }}</td>
+                                    <td>{{ getTravelerInfo(traveler.idTraveler).document }}</td>
+                                    <td>{{ getTravelerInfo(traveler.idTraveler).email }}</td>
+                                    <td>{{ getTravelerInfo(traveler.idTraveler).phone }}</td>
+                                    <td>
+                                        <p-tag [value]="getValue(traveler.status)" [severity]="getSeverity(traveler.status)"></p-tag>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
 </p-table>
 
-<p-dialog
-  [(visible)]="reservationDialog"
-  [style]="{ width: '700px' }"
-  header="Crear Reservación"
-  [modal]="true"
-  class="p-fluid"
->
-  <ng-template pTemplate="content">
-    <p-stepper [value]="activeStepIndex">
-      <p-step-list>
-        <p-step [value]="0" label="Crear Cliente"></p-step>
-        <p-step [value]="1" label="Agregar Viajeros"></p-step>
-        <p-step [value]="2" label="Confirmar Reserva"></p-step>
-      </p-step-list>
-
-      <!-- Contenido del Step 1 -->
-      <div *ngIf="activeStepIndex === 0" class="step-content">
-        <!-- Aquí irá el contenido del primer paso -->
-        <ng-container>
-          <app-form-clients
-            [reservation]="reservation"
-            [travel]="travel"
-            [travelers]="travelers"
-            [clients]="clients"
-            [client]="client"
-            [submitted]="submitted"
-            (searchClient)="searchClient($event)"
-            (createClient)="createClient($event)"
-          />
-        </ng-container>
-      </div>
-
-      <!-- Contenido del Step 2 -->
-      <div *ngIf="activeStepIndex === 1" class="step-content">
-        <!-- Aquí irá el contenido del segundo paso -->
-        <ng-container>
-          <app-form-travelers
-            [reservation]="reservation"
-            [travel]="travel"
-            [travelers]="travelers"
-            [clients]="clients"
-            [traveler]="traveler"
-            [submitted]="submitted"
-            (searchClient)="searchClient($event)"
-            (createClient)="createClient($event)"
-            (addTraveler)="addTraveler()"
-          />
-        </ng-container>
-      </div>
-
-      <!-- Contenido del Step 3 -->
-      <div *ngIf="activeStepIndex === 2" class="step-content">
-        <!-- Aquí irá el contenido del tercer paso -->
-        <ng-container>
-          <app-form-payments [payment]="payment" [submitted]="submitted" />
-        </ng-container>
-      </div>
-    </p-stepper>
-  </ng-template>
-
-  <ng-template pTemplate="footer">
-    <div class="flex justify-content-between">
-      <p-button
-        label="Anterior"
-        icon="pi pi-arrow-left"
-        (onClick)="previousStep()"
-        [disabled]="activeStepIndex === 0"
-      ></p-button>
-      <p-button
-        *ngIf="activeStepIndex !== 2"
-        label="Siguiente"
-        icon="pi pi-arrow-right"
-        (onClick)="nextStep()"
-        [disabled]="!isStepValid(activeStepIndex)"
-      ></p-button>
-      <p-button
-        *ngIf="activeStepIndex === 2"
-        label="Guardar"
-        icon="pi pi-check"
-        (onClick)="saveReservation()"
-        [disabled]="!isStepValid(activeStepIndex)"
-      ></p-button>
-    </div>
-  </ng-template>
+<p-dialog [(visible)]="reservationDialog" [style]="{ width: '800px' }" header="Reservación" [modal]="true">
+    <app-form-reservation />
 </p-dialog>
 
 <p-toast></p-toast>

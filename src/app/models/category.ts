@@ -1,5 +1,5 @@
 export class CategoryModel {
-  id = 0;
-  name = '';
-  status = true;
+    id = 0;
+    name = '';
+    status = true;
 }

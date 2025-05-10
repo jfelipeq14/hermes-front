@@ -17,195 +17,176 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
 
 @Component({
-  standalone: true,
-  selector: 'app-services',
-  templateUrl: './services.component.html',
-  styleUrls: ['./services.component.scss'],
-  imports: [
-    CommonModule,
-    TableModule,
-    FormsModule,
-    ButtonModule,
-    ToastModule,
-    DialogModule,
-    DropdownModule,
-    InputTextModule,
-    InputIconModule,
-    IconFieldModule,
-    ConfirmDialogModule,
-    TagModule,
-  ],
-  providers: [
-    ServiceService,
-    CategoryService,
-    MessageService,
-    ConfirmationService,
-  ],
+    standalone: true,
+    selector: 'app-services',
+    templateUrl: './services.component.html',
+    styleUrls: ['./services.component.scss'],
+    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule, ConfirmDialogModule, TagModule],
+    providers: [ServiceService, CategoryService, MessageService, ConfirmationService]
 })
 export class ServicesPage implements OnInit {
-  service: ServiceModel = new ServiceModel();
-  services: ServiceModel[] = [];
-  categories: CategoryModel[] = [];
-  serviceDialog = false;
-  submitted = false;
-  statuses = [
-    { label: 'Activo', value: true },
-    { label: 'Inactivo', value: false },
-  ];
+    service: ServiceModel = new ServiceModel();
+    services: ServiceModel[] = [];
+    categories: CategoryModel[] = [];
+    serviceDialog = false;
+    submitted = false;
+    statuses = [
+        { label: 'Activo', value: true },
+        { label: 'Inactivo', value: false }
+    ];
 
-  constructor(
-    private serviceService: ServiceService,
-    private categoryService: CategoryService,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService
-  ) {}
+    constructor(
+        private serviceService: ServiceService,
+        private categoryService: CategoryService,
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService
+    ) {}
 
-  ngOnInit(): void {
-    this.getAllServices();
-    this.getAllCategories();
-  }
-
-  onGlobalFilter(table: Table, event: Event) {
-    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  }
-
-  getAllCategories() {
-    this.categoryService.getAll().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
-        });
-      },
-    });
-  }
-
-  getAllServices() {
-    this.serviceService.getAll().subscribe({
-      next: (services) => {
-        this.services = services;
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
-        });
-      },
-    });
-  }
-
-  saveService() {
-    this.submitted = true;
-
-    if (!this.service.id) {
-      this.serviceService.create(this.service).subscribe({
-        next: (s) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: `${s.name} creado`,
-            life: 3000,
-          });
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
-      this.refresh();
-    } else {
-      this.serviceService.update(this.service).subscribe({
-        next: (s) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: `${s.name} actualizado`,
-            life: 3000,
-          });
-        },
-        error: (e) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: e.error.message,
-            life: 3000,
-          });
-        },
-      });
-      this.refresh();
+    ngOnInit(): void {
+        this.getAllServices();
+        this.getAllCategories();
     }
-    this.refresh();
-  }
 
-  editService(service: ServiceModel) {
-    this.service = { ...service };
-    this.serviceDialog = true;
-  }
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
 
-  changeStatusService(service: ServiceModel) {
-    this.confirmationService.confirm({
-      message:
-        '¿Está seguro de que desea cambiar el estado de ' + service.name + '?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí',
-      rejectLabel: 'No',
-      acceptButtonStyleClass: 'p-button-primary',
-      rejectButtonStyleClass: 'p-button-secondary',
-      accept: () => {
-        this.serviceService.changeStatus(service.id).subscribe({
-          next: (s) => {
-            this.messageService.add({
-              severity: this.getSeverity(s.status),
-              summary: 'Éxito',
-              detail: `${s.name} ${s.status ? 'activado' : 'desactivado'}`,
-              life: 3000,
-            });
-          },
-          error: (e) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: e.error.message,
-              life: 3000,
-            });
-          },
+    getAllCategories() {
+        this.categoryService.getAll().subscribe({
+            next: (categories) => {
+                this.categories = categories;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
         });
+    }
+
+    getAllServices() {
+        this.serviceService.getAll().subscribe({
+            next: (services) => {
+                this.services = services;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
+        });
+    }
+
+    saveService() {
+        this.submitted = true;
+
+        if (!this.service.id) {
+            this.serviceService.create(this.service).subscribe({
+                next: (s) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: `${s.name} creado`,
+                        life: 3000
+                    });
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                }
+            });
+            this.refresh();
+        } else {
+            this.serviceService.update(this.service).subscribe({
+                next: (s) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: `${s.name} actualizado`,
+                        life: 3000
+                    });
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                }
+            });
+            this.refresh();
+        }
         this.refresh();
-      },
-    });
-  }
+    }
 
-  showPopup() {
-    this.service = new ServiceModel();
-    this.serviceDialog = true;
-    this.submitted = false;
-  }
+    editService(service: ServiceModel) {
+        this.service = { ...service };
+        this.serviceDialog = true;
+    }
 
-  closePopup() {
-    this.serviceDialog = false;
-    this.service = new ServiceModel();
-  }
+    changeStatusService(service: ServiceModel) {
+        this.confirmationService.confirm({
+            message: '¿Está seguro de que desea cambiar el estado de ' + service.name + '?',
+            header: 'Confirmar',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-secondary',
+            accept: () => {
+                this.serviceService.changeStatus(service.id).subscribe({
+                    next: (s) => {
+                        this.messageService.add({
+                            severity: this.getSeverity(s.status),
+                            summary: 'Éxito',
+                            detail: `${s.name} ${s.status ? 'activado' : 'desactivado'}`,
+                            life: 3000
+                        });
+                    },
+                    error: (e) => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: e.error.message,
+                            life: 3000
+                        });
+                    }
+                });
+                this.refresh();
+            }
+        });
+    }
 
-  refresh() {
-    this.getAllCategories();
-    this.getAllServices();
-    this.closePopup();
-    this.submitted = false;
-  }
+    showPopup() {
+        this.service = new ServiceModel();
+        this.serviceDialog = true;
+        this.submitted = false;
+    }
 
-  getSeverity(status: boolean): 'success' | 'danger' {
-    return status ? 'success' : 'danger';
-  }
+    closePopup() {
+        this.serviceDialog = false;
+        this.service = new ServiceModel();
+    }
+
+    refresh() {
+        this.getAllCategories();
+        this.getAllServices();
+        this.closePopup();
+        this.submitted = false;
+    }
+
+    getSeverity(status: boolean): 'success' | 'danger' {
+        return status ? 'success' : 'danger';
+    }
 }

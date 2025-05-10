@@ -11,88 +11,82 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 
 import { bloodTypes, epslist, sexlist, typesDocument } from '../../constants';
-import {
-  MunicipalityModel,
-  ReservationModel,
-  UserModel,
-} from '../../../models';
+import { MunicipalityModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MunicipalityService } from '../../../services';
 
 @Component({
-  selector: 'app-form-clients',
-  templateUrl: './form-clients.component.html',
-  styleUrls: ['./form-clients.component.scss'],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ButtonModule,
-    DropdownModule,
-    InputTextModule,
-    InputIconModule,
-    IconFieldModule,
-  ],
-  providers: [MunicipalityService, MessageService],
+    selector: 'app-form-clients',
+    templateUrl: './form-clients.component.html',
+    styleUrls: ['./form-clients.component.scss'],
+    imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule],
+    providers: [MunicipalityService, MessageService]
 })
 export class FormClientsComponent implements OnInit {
-  constructor(
-    private municipalityService: MunicipalityService,
-    private messageService: MessageService
-  ) {}
+    constructor(
+        private municipalityService: MunicipalityService,
+        private messageService: MessageService
+    ) {}
 
-  @Input() reservation: ReservationModel = new ReservationModel();
-  @Input() travel = false;
-  @Input() travelers: UserModel[] = [];
-  @Input() clients: UserModel[] = [];
-  @Input() client: UserModel = new UserModel();
-  @Input() submitted = false;
+    @Input() reservation: ReservationModel = new ReservationModel();
+    @Input() travel = false;
+    @Input() travelers: ReservationTravelerModel[] = [];
+    @Input() clients: UserModel[] = [];
+    @Input() client: UserModel = new UserModel();
+    @Input() submitted = false;
+    @Input() isPasswordDisable = false;
 
-  @Output() searchClient = new EventEmitter<any>();
-  @Output() createClient = new EventEmitter<any>();
+    @Output() searchClient = new EventEmitter<any>();
+    @Output() createClient = new EventEmitter<any>();
+    @Output() handleTravel = new EventEmitter<any>();
 
-  typesDocument = typesDocument;
-  sexlist = sexlist;
-  bloodTypes = bloodTypes;
-  epslist = epslist;
-  municipalities: MunicipalityModel[] = [];
+    typesDocument = typesDocument;
+    sexlist = sexlist;
+    bloodTypes = bloodTypes;
+    epslist = epslist;
+    municipalities: MunicipalityModel[] = [];
 
-  age = 0;
-  maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
+    age = 0;
+    maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
 
-  getAllMunicipalities() {
-    this.municipalityService.getAll().subscribe({
-      next: (municipalities) => {
-        this.municipalities = municipalities;
-      },
-      error: (e) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: e.error.message,
-          life: 3000,
+    getAllMunicipalities() {
+        this.municipalityService.getAll().subscribe({
+            next: (municipalities) => {
+                this.municipalities = municipalities;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
         });
-      },
-    });
-  }
-
-  ngOnInit(): void {
-    this.getAllMunicipalities();
-  }
-
-  onChangeBirthDate(event: any) {
-    if (!event.value) {
-      return;
     }
 
-    const birthDate = new Date(event.value);
-    const today = new Date();
-    this.age = today.getFullYear() - birthDate.getFullYear();
-  }
+    ngOnInit(): void {
+        this.getAllMunicipalities();
+    }
 
-  onSearchClient(document: string) {
-    this.searchClient.emit(document);
-  }
+    onChangeBirthDate(event: any) {
+        if (!event.value) {
+            return;
+        }
 
-  onCreateClient(user: UserModel) {
-    this.createClient.emit(user);
-  }
+        const birthDate = new Date(event.value);
+        const today = new Date();
+        this.age = today.getFullYear() - birthDate.getFullYear();
+    }
+
+    onHandleTravel(event: any) {
+        this.handleTravel.emit(event);
+    }
+
+    onSearchClient(document: string) {
+        this.searchClient.emit(document);
+    }
+
+    onCreateClient(user: UserModel) {
+        this.createClient.emit(user);
+    }
 }

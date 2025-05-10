@@ -3,23 +3,19 @@ import { AuthService } from '../services';
 import { map, Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[appShowRoles]',
+    selector: '[appShowRoles]'
 })
 export class ShowForRolesDirective implements OnInit, OnDestroy {
-  @Input('appShowRoles') allowedRoles?: number[];
-  private sub?: Subscription;
+    @Input('appShowRoles') allowedRoles?: number[];
+    private sub?: Subscription;
 
-  constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {
-    this.sub = this.authService.currentUser$
-      .pipe(
-        map((user) => Boolean(user && this.allowedRoles?.includes(user.idRole)))
-      )
-      .subscribe();
-  }
+    ngOnInit(): void {
+        this.sub = this.authService.currentUser$.pipe(map((user) => Boolean(user && this.allowedRoles?.includes(user.idRole)))).subscribe();
+    }
 
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-  }
+    ngOnDestroy(): void {
+        this.sub?.unsubscribe();
+    }
 }

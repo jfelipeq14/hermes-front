@@ -6,36 +6,36 @@ import { UserModel } from '../models';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root'
 })
 export class ProfileService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+    constructor(
+        private http: HttpClient,
+        private authService: AuthService
+    ) {}
 
-  private url = environment.SERVER_URL + 'users/';
+    private url = environment.SERVER_URL + 'users/';
 
-  getCurrentUser(): Observable<UserModel> {
-    // Obtener el ID del usuario desde el servicio de autenticación
-    const currentUser = this.authService.currentUserSubject.getValue();
-    const userId = currentUser?.id;
+    getCurrentUser(): Observable<UserModel> {
+        // Obtener el ID del usuario desde el servicio de autenticación
+        const currentUser = this.authService.currentUserSubject.getValue();
+        const userId = currentUser?.id;
 
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
+        if (!userId) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        return this.http.get<UserModel>(`${this.url}${userId}`);
     }
 
-    return this.http.get<UserModel>(`${this.url}${userId}`);
-  }
+    updateProfile(user: UserModel): Observable<UserModel> {
+        // Asegurar que se envía el objeto correcto para update
+        const updateUserDto: UserModel = {
+            ...user,
+            // Convertir dateBirth a Date si es una cadena
+            dateBirth: typeof user.dateBirth === 'string' ? new Date(user.dateBirth) : user.dateBirth
+        };
 
-  updateProfile(user: UserModel): Observable<UserModel> {
-    // Asegurar que se envía el objeto correcto para update
-    const updateUserDto: UserModel = {
-      ...user,
-      // Convertir dateBirth a Date si es una cadena
-      dateBirth:
-        typeof user.dateBirth === 'string'
-          ? new Date(user.dateBirth)
-          : user.dateBirth,
-    };
-
-    return this.http.patch<UserModel>(`${this.url}${user.id}`, updateUserDto);
-  }
+        return this.http.patch<UserModel>(`${this.url}${user.id}`, updateUserDto);
+    }
 }

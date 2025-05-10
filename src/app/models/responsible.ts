@@ -1,3 +1,3 @@
 export class ResponsibleModel {
-  idUser = 0;
+    idUser = 0;
 }

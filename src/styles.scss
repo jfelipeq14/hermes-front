@@ -1,17 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
-@use "tailwindcss";
-@use "primeicons/primeicons.css";
-@use "primeflex/primeflex.css";
-@use "./assets/layout/layout.scss";
-@plugin "tailwindcss-primeui";
-@layer tailwind, primeng;
-
-
-
-* {
-  scrollbar-width: thin;
-}
-
-.required::after {
-  content: ": *";
-}
+@use './tailwind.css';
+@use './assets/layout/layout.scss';
+@use 'primeicons/primeicons.css';

@@ -6,11 +6,11 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ClientsService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + 'users/clients/';
+    private url = environment.SERVER_URL + 'users/clients/';
 
-  getAll(): Observable<UserModel[]> {
-    return this.http.get<UserModel[]>(this.url);
-  }
+    getAll(): Observable<UserModel[]> {
+        return this.http.get<UserModel[]>(this.url);
+    }
 }

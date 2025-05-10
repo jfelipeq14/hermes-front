@@ -1,3 +1,3 @@
 export class RolePrivilegeModel {
-  idPrivilege = 0;
+    idPrivilege = 0;
 }
