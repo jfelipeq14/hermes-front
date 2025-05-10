@@ -3,21 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormReservationComponent } from './form-reservation.component';
 
 describe('FormReservationComponent', () => {
-  let component: FormReservationComponent;
-  let fixture: ComponentFixture<FormReservationComponent>;
+    let component: FormReservationComponent;
+    let fixture: ComponentFixture<FormReservationComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormReservationComponent]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [FormReservationComponent]
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(FormReservationComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(FormReservationComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

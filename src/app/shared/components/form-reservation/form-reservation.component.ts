@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } from '..';
@@ -60,7 +61,7 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
-    searchClient(document: any) {
+    searchClient(document: string) {
         if (!document) {
             return;
         }

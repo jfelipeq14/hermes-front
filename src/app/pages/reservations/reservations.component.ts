@@ -15,13 +15,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
-import { StepperModule } from 'primeng/stepper';
 
 import { AuthService, ClientsService, ProgrammingService, ReservationsService } from '../../services';
 
-import { DateModel, PackageModel, PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
+import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
-import { FormClientsComponent, FormPaymentsComponent, FormReservationComponent, FormTravelersComponent } from '../../shared/components';
+import { FormReservationComponent } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
 
 import { getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';

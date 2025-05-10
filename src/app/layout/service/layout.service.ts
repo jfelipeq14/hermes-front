@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, effect, signal, computed } from '@angular/core';
 import { Subject } from 'rxjs';
-import { updatePreset } from '@primeng/themes';
 
 export interface layoutConfig {
     preset?: string;
