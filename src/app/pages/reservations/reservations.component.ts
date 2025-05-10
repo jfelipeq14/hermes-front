@@ -16,7 +16,7 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { AuthService, ClientsService, ProgrammingService, ReservationsService } from '../../services';
+import { AuthService, ClientsService, PackageService, ProgrammingService, ReservationsService } from '../../services';
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
@@ -30,7 +30,7 @@ import { getSeverity, getSeverityReservation, getValue, getValueReservation } fr
     templateUrl: './reservations.component.html',
     styleUrls: ['./reservations.component.scss'],
     imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, FormReservationComponent],
-    providers: [ReservationsService, ProgrammingService, ClientsService, MessageService, ConfirmationService]
+    providers: [ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
 })
 export class ReservationsPage implements OnInit {
     reservations: ReservationModel[] = [];
@@ -51,6 +51,7 @@ export class ReservationsPage implements OnInit {
     constructor(
         private reservationService: ReservationsService,
         private programmingService: ProgrammingService,
+        private packageService: PackageService,
         private clientsService: ClientsService,
         private authService: AuthService,
         private messageService: MessageService,
@@ -60,6 +61,8 @@ export class ReservationsPage implements OnInit {
     ngOnInit(): void {
         this.getAllReservations();
         this.getAllDates();
+        this.getAllPackages();
+        this.getAllClients();
     }
 
     getAllReservations() {
@@ -94,6 +97,22 @@ export class ReservationsPage implements OnInit {
         });
     }
 
+    getAllPackages() {
+        this.packageService.getAll().subscribe({
+            next: (packages) => {
+                this.packages = packages;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
+        });
+    }
+
     getAllClients() {
         this.clientsService.getAll().subscribe({
             next: (clients) => {
@@ -116,15 +135,23 @@ export class ReservationsPage implements OnInit {
 
     onRowExpand(event: any) {
         if (!event) return;
-        console.log(event);
     }
 
-    getTravelerInfo(travelerId: number): UserModel {
+    getInfoUser(travelerId: number): UserModel {
         const traveler = this.clients.find((c) => c.id === travelerId);
 
         if (!traveler) return new UserModel();
 
         return traveler;
+    }
+
+    getInfoPackage(idDate: number): PackageModel {
+        const date = this.dates.find((d) => d.id === idDate);
+        const pack = this.packages.find((p) => p.id === date?.idPackage);
+
+        if (!pack) return new PackageModel();
+
+        return pack;
     }
 
     changeStatusReservation(reservation: ReservationModel) {

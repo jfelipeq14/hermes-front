@@ -163,7 +163,7 @@ export class FormReservationComponent implements OnInit {
 
     handleTravel(event: any) {
         if (!event) return;
-        // necesito validar el check
+        console.log(event.value);
     }
 
     isStepValid(step: number): boolean {

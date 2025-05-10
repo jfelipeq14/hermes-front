@@ -26,7 +26,8 @@
     <ng-template #header>
         <tr>
             <th style="width: 5rem"></th>
-            <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+            <th pSortableColumn="id">Cliente <p-sortIcon field="client" /></th>
+            <th pSortableColumn="id">Paquete <p-sortIcon field="client" /></th>
             <th pSortableColumn="date">Fecha <p-sortIcon field="date" /></th>
             <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
             <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
@@ -37,7 +38,8 @@
             <td>
                 <p-button type="button" pRipple [pRowToggler]="reservation" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
-            <td>{{ reservation.id }}</td>
+            <td>{{ getInfoUser(reservation.idUser).name }}</td>
+            <td>{{ getInfoPackage(reservation.idDate).name }}</td>
             <td>{{ reservation.date | date: 'short' }}</td>
             <td>{{ reservation.price | currency: 'COP' }}</td>
             <td>
@@ -62,7 +64,6 @@
                         <p-table [value]="reservation.detailReservationTravelers" styleClass="p-datatable-sm">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Documento</th>
                                     <th>Email</th>
@@ -72,11 +73,10 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-traveler>
                                 <tr>
-                                    <td>{{ traveler.idTraveler }}</td>
-                                    <td>{{ getTravelerInfo(traveler.idTraveler).name }}</td>
-                                    <td>{{ getTravelerInfo(traveler.idTraveler).document }}</td>
-                                    <td>{{ getTravelerInfo(traveler.idTraveler).email }}</td>
-                                    <td>{{ getTravelerInfo(traveler.idTraveler).phone }}</td>
+                                    <td>{{ getInfoUser(traveler.idTraveler).name }}</td>
+                                    <td>{{ getInfoUser(traveler.idTraveler).document }}</td>
+                                    <td>{{ getInfoUser(traveler.idTraveler).email }}</td>
+                                    <td>{{ getInfoUser(traveler.idTraveler).phone }}</td>
                                     <td>
                                         <p-tag [value]="getValue(traveler.status)" [severity]="getSeverity(traveler.status)"></p-tag>
                                     </td>
