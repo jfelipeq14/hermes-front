@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -53,8 +53,6 @@ import { CalendarComponent, FormProgrammingComponent } from '../../shared/compon
     providers: [ProgrammingService, PackageService, ResponsibleService, MeetingService, MessageService, ConfirmationService]
 })
 export class ProgrammingPage implements OnInit {
-    @ViewChild('eventMenu') eventMenu: any;
-
     date: DateModel = new DateModel();
     dates: DateModel[] = [];
     meeting: MeetingModel = new MeetingModel();
@@ -73,14 +71,30 @@ export class ProgrammingPage implements OnInit {
         private responsibleService: ResponsibleService,
         private meetingService: MeetingService,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService,
-        private router: Router
+        private confirmationService: ConfirmationService
     ) {}
 
     ngOnInit(): void {
+        this.getAllDates();
         this.getAllPackages();
         this.getAllResponsibles();
         this.getAllMeetings();
+    }
+
+    getAllDates() {
+        this.programmingService.getAll().subscribe({
+            next: (dates) => {
+                this.dates = dates;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
+        });
     }
 
     getAllMeetings() {
@@ -306,8 +320,8 @@ export class ProgrammingPage implements OnInit {
         });
     }
 
-    clickPackage(event: any) {
-        console.log('click paackage', event);
+    clickPackage(date: any) {
+        console.log('click package', date.idPackage);
     }
 
     handleProgramming() {

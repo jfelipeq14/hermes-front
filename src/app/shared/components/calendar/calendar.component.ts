@@ -10,7 +10,7 @@ import listPlugin from '@fullcalendar/list';
 
 import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { SplitButtonModule } from 'primeng/splitbutton';
 
 import { ProgrammingService } from '../../../services';
@@ -36,15 +36,48 @@ export class CalendarComponent implements OnInit {
     @Input() reservationDialog = false;
     @Input() clientsDialog = false;
     @Input() programmingDialog = false;
-    @Output() clickPackage = new EventEmitter<any>();
+    @Output() clickProgramming = new EventEmitter<any>();
     @Output() editProgramming = new EventEmitter<DateModel>();
     @Output() changeStatusDate = new EventEmitter<DateModel>();
     @Output() handleReservation = new EventEmitter<boolean>();
     @Output() handleClients = new EventEmitter<boolean>();
     @Output() handleProgramming = new EventEmitter<boolean>();
 
-    date = new DateModel();
     dates: DateModel[] = [];
+    date: DateModel = new DateModel();
+
+    programmingSelect: any = null;
+
+    buttons: MenuItem[] = [
+        {
+            label: 'Editar programación',
+            icon: 'pi pi-pencil',
+            command: () => {
+                this.onEditProgramming();
+            }
+        },
+        {
+            label: 'Cambiar estado',
+            icon: 'pi pi-fw pi-sync',
+            command: () => {
+                this.onChangeStatusDate();
+            }
+        },
+        {
+            label: 'Crear reserva',
+            icon: 'pi pi-fw pi-calendar-plus',
+            command: () => {
+                this.onHandleReservation();
+            }
+        },
+        {
+            label: 'Ver clientes',
+            icon: 'pi pi-fw pi-user',
+            command: () => {
+                this.onHandleClients();
+            }
+        }
+    ];
 
     calendarOptions = signal<CalendarOptions>({
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -54,13 +87,7 @@ export class CalendarComponent implements OnInit {
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         initialView: 'dayGridMonth',
-        weekends: true,
-        editable: true,
         selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        eventDisplay: 'block',
-        eventClassNames: ['calendar-event'],
         dateClick: (info) => {
             this.date = new DateModel();
             this.date.start = info.date;
@@ -76,39 +103,6 @@ export class CalendarComponent implements OnInit {
             status: date.status
         }))
     });
-
-    getMappedMenuItems(event: any) {
-        return [
-            {
-                label: 'Editar programación',
-                icon: 'pi pi-pencil',
-                command: () => {
-                    this.onEditProgramming(event.id);
-                }
-            },
-            {
-                label: 'Cambiar estado',
-                icon: 'pi pi-fw pi-sync',
-                command: () => {
-                    this.onChangeStatusDate(event.id);
-                }
-            },
-            {
-                label: 'Crear reserva',
-                icon: 'pi pi-fw pi-calendar-plus',
-                command: () => {
-                    this.onHandleReservation();
-                }
-            },
-            {
-                label: 'Ver clientes',
-                icon: 'pi pi-fw pi-user',
-                command: () => {
-                    this.onHandleClients();
-                }
-            }
-        ];
-    }
 
     getAllDates() {
         this.programmingService.getAll().subscribe({
@@ -137,20 +131,24 @@ export class CalendarComponent implements OnInit {
         });
     }
 
-    onClickPackage(id: any) {
-        this.clickPackage.emit(id);
+    onClickProgramming(event: any, selectEvent: any) {
+        if (!event || !selectEvent) return;
+
+        this.programmingSelect = this.dates.find((date) => date.id === +selectEvent.id);
+
+        this.clickProgramming.emit(this.programmingSelect);
     }
 
-    onEditProgramming(id: any) {
-        if (!id) return;
-        const date = this.dates.find((date) => date.id === id);
-        this.editProgramming.emit(date);
+    onEditProgramming() {
+        if (!this.programmingSelect) return;
+        const programming = this.dates.find((date) => date.id === this.programmingSelect.id);
+        this.editProgramming.emit(programming);
     }
 
-    onChangeStatusDate(id: any) {
-        if (!id) return;
-        const date = this.dates.find((date) => date.id === id);
-        this.changeStatusDate.emit(date);
+    onChangeStatusDate() {
+        if (!this.programmingSelect) return;
+        const programming = this.dates.find((date) => date.id === this.programmingSelect.id);
+        this.changeStatusDate.emit(programming);
     }
 
     onHandleReservation() {
