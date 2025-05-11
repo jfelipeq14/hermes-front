@@ -320,32 +320,37 @@ export class ProgrammingPage implements OnInit {
 
     handleProgramming() {
         this.date = new DateModel();
-        this.programmingDialog = true;
+        this.programmingDialog = !this.programmingDialog;
         this.submitted = false;
     }
 
     handleReservation() {
-        this.reservationDialog = true;
+        this.reservationDialog = !this.reservationDialog;
     }
 
     handleClients() {
-        this.clientsDialog = true;
+        this.clientsDialog = !this.clientsDialog;
     }
 
     closePopup() {
         this.programmingDialog = false;
+        this.reservationDialog = false;
+        this.clientsDialog = false;
         this.submitted = false;
-        this.date = new DateModel();
-        this.meeting = new MeetingModel();
+        this.refresh();
     }
 
     refresh() {
         this.date = new DateModel();
         this.dates = [];
+
         this.meeting = new MeetingModel();
+
         this.responsible = new ResponsibleModel();
-        this.packages = [];
         this.responsibles = [];
+
+        this.packages = [];
+
         this.programmingDialog = false;
         this.submitted = false;
 
