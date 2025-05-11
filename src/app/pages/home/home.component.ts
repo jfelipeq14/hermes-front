@@ -13,9 +13,9 @@ import { AccordionModule } from 'primeng/accordion';
 import { CarouselModule } from 'primeng/carousel';
 
 // Componentes propios
-import { MunicipalityModel, UserModel } from '../../models';
+import { DateModel, MunicipalityModel, PackageModel, ServiceModel, UserModel } from '../../models';
 import { FormReservationComponent, LoginComponent, RegisterComponent } from '../../shared/components';
-import { MunicipalityService } from '../../services';
+import { MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
 import { MessageService } from 'primeng/api';
 
 interface TravelPackage {
@@ -32,7 +32,7 @@ interface TravelPackage {
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
     imports: [CommonModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent, FormReservationComponent],
-    providers: [MunicipalityService, MessageService]
+    providers: [ProgrammingService, PackageService, ServiceService, MunicipalityService, MessageService]
 })
 export class HomePage implements OnInit {
     submitted = false;
@@ -43,40 +43,9 @@ export class HomePage implements OnInit {
     idDate = 0;
     municipalities: MunicipalityModel[] = [];
 
-    packages: TravelPackage[] = [
-        {
-            id: 1,
-            image: 'assets/images/cartagena.jpg',
-            location: 'Cartagena, Colombia',
-            details: ['Recorrido por la ciudad', 'Tour al centro y playa blanca', 'Hotel 4 estrellas todo incluido', 'Alimentación: 4 desayunos y 3 cenas'],
-            price: 85000,
-            date: '01/05/2024'
-        },
-        {
-            id: 2,
-            image: 'assets/images/cartagena.jpg',
-            location: 'Cartagena, Colombia',
-            details: ['Recorrido por la ciudad', 'Tour al centro y playa blanca', 'Hotel 4 estrellas todo incluido', 'Alimentación: 4 desayunos y 3 cenas'],
-            price: 85000,
-            date: '01/06/2024'
-        },
-        {
-            id: 3,
-            image: 'assets/images/cartagena.jpg',
-            location: 'Cartagena, Colombia',
-            details: ['Recorrido por la ciudad', 'Tour al centro y playa blanca', 'Hotel 4 estrellas todo incluido', 'Alimentación: 4 desayunos y 3 cenas'],
-            price: 85000,
-            date: '01/07/2024'
-        },
-        {
-            id: 4,
-            image: 'assets/images/cartagena.jpg',
-            location: 'Cartagena, Colombia',
-            details: ['Recorrido por la ciudad', 'Tour al centro y playa blanca', 'Hotel 4 estrellas todo incluido', 'Alimentación: 4 desayunos y 3 cenas'],
-            price: 85000,
-            date: '01/08/2024'
-        }
-    ];
+    dates: DateModel[] = [];
+    packages: PackageModel[] = [];
+    services: ServiceModel[] = [];
 
     features = [
         {
@@ -102,12 +71,81 @@ export class HomePage implements OnInit {
     ];
 
     constructor(
+        private programmingService: ProgrammingService,
+        private packageService: PackageService,
+        private serviceService: ServiceService,
         private municipalityService: MunicipalityService,
         private messageService: MessageService
     ) {}
 
     ngOnInit(): void {
+        this.getAllDates();
+        this.getAllPackage();
+        this.getAllServices();
         this.getAllMunicipalities();
+    }
+
+    getAllDates() {
+        this.programmingService.getAll().subscribe({
+            next: (dates) => {
+                this.dates = dates.map((date) => {
+                    if (!date.status) {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Advertencia',
+                            detail: 'No hay fechas disponibles',
+                            life: 3000
+                        });
+                    }
+                    return date;
+                });
+            },
+            error: () => {
+                return;
+            }
+        });
+    }
+
+    getAllPackage() {
+        this.packageService.getAll().subscribe({
+            next: (packages) => {
+                this.packages = packages.map((pack) => {
+                    if (!pack.status) {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Advertencia',
+                            detail: 'No hay paquetes disponibles',
+                            life: 3000
+                        });
+                    }
+                    return pack;
+                });
+            },
+            error: () => {
+                return;
+            }
+        });
+    }
+
+    getAllServices() {
+        this.serviceService.getAll().subscribe({
+            next: (services) => {
+                this.services = services.map((service) => {
+                    if (!service.status) {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Advertencia',
+                            detail: 'No hay servicios disponibles',
+                            life: 3000
+                        });
+                    }
+                    return service;
+                });
+            },
+            error: () => {
+                return;
+            }
+        });
     }
 
     getAllMunicipalities() {
@@ -115,15 +153,28 @@ export class HomePage implements OnInit {
             next: (municipalities) => {
                 this.municipalities = municipalities;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message || 'No se pudieron cargar los municipios',
-                    life: 3000
-                });
+            error: () => {
+                return;
             }
         });
+    }
+
+    getPackageInfo(id: number) {
+        const packageInfo = this.packages.find((pack) => pack.id === id);
+        if (!packageInfo) return;
+        return packageInfo;
+    }
+
+    getServiceInfo(id: number) {
+        const serviceInfo = this.services.find((service) => service.id === id);
+        if (!serviceInfo) return;
+        return serviceInfo;
+    }
+
+    clickReservation(idDate: number) {
+        this.idDate = idDate;
+        this.dialogType = 'reservation';
+        this.dialogVisible = true;
     }
 
     showPopupLogin(): void {
@@ -133,11 +184,6 @@ export class HomePage implements OnInit {
 
     showPopupRegister(): void {
         this.dialogType = 'register';
-        this.dialogVisible = true;
-    }
-
-    showPopupReservation(): void {
-        this.dialogType = 'reservation';
         this.dialogVisible = true;
     }
 
