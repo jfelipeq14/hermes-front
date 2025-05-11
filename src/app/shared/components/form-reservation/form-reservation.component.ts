@@ -77,18 +77,19 @@ export class FormReservationComponent implements OnInit {
                 detail: 'No se encontró el cliente',
                 life: 3000
             });
+            this.isPasswordDisable = false;
         }
 
         if (this.reservation.idUser !== 0 && clientFound) {
             this.traveler = clientFound;
+            this.isPasswordDisable = true;
         }
 
         if (this.reservation.idUser === 0 && clientFound) {
             this.client = clientFound;
             this.reservation.idUser = clientFound.id;
+            this.isPasswordDisable = true;
         }
-
-        this.isPasswordDisable = true;
     }
 
     handleTravel(travel: boolean) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -19,12 +19,8 @@ import { ZONE } from '../../constants';
     styleUrl: './form-programming.component.scss',
     imports: [CommonModule, FormsModule, ButtonModule, IconFieldModule, InputTextModule, InputNumberModule, InputIconModule, MultiSelectModule, TextareaModule, DatePickerModule, DropdownModule]
 })
-export class FormProgrammingComponent implements OnInit {
+export class FormProgrammingComponent {
     constructor() {}
-
-    ngOnInit(): void {
-        console.log('FormProgrammingComponent initialized');
-    }
 
     @Input() date: DateModel = new DateModel();
     @Input() meeting: MeetingModel = new MeetingModel();

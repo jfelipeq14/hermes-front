@@ -13,21 +13,21 @@
             <p class="mb-0 text-lg text-700">Descubre destinos increíbles a precios accesibles</p>
         </section>
 
-        <p-carousel [value]="packages" [numVisible]="3" [numScroll]="3" [circular]="false" class="gap-4">
-            <ng-template let-product #item>
+        <p-carousel [value]="dates" [numVisible]="3" [numScroll]="3" [circular]="false" class="gap-4">
+            <ng-template let-date #item>
                 <div class="p-4 mx-2 bg-gray-200 border border-gray-200 rounded-lg">
                     <div class="mb-4">
-                        <img src="{{ product.image }}" [alt]="product.location" class="object-cover w-full h-48 rounded-t-lg" />
+                        <img src="{{ 'http://localhost:3000/images/' + getPackageInfo(date.idPackage)?.image }}" [alt]="getPackageInfo(date.idPackage)?.name" class="object-cover w-full h-48 rounded-t-lg" />
                     </div>
                     <div class="px-2">
-                        <h3 class="mb-2 text-lg font-bold text-gray-800">{{ product.location }}</h3>
+                        <h3 class="mb-2 text-lg font-bold text-gray-800">{{ getPackageInfo(date.idPackage)?.name }}</h3>
                         <ul class="mb-4 text-sm text-gray-600">
-                            <li *ngFor="let detail of product.details" class="mb-1">- {{ detail }}</li>
+                            <li *ngFor="let service of getPackageInfo(date.idPackage)?.detailPackagesServices" class="mb-1">- {{ getServiceInfo(service.idService)?.name }}</li>
                         </ul>
-                        <div class="mb-4 text-sm text-gray-500">Fecha: {{ product.date }}</div>
+                        <div class="mb-4 text-sm text-gray-500">Fecha: {{ date.start }}</div>
                         <div class="flex items-center justify-between">
-                            <div class="text-xl font-semibold text-primary">{{ '$' + product.price }}</div>
-                            <p-button icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary" (onClick)="showPopupReservation()"></p-button>
+                            <div class="text-xl font-semibold text-primary">{{ '$' + getPackageInfo(date.idPackage)?.price }}</div>
+                            <p-button icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary" (onClick)="clickReservation(date.id)"></p-button>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
 </div>
 
 <!-- Modal de login -->
-<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true">
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">
     <ng-container *ngIf="dialogType === 'login'">
         <app-login [loginDialog]="dialogVisible" [submitted]="submitted" [user]="user"></app-login>
     </ng-container>
@@ -137,7 +137,7 @@
         <app-register [registerDialog]="dialogVisible" [submitted]="submitted" [user]="user" [municipalities]="municipalities"></app-register>
     </ng-container>
 
-    <ng-container>
+    <ng-container *ngIf="dialogType === 'reservation'">
         <app-form-reservation [idDate]="idDate" />
     </ng-container>
 </p-dialog>
