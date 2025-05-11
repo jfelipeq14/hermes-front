@@ -217,7 +217,6 @@ export class ProgrammingPage implements OnInit {
         this.meeting.idDate = idDate;
         const hourFormated = formatTime(this.meeting.hour);
         this.meeting.hour = hourFormated;
-        console.log(this.meeting);
 
         if (this.meeting.id) {
             this.meetingService.update(this.meeting).subscribe({
@@ -317,10 +316,6 @@ export class ProgrammingPage implements OnInit {
                 });
             }
         });
-    }
-
-    clickPackage(date: any) {
-        console.log('click package', date.idPackage);
     }
 
     handleProgramming() {

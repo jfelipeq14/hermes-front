@@ -41,8 +41,6 @@ export class FormTravelersComponent {
     }
 
     onSearchClient(document: string) {
-        console.log('document in traveler' + document);
-
         this.searchClient.emit(document);
     }
 

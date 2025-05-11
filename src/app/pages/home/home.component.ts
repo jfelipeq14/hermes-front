@@ -18,15 +18,6 @@ import { FormReservationComponent, LoginComponent, RegisterComponent } from '../
 import { MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
 import { MessageService } from 'primeng/api';
 
-interface TravelPackage {
-    id: number;
-    image: string;
-    location: string;
-    details: string[];
-    price: number;
-    date: string;
-}
-
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
@@ -162,7 +153,6 @@ export class HomePage implements OnInit {
     getPackageInfo(id: number) {
         const packageInfo = this.packages.find((pack) => pack.id === id);
         if (!packageInfo) return;
-        console.log(packageInfo.image);
 
         return packageInfo;
     }
