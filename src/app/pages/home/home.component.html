@@ -13,25 +13,22 @@
             <p class="mb-0 text-lg text-700">Descubre destinos increíbles a precios accesibles</p>
         </section>
 
-        <p-carousel [value]="packages" [numVisible]="3" [numScroll]="3" [circular]="false">
+        <p-carousel [value]="packages" [numVisible]="3" [numScroll]="3" [circular]="false" class="gap-4">
             <ng-template let-product #item>
-                <div class="p-2 m-2 border border-surface rounded-border">
+                <div class="p-4 mx-2 bg-gray-200 border border-gray-200 rounded-lg">
                     <div class="mb-4">
-                        <div class="relative mx-auto">
-                            <img src="http://localhost:3000/{{ product.image }}" [alt]="product.name" class="w-full rounded-border" />
-                            <div class="absolute bg-black/70 rounded-border">
-                                <!-- <p-tag [value]="'true'" /> -->
-                            </div>
-                        </div>
+                        <img src="{{ product.image }}" [alt]="product.location" class="object-cover w-full h-48 rounded-t-lg" />
                     </div>
-                    <div class="mb-4 font-medium">{{ product.name }}</div>
-                    <div class="flex justify-between align-items-center">
-                        <div class="mt-0 text-xl font-semibold">
-                            {{ '$' + product.price }}
+                    <div class="px-2">
+                        <h3 class="mb-2 text-lg font-bold text-gray-800">{{ product.location }}</h3>
+                        <ul class="mb-4 text-sm text-gray-600">
+                            <li *ngFor="let detail of product.details" class="mb-1">- {{ detail }}</li>
+                        </ul>
+                        <div class="mb-4 text-sm text-gray-500">Fecha: {{ product.date }}</div>
+                        <div class="flex items-center justify-between">
+                            <div class="text-xl font-semibold text-primary">{{ '$' + product.price }}</div>
+                            <p-button icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary" (onClick)="showPopupReservation()"></p-button>
                         </div>
-                        <span>
-                            <p-button icon="pi pi-ticket"> Reservar </p-button>
-                        </span>
                     </div>
                 </div>
             </ng-template>
