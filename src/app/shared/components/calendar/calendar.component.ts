@@ -14,7 +14,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { SplitButtonModule } from 'primeng/splitbutton';
 
 import { ProgrammingService } from '../../../services';
-import { DateModel } from '../../../models';
+import { DateModel, PackageModel } from '../../../models';
 
 @Component({
     selector: 'app-calendar',
@@ -33,6 +33,7 @@ export class CalendarComponent implements OnInit {
         this.getAllDates();
     }
 
+    @Input() packages: PackageModel[] = [];
     @Output() clickDate = new EventEmitter<DateModel>();
     @Output() clickProgramming = new EventEmitter<any>();
     @Output() editProgramming = new EventEmitter<DateModel>();
@@ -81,14 +82,14 @@ export class CalendarComponent implements OnInit {
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            right: 'dayGridMonth,listWeek'
         },
-        initialView: 'dayGridMonth',
+        initialView: 'listWeek',
         selectable: true,
         dateClick: (info) => this.onClickDate(info),
         events: this.dates.map((date) => ({
             id: date.id.toString(),
-            title: `Paquete ${date.idPackage}`,
+            title: this.getPackageInfo(date.idPackage)?.name || 'Paquete no encontrado',
             start: date.start,
             end: date.end,
             allDay: false,
@@ -104,7 +105,7 @@ export class CalendarComponent implements OnInit {
                     ...options,
                     events: dates.map((date) => ({
                         id: date.id.toString(),
-                        title: `Paquete ${date.idPackage}`,
+                        title: this.getPackageInfo(date.idPackage)?.name || 'Paquete no encontrado',
                         start: date.start,
                         end: date.end,
                         allDay: false,
@@ -121,6 +122,11 @@ export class CalendarComponent implements OnInit {
                 });
             }
         });
+    }
+
+    getPackageInfo(id: number) {
+        const packageInfo = this.packages.find((pkg) => pkg.id === id);
+        return packageInfo ? packageInfo : null;
     }
 
     onClickDate(info: any) {
