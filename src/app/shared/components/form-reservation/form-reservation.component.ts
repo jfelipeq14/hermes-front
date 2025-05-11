@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } from '..';
 import { CommonModule } from '@angular/common';
@@ -26,6 +26,8 @@ export class FormReservationComponent implements OnInit {
     ngOnInit() {
         this.getAllClients();
     }
+
+    @Input() idDate = 0;
 
     reservation: ReservationModel = new ReservationModel();
     payment: PaymentModel = new PaymentModel();
