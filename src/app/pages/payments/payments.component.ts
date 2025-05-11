@@ -194,6 +194,10 @@ export class PaymentsPage implements OnInit {
         });
     }
 
+    toPayment(payment: PaymentModel) {
+        console.log(payment);
+    }
+
     showPopup() {
         this.payment = new PaymentModel();
         this.submitted = false;

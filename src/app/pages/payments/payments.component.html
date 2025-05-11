@@ -14,7 +14,7 @@
     (onRowExpand)="onRowExpand($event)"
 >
     <ng-template pTemplate="caption">
-        <h3 class="m-0 p-0 text-center">Pagos de Reservaciones</h3>
+        <h3 class="p-0 m-0 text-center">Pagos de Reservaciones</h3>
         <div class="flex justify-content-between align-items-center">
             <p-button label="Crear Pago" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()"></p-button>
             <p-iconfield>
@@ -87,6 +87,9 @@
                                             <p-tag [value]="getValuePayment(status.value)" [severity]="getServerityPayment(status.value)"></p-tag>
                                         </ng-template>
                                     </p-dropdown>
+                                </td>
+                                <td>
+                                    <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" (click)="toPayment(payment)" />
                                 </td>
                             </tr>
                         </ng-template>
