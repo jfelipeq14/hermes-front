@@ -1,6 +1,5 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // PrimeNG Imports
@@ -32,7 +31,7 @@ interface TravelPackage {
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    imports: [CommonModule, RouterModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent, FormReservationComponent],
+    imports: [CommonModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent, FormReservationComponent],
     providers: [MunicipalityService, MessageService]
 })
 export class HomePage implements OnInit {

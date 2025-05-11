@@ -20,7 +20,7 @@ import { AuthService, ClientsService, PackageService, ProgrammingService, Reserv
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
-import { CalendarComponent, FormReservationComponent } from '../../shared/components';
+import { CalendarComponent } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
 
 import { getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
