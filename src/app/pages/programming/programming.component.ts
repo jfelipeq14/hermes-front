@@ -24,7 +24,7 @@ import { MeetingService, PackageService, ProgrammingService, ResponsibleService 
 import { DateModel, MeetingModel, PackageModel, ResponsibleModel, UserModel } from '../../models';
 import { ZONE } from '../../shared/constants';
 import { formatTime, getSeverity } from '../../shared/helpers';
-import { CalendarComponent, FormProgrammingComponent } from '../../shared/components';
+import { CalendarComponent, FormProgrammingComponent, FormReservationComponent } from '../../shared/components';
 
 @Component({
     selector: 'app-programming',
@@ -47,7 +47,8 @@ import { CalendarComponent, FormProgrammingComponent } from '../../shared/compon
         DatePickerModule,
         DropdownModule,
         CalendarComponent,
-        FormProgrammingComponent
+        FormProgrammingComponent,
+        FormReservationComponent
     ],
     providers: [ProgrammingService, PackageService, ResponsibleService, MeetingService, MessageService, ConfirmationService]
 })
@@ -59,10 +60,11 @@ export class ProgrammingPage implements OnInit {
     responsibles: UserModel[] = [];
     packages: PackageModel[] = [];
     zones = ZONE;
-    programmingDialog = false;
-    reservationDialog = false;
-    clientsDialog = false;
     submitted = false;
+    idDate: number = 0;
+
+    dialogVisible = false;
+    dialogType: 'programming' | 'reservation' | 'clients' = 'programming';
 
     constructor(
         private programmingService: ProgrammingService,
@@ -282,7 +284,8 @@ export class ProgrammingPage implements OnInit {
                 this.meeting = new MeetingModel();
             }
         });
-        this.programmingDialog = true;
+        this.dialogType = 'programming';
+        this.dialogVisible = true;
     }
 
     changeStatusDate(date: DateModel) {
@@ -318,24 +321,31 @@ export class ProgrammingPage implements OnInit {
         });
     }
 
-    handleProgramming() {
-        this.date = new DateModel();
-        this.programmingDialog = !this.programmingDialog;
-        this.submitted = false;
+    clickDate(date: DateModel) {
+        if (!date) return;
+        this.date = date;
+        this.dialogType = 'programming';
+        this.dialogVisible = true;
     }
 
-    handleReservation() {
-        this.reservationDialog = !this.reservationDialog;
+    clickProgramming(event: any) {
+        console.log(event);
     }
 
-    handleClients() {
-        this.clientsDialog = !this.clientsDialog;
+    toReservation(id: number) {
+        this.idDate = id;
+        this.dialogType = 'reservation';
+        this.dialogVisible = true;
+    }
+
+    toClients(id: number) {
+        this.idDate = id;
+        this.dialogType = 'clients';
+        this.dialogVisible = true;
     }
 
     closePopup() {
-        this.programmingDialog = false;
-        this.reservationDialog = false;
-        this.clientsDialog = false;
+        this.dialogVisible = false;
         this.submitted = false;
         this.refresh();
     }
@@ -351,7 +361,7 @@ export class ProgrammingPage implements OnInit {
 
         this.packages = [];
 
-        this.programmingDialog = false;
+        this.dialogVisible = false;
         this.submitted = false;
 
         this.getAllPackages();

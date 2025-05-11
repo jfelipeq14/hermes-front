@@ -33,15 +33,12 @@ export class CalendarComponent implements OnInit {
         this.getAllDates();
     }
 
-    @Input() reservationDialog = false;
-    @Input() clientsDialog = false;
-    @Input() programmingDialog = false;
+    @Output() clickDate = new EventEmitter<DateModel>();
     @Output() clickProgramming = new EventEmitter<any>();
     @Output() editProgramming = new EventEmitter<DateModel>();
     @Output() changeStatusDate = new EventEmitter<DateModel>();
-    @Output() handleReservation = new EventEmitter<boolean>();
-    @Output() handleClients = new EventEmitter<boolean>();
-    @Output() handleProgramming = new EventEmitter<boolean>();
+    @Output() toReservation = new EventEmitter<number>();
+    @Output() toClients = new EventEmitter<number>();
 
     dates: DateModel[] = [];
     date: DateModel = new DateModel();
@@ -67,14 +64,14 @@ export class CalendarComponent implements OnInit {
             label: 'Crear reserva',
             icon: 'pi pi-fw pi-calendar-plus',
             command: () => {
-                this.onHandleReservation();
+                this.onClickReservation();
             }
         },
         {
             label: 'Ver clientes',
             icon: 'pi pi-fw pi-user',
             command: () => {
-                this.onHandleClients();
+                this.onClickClients();
             }
         }
     ];
@@ -88,12 +85,7 @@ export class CalendarComponent implements OnInit {
         },
         initialView: 'dayGridMonth',
         selectable: true,
-        dateClick: (info) => {
-            this.date = new DateModel();
-            this.date.start = info.date;
-            this.date.end = info.date;
-            this.programmingDialog = true;
-        },
+        dateClick: (info) => this.onClickDate(info),
         events: this.dates.map((date) => ({
             id: date.id.toString(),
             title: `Paquete ${date.idPackage}`,
@@ -131,6 +123,15 @@ export class CalendarComponent implements OnInit {
         });
     }
 
+    onClickDate(info: any) {
+        if (!info) return;
+
+        this.date = new DateModel();
+        this.date.start = info.date;
+        this.date.end = info.date;
+        this.clickDate.emit(this.date);
+    }
+
     onClickProgramming(event: any, selectEvent: any) {
         if (!event || !selectEvent) return;
 
@@ -151,15 +152,13 @@ export class CalendarComponent implements OnInit {
         this.changeStatusDate.emit(programming);
     }
 
-    onHandleReservation() {
-        this.handleReservation.emit(!this.reservationDialog);
+    onClickReservation() {
+        if (!this.programmingSelect) return;
+        this.toReservation.emit(this.programmingSelect.id);
     }
 
-    onHandleClients() {
-        this.handleClients.emit(!this.clientsDialog);
-    }
-
-    onHandleProgramming() {
-        this.handleProgramming.emit(!this.programmingDialog);
+    onClickClients() {
+        if (!this.programmingSelect) return;
+        this.toClients.emit(this.programmingSelect.id);
     }
 }
