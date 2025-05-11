@@ -162,6 +162,8 @@ export class HomePage implements OnInit {
     getPackageInfo(id: number) {
         const packageInfo = this.packages.find((pack) => pack.id === id);
         if (!packageInfo) return;
+        console.log(packageInfo.image);
+
         return packageInfo;
     }
 

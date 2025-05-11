@@ -17,7 +17,7 @@
             <ng-template let-date #item>
                 <div class="p-4 mx-2 bg-gray-200 border border-gray-200 rounded-lg">
                     <div class="mb-4">
-                        <img src="{{ getPackageInfo(date.idPackage)?.image }}" [alt]="getPackageInfo(date.idPackage)?.name" class="object-cover w-full h-48 rounded-t-lg" />
+                        <img src="{{ 'http://localhost:3000/images/' + getPackageInfo(date.idPackage)?.image }}" [alt]="getPackageInfo(date.idPackage)?.name" class="object-cover w-full h-48 rounded-t-lg" />
                     </div>
                     <div class="px-2">
                         <h3 class="mb-2 text-lg font-bold text-gray-800">{{ getPackageInfo(date.idPackage)?.name }}</h3>
