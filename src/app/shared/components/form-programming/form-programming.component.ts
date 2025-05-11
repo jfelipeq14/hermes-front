@@ -29,7 +29,7 @@ export class FormProgrammingComponent {
     @Input() zones = ZONE;
     @Input() submitted = false;
 
-    @Output() toSave = new EventEmitter<DateModel>();
+    @Output() toSave = new EventEmitter<void>();
     @Output() toCancel = new EventEmitter<void>();
 
     onChangeResponsible(event: any) {
@@ -42,7 +42,7 @@ export class FormProgrammingComponent {
 
     onCreateDate(date: DateModel) {
         if (!date) return;
-        this.toSave.emit(date);
+        this.toSave.emit();
     }
 
     onClosePopup() {

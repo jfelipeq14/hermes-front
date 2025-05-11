@@ -1,18 +1,26 @@
 <div class="container">
     <app-calendar
-        [reservationDialog]="reservationDialog"
-        [clientsDialog]="clientsDialog"
-        [programmingDialog]="programmingDialog"
+        [packages]="packages"
+        (clickDate)="clickDate($event)"
+        (clickProgramming)="clickProgramming($event)"
         (editProgramming)="editProgramming($event)"
         (changeStatusDate)="changeStatusDate($event)"
-        (handleReservation)="handleReservation()"
-        (handleClients)="handleClients()"
-        (handleProgramming)="handleProgramming()"
+        (toReservation)="toReservation($event)"
+        (toClients)="toClients($event)"
     />
 </div>
 
-<p-dialog [(visible)]="programmingDialog" [style]="{ width: '600px', height: 'auto', 'max-width': '100dvw', 'max-height': '100dvh' }" header="Programación" [modal]="true" (onHide)="closePopup()">
-    <app-form-programming [date]="date" [meeting]="meeting" [submitted]="submitted" [packages]="packages" [zones]="zones" (editProgramming)="editProgramming(date)" (changeStatusDate)="changeStatusDate(date)" />
+<!-- Modal -->
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">
+    <ng-container *ngIf="dialogType === 'programming'">
+        <app-form-programming [date]="date" [meeting]="meeting" [packages]="packages" [responsibles]="responsibles" [zones]="zones" [submitted]="submitted" (toSave)="createDate()" (toCancel)="closePopup()" />
+    </ng-container>
+
+    <ng-container *ngIf="dialogType === 'reservation'">
+        <app-form-reservation [idDate]="idDate" />
+    </ng-container>
+
+    <ng-container *ngIf="dialogType === 'reservation'"> </ng-container>
 </p-dialog>
 
 <p-toast></p-toast>

@@ -14,7 +14,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { SplitButtonModule } from 'primeng/splitbutton';
 
 import { ProgrammingService } from '../../../services';
-import { DateModel } from '../../../models';
+import { DateModel, PackageModel } from '../../../models';
 
 @Component({
     selector: 'app-calendar',
@@ -33,15 +33,13 @@ export class CalendarComponent implements OnInit {
         this.getAllDates();
     }
 
-    @Input() reservationDialog = false;
-    @Input() clientsDialog = false;
-    @Input() programmingDialog = false;
+    @Input() packages: PackageModel[] = [];
+    @Output() clickDate = new EventEmitter<DateModel>();
     @Output() clickProgramming = new EventEmitter<any>();
     @Output() editProgramming = new EventEmitter<DateModel>();
     @Output() changeStatusDate = new EventEmitter<DateModel>();
-    @Output() handleReservation = new EventEmitter<boolean>();
-    @Output() handleClients = new EventEmitter<boolean>();
-    @Output() handleProgramming = new EventEmitter<boolean>();
+    @Output() toReservation = new EventEmitter<number>();
+    @Output() toClients = new EventEmitter<number>();
 
     dates: DateModel[] = [];
     date: DateModel = new DateModel();
@@ -67,14 +65,14 @@ export class CalendarComponent implements OnInit {
             label: 'Crear reserva',
             icon: 'pi pi-fw pi-calendar-plus',
             command: () => {
-                this.onHandleReservation();
+                this.onClickReservation();
             }
         },
         {
             label: 'Ver clientes',
             icon: 'pi pi-fw pi-user',
             command: () => {
-                this.onHandleClients();
+                this.onClickClients();
             }
         }
     ];
@@ -84,19 +82,15 @@ export class CalendarComponent implements OnInit {
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            right: 'dayGridMonth,listWeek'
         },
         initialView: 'dayGridMonth',
+        timeZone: 'UTC',
         selectable: true,
-        dateClick: (info) => {
-            this.date = new DateModel();
-            this.date.start = info.date;
-            this.date.end = info.date;
-            this.programmingDialog = true;
-        },
+        dateClick: (info) => this.onClickDate(info),
         events: this.dates.map((date) => ({
             id: date.id.toString(),
-            title: `Paquete ${date.idPackage}`,
+            title: this.getPackageInfo(date.idPackage)?.name || 'Paquete no encontrado',
             start: date.start,
             end: date.end,
             allDay: false,
@@ -112,7 +106,7 @@ export class CalendarComponent implements OnInit {
                     ...options,
                     events: dates.map((date) => ({
                         id: date.id.toString(),
-                        title: `Paquete ${date.idPackage}`,
+                        title: this.getPackageInfo(date.idPackage)?.name || 'Paquete no encontrado',
                         start: date.start,
                         end: date.end,
                         allDay: false,
@@ -129,6 +123,20 @@ export class CalendarComponent implements OnInit {
                 });
             }
         });
+    }
+
+    getPackageInfo(id: number) {
+        const packageInfo = this.packages.find((pkg) => pkg.id === id);
+        return packageInfo ? packageInfo : null;
+    }
+
+    onClickDate(info: any) {
+        if (!info) return;
+
+        this.date = new DateModel();
+        this.date.start = info.date;
+        this.date.end = info.date;
+        this.clickDate.emit(this.date);
     }
 
     onClickProgramming(event: any, selectEvent: any) {
@@ -151,15 +159,13 @@ export class CalendarComponent implements OnInit {
         this.changeStatusDate.emit(programming);
     }
 
-    onHandleReservation() {
-        this.handleReservation.emit(!this.reservationDialog);
+    onClickReservation() {
+        if (!this.programmingSelect) return;
+        this.toReservation.emit(this.programmingSelect.id);
     }
 
-    onHandleClients() {
-        this.handleClients.emit(!this.clientsDialog);
-    }
-
-    onHandleProgramming() {
-        this.handleProgramming.emit(!this.programmingDialog);
+    onClickClients() {
+        if (!this.programmingSelect) return;
+        this.toClients.emit(this.programmingSelect.id);
     }
 }

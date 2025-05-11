@@ -1,13 +1,16 @@
 <full-calendar [options]="calendarOptions()">
     <ng-template #eventContent let-arg>
-        <p-splitbutton
-            label="{{ arg.event.title }}"
-            id="{{ arg.event.id }}"
-            [model]="buttons"
-            [severity]="arg.event.extendedProps.status ? 'primary' : 'danger'"
-            (click)="onClickProgramming($event, arg.event)"
-            [appendTo]="'body'"
-            [dropdownIcon]="'pi pi-ellipsis-h'"
-        ></p-splitbutton>
+        <div class="flex items-center space-x-2">
+            <p-splitbutton
+                label="{{ arg.event.title }}"
+                id="{{ arg.event.id }}"
+                [model]="buttons"
+                [severity]="arg.event.extendedProps.status ? 'primary' : 'danger'"
+                (click)="onClickProgramming($event, arg.event)"
+                [appendTo]="'body'"
+                [dropdownIcon]="'pi pi-ellipsis-h'"
+                class="relative z-10 text-sm truncate"
+            ></p-splitbutton>
+        </div>
     </ng-template>
 </full-calendar>

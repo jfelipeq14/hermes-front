@@ -1,24 +1,33 @@
 :host ::ng-deep {
     .fc-event-title {
-      padding-right: 20px; 
+        padding-right: 20px;
     }
-  
+
     .fc-event {
-      cursor: pointer;
-  
-      &:hover {
-        .p-menu-button {
-          visibility: visible;
+        cursor: pointer;
+
+        &:hover {
+            .p-menu-button {
+                visibility: visible;
+            }
         }
-      }
     }
-  
+
     .p-menu-button {
-      visibility: hidden;
+        visibility: hidden;
     }
-  
+
     .p-menu .p-menuitem-link {
-      padding: 0.5rem 1rem;
+        padding: 0.5rem 1rem;
     }
-  }
-  
+}
+
+// Asegura que los modales tengan un z-index mayor que los menús desplegables
+.p-dialog {
+    z-index: 1050 !important; // Asegura que los diálogos estén por encima
+}
+
+// Ajusta el z-index de los menús desplegables
+.p-splitbutton-panel {
+    z-index: 1040 !important; // Menor que los diálogos pero mayor que otros elementos
+}
