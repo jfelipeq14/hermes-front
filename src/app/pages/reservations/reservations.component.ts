@@ -20,7 +20,7 @@ import { AuthService, ClientsService, PackageService, ProgrammingService, Reserv
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
-import { FormReservationComponent } from '../../shared/components';
+import { CalendarComponent, FormReservationComponent } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
 
 import { getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
@@ -29,12 +29,11 @@ import { getSeverity, getSeverityReservation, getValue, getValueReservation } fr
     selector: 'app-reservations',
     templateUrl: './reservations.component.html',
     styleUrls: ['./reservations.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, FormReservationComponent],
+    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, CalendarComponent],
     providers: [ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
 })
 export class ReservationsPage implements OnInit {
     reservations: ReservationModel[] = [];
-    reservationDialog = false;
     dates: DateModel[] = [];
     clients: UserModel[] = [];
     packages: PackageModel[] = [];
@@ -45,6 +44,8 @@ export class ReservationsPage implements OnInit {
     getSeverityReservation = getSeverityReservation;
     getValue = getValue;
     getSeverity = getSeverity;
+
+    calendarDialog = false;
 
     expandedRows: Record<string, boolean> = {};
 
@@ -191,11 +192,11 @@ export class ReservationsPage implements OnInit {
     }
 
     showPopup() {
-        this.reservationDialog = true;
+        this.calendarDialog = true;
     }
 
     closePopup() {
-        this.reservationDialog = false;
+        this.calendarDialog = false;
     }
 
     refresh() {
@@ -203,7 +204,7 @@ export class ReservationsPage implements OnInit {
         this.clients = [];
         this.packages = [];
         this.dates = [];
-        this.reservationDialog = false;
+        this.calendarDialog = false;
 
         this.getAllReservations();
         this.getAllDates();
