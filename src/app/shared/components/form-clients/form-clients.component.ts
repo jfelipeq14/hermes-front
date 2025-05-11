@@ -83,6 +83,8 @@ export class FormClientsComponent implements OnInit {
     }
 
     onSearchClient(document: string) {
+        console.log('document in client' + document);
+
         this.searchClient.emit(document);
     }
 

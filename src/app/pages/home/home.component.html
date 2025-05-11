@@ -128,7 +128,7 @@
 </div>
 
 <!-- Modal de login -->
-<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true">
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">
     <ng-container *ngIf="dialogType === 'login'">
         <app-login [loginDialog]="dialogVisible" [submitted]="submitted" [user]="user"></app-login>
     </ng-container>
@@ -137,7 +137,7 @@
         <app-register [registerDialog]="dialogVisible" [submitted]="submitted" [user]="user" [municipalities]="municipalities"></app-register>
     </ng-container>
 
-    <ng-container>
+    <ng-container *ngIf="dialogType === 'reservation'">
         <app-form-reservation [idDate]="idDate" />
     </ng-container>
 </p-dialog>
