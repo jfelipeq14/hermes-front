@@ -12,7 +12,7 @@
     [rowsPerPageOptions]="[10, 20, 30]"
 >
     <ng-template pTemplate="caption">
-        <h3 class="m-0 p-0 text-center">Servicios</h3>
+        <h3 class="p-0 m-0 text-center">Servicios</h3>
         <div class="flex justify-content-between align-items-center">
             <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
             <p-iconfield>
@@ -62,19 +62,19 @@
 
 <p-dialog [(visible)]="serviceDialog" [style]="{ width: '450px' }" header="Detalles del Servicio" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="field flex flex-col">
+        <div class="flex flex-col field">
             <label for="category" class="required">Categoría</label>
-            <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" class="w-full md:w-14rem"></p-dropdown>
+            <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" [appendTo]="'body'"></p-dropdown>
             <small class="p-error" *ngIf="submitted && !service.idCategoryServices"> La categoría es obligatoria. </small>
         </div>
 
-        <div class="field flex flex-col">
+        <div class="flex flex-col field">
             <label for="name" class="required">Nombre</label>
             <input id="name" type="text" [(ngModel)]="service.name" pInputText required />
             <small class="p-error" *ngIf="submitted && !service.name">El nombre es obligatorio.</small>
         </div>
 
-        <div class="field flex flex-col">
+        <div class="flex flex-col field">
             <label for="price" class="required">Precio</label>
             <input type="number" pInputText id="price" [(ngModel)]="service.price" required />
             <small class="p-error" *ngIf="submitted && !service.price">El precio es obligatorio.</small>

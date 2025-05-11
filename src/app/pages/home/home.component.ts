@@ -1,6 +1,5 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // PrimeNG Imports
@@ -15,7 +14,7 @@ import { CarouselModule } from 'primeng/carousel';
 
 // Componentes propios
 import { MunicipalityModel, UserModel } from '../../models';
-import { LoginComponent, RegisterComponent } from '../../shared/components';
+import { FormReservationComponent, LoginComponent, RegisterComponent } from '../../shared/components';
 import { MunicipalityService } from '../../services';
 import { MessageService } from 'primeng/api';
 
@@ -32,17 +31,16 @@ interface TravelPackage {
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    imports: [CommonModule, RouterModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent],
+    imports: [CommonModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent, FormReservationComponent],
     providers: [MunicipalityService, MessageService]
 })
 export class HomePage implements OnInit {
-    loginDialog = false;
-    registerDialog = false;
     submitted = false;
     dialogVisible = false;
-    dialogType: 'login' | 'register' = 'login';
+    dialogType: 'login' | 'register' | 'reservation' = 'login';
 
     user: UserModel = new UserModel();
+    idDate = 0;
     municipalities: MunicipalityModel[] = [];
 
     packages: TravelPackage[] = [
@@ -105,8 +103,7 @@ export class HomePage implements OnInit {
 
     constructor(
         private municipalityService: MunicipalityService,
-        private messageService: MessageService,
-        private router: Router // Inject Router service
+        private messageService: MessageService
     ) {}
 
     ngOnInit(): void {
@@ -129,10 +126,6 @@ export class HomePage implements OnInit {
         });
     }
 
-    goToReservation(idDate: number) {
-        this.router.navigate(['/reservation'], { queryParams: { idDate: idDate } });
-    }
-
     showPopupLogin(): void {
         this.dialogType = 'login';
         this.dialogVisible = true;
@@ -143,9 +136,13 @@ export class HomePage implements OnInit {
         this.dialogVisible = true;
     }
 
+    showPopupReservation(): void {
+        this.dialogType = 'reservation';
+        this.dialogVisible = true;
+    }
+
     closePopup() {
-        this.loginDialog = false;
-        this.registerDialog = false;
+        this.dialogVisible = false;
         this.user = new UserModel();
     }
 }

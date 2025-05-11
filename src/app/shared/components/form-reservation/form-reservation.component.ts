@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } from '..';
 import { CommonModule } from '@angular/common';
-import { PaymentModel, ReservationModel, UserModel } from '../../../models';
+import { PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MessageService } from 'primeng/api';
 import { AuthService, ClientsService, ReservationsService } from '../../../services';
 import { ButtonModule } from 'primeng/button';
@@ -26,6 +26,8 @@ export class FormReservationComponent implements OnInit {
     ngOnInit() {
         this.getAllClients();
     }
+
+    @Input() idDate = 0;
 
     reservation: ReservationModel = new ReservationModel();
     payment: PaymentModel = new PaymentModel();
@@ -87,6 +89,18 @@ export class FormReservationComponent implements OnInit {
         }
 
         this.isPasswordDisable = true;
+    }
+
+    handleTravel(travel: boolean) {
+        this.travel = travel;
+        if (travel) {
+            this.reservation.detailReservationTravelers.push({
+                idTraveler: this.client.id
+            });
+        } else {
+            //remove traveler
+            this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((traveler) => traveler.idTraveler !== this.client.id);
+        }
     }
 
     createClient(event: any) {
@@ -161,9 +175,10 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
-    handleTravel(event: any) {
-        if (!event) return;
-        // necesito validar el check
+    deleteTraveler(traveler: ReservationTravelerModel) {
+        if (!traveler) return;
+
+        this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((t) => t.idTraveler !== traveler.idTraveler);
     }
 
     isStepValid(step: number): boolean {

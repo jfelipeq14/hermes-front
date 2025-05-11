@@ -16,11 +16,11 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { AuthService, ClientsService, ProgrammingService, ReservationsService } from '../../services';
+import { AuthService, ClientsService, PackageService, ProgrammingService, ReservationsService } from '../../services';
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
-import { FormReservationComponent } from '../../shared/components';
+import { CalendarComponent } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
 
 import { getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
@@ -29,12 +29,11 @@ import { getSeverity, getSeverityReservation, getValue, getValueReservation } fr
     selector: 'app-reservations',
     templateUrl: './reservations.component.html',
     styleUrls: ['./reservations.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, FormReservationComponent],
-    providers: [ReservationsService, ProgrammingService, ClientsService, MessageService, ConfirmationService]
+    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, CalendarComponent],
+    providers: [ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
 })
 export class ReservationsPage implements OnInit {
     reservations: ReservationModel[] = [];
-    reservationDialog = false;
     dates: DateModel[] = [];
     clients: UserModel[] = [];
     packages: PackageModel[] = [];
@@ -46,11 +45,14 @@ export class ReservationsPage implements OnInit {
     getValue = getValue;
     getSeverity = getSeverity;
 
+    calendarDialog = false;
+
     expandedRows: Record<string, boolean> = {};
 
     constructor(
         private reservationService: ReservationsService,
         private programmingService: ProgrammingService,
+        private packageService: PackageService,
         private clientsService: ClientsService,
         private authService: AuthService,
         private messageService: MessageService,
@@ -60,6 +62,8 @@ export class ReservationsPage implements OnInit {
     ngOnInit(): void {
         this.getAllReservations();
         this.getAllDates();
+        this.getAllPackages();
+        this.getAllClients();
     }
 
     getAllReservations() {
@@ -94,6 +98,22 @@ export class ReservationsPage implements OnInit {
         });
     }
 
+    getAllPackages() {
+        this.packageService.getAll().subscribe({
+            next: (packages) => {
+                this.packages = packages;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
+        });
+    }
+
     getAllClients() {
         this.clientsService.getAll().subscribe({
             next: (clients) => {
@@ -116,15 +136,23 @@ export class ReservationsPage implements OnInit {
 
     onRowExpand(event: any) {
         if (!event) return;
-        console.log(event);
     }
 
-    getTravelerInfo(travelerId: number): UserModel {
-        const traveler = this.clients.find((c) => c.id === travelerId);
+    getInfoUser(idUser: number): UserModel {
+        const traveler = this.clients.find((c) => c.id === idUser);
 
         if (!traveler) return new UserModel();
 
         return traveler;
+    }
+
+    getInfoPackage(idDate: number): PackageModel {
+        const date = this.dates.find((d) => d.id === idDate);
+        const pack = this.packages.find((p) => p.id === date?.idPackage);
+
+        if (!pack) return new PackageModel();
+
+        return pack;
     }
 
     changeStatusReservation(reservation: ReservationModel) {
@@ -164,11 +192,11 @@ export class ReservationsPage implements OnInit {
     }
 
     showPopup() {
-        this.reservationDialog = true;
+        this.calendarDialog = true;
     }
 
     closePopup() {
-        this.reservationDialog = false;
+        this.calendarDialog = false;
     }
 
     refresh() {
@@ -176,7 +204,7 @@ export class ReservationsPage implements OnInit {
         this.clients = [];
         this.packages = [];
         this.dates = [];
-        this.reservationDialog = false;
+        this.calendarDialog = false;
 
         this.getAllReservations();
         this.getAllDates();
