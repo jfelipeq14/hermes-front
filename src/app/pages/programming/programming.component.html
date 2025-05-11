@@ -12,7 +12,7 @@
 </div>
 
 <p-dialog [(visible)]="programmingDialog" [style]="{ width: '600px', height: 'auto', 'max-width': '100dvw', 'max-height': '100dvh' }" header="Programación" [modal]="true" (onHide)="closePopup()">
-    <app-form-programming [date]="date" [meeting]="meeting" [submitted]="submitted" [packages]="packages" [zones]="zones" (editProgramming)="editProgramming(date)" (changeStatusDate)="changeStatusDate(date)" />
+    <app-form-programming [date]="date" [meeting]="meeting" [packages]="packages" [responsibles]="responsibles" [zones]="zones" [submitted]="submitted" (toSave)="createDate()" (toCancel)="closePopup()" />
 </p-dialog>
 
 <p-toast></p-toast>
