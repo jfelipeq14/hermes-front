@@ -84,7 +84,8 @@ export class CalendarComponent implements OnInit {
             center: 'title',
             right: 'dayGridMonth,listWeek'
         },
-        initialView: 'listWeek',
+        initialView: 'dayGridMonth',
+        timeZone: 'UTC',
         selectable: true,
         dateClick: (info) => this.onClickDate(info),
         events: this.dates.map((date) => ({
