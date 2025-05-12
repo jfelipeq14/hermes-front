@@ -20,8 +20,8 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 
-import { MeetingService, PackageService, ProgrammingService, ResponsibleService } from '../../services';
-import { DateModel, MeetingModel, PackageModel, ResponsibleModel, UserModel } from '../../models';
+import { MeetingService, PackageService, ProgrammingService, ReservationsService, ResponsibleService } from '../../services';
+import { DateModel, MeetingModel, PackageModel, ReservationModel, ReservationTravelerModel, ResponsibleModel, UserModel } from '../../models';
 import { ZONE } from '../../shared/constants';
 import { formatTime, getSeverity } from '../../shared/helpers';
 import { CalendarComponent, FormProgrammingComponent, FormReservationComponent } from '../../shared/components';
@@ -50,7 +50,7 @@ import { CalendarComponent, FormProgrammingComponent, FormReservationComponent }
         FormProgrammingComponent,
         FormReservationComponent
     ],
-    providers: [ProgrammingService, PackageService, ResponsibleService, MeetingService, MessageService, ConfirmationService]
+    providers: [ProgrammingService, PackageService, ResponsibleService, MeetingService, ReservationsService, MessageService, ConfirmationService]
 })
 export class ProgrammingPage implements OnInit {
     date: DateModel = new DateModel();
@@ -59,6 +59,8 @@ export class ProgrammingPage implements OnInit {
     responsible: ResponsibleModel = new ResponsibleModel();
     responsibles: UserModel[] = [];
     packages: PackageModel[] = [];
+    reservations: ReservationModel[] = [];
+    clients: ReservationTravelerModel[] = [];
     zones = ZONE;
     submitted = false;
     idDate: number = 0;
@@ -71,6 +73,7 @@ export class ProgrammingPage implements OnInit {
         private packageService: PackageService,
         private responsibleService: ResponsibleService,
         private meetingService: MeetingService,
+        private reservationService: ReservationsService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
@@ -78,6 +81,7 @@ export class ProgrammingPage implements OnInit {
     ngOnInit(): void {
         this.getAllDates();
         this.getAllPackages();
+        this.getAllReservations();
         this.getAllResponsibles();
         this.getAllMeetings();
     }
@@ -124,6 +128,22 @@ export class ProgrammingPage implements OnInit {
         this.packageService.getAll().subscribe({
             next: (packages) => {
                 this.packages = packages;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
+        });
+    }
+
+    getAllReservations() {
+        this.reservationService.getAll().subscribe({
+            next: (reservations) => {
+                this.reservations = reservations;
             },
             error: (e) => {
                 this.messageService.add({
@@ -340,6 +360,7 @@ export class ProgrammingPage implements OnInit {
 
     toClients(id: number) {
         this.idDate = id;
+        this.clients = this.reservations.find((r) => r.idDate === this.idDate)?.detailReservationTravelers || [];
         this.dialogType = 'clients';
         this.dialogVisible = true;
     }
