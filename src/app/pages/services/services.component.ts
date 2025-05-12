@@ -156,7 +156,7 @@ export class ServicesPage implements OnInit {
                     },
                     error: (e) => {
                         this.messageService.add({
-                            severity: 'error',
+                            severity: 'danger',
                             summary: 'Error',
                             detail: e.error.message,
                             life: 3000
@@ -186,7 +186,7 @@ export class ServicesPage implements OnInit {
         this.submitted = false;
     }
 
-    getSeverity(status: boolean): 'success' | 'danger' {
-        return status ? 'success' : 'danger';
+    getSeverity(status: boolean): 'success' | 'error' {
+        return status ? 'success' : 'error';
     }
 }

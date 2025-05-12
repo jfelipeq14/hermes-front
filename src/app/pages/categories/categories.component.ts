@@ -53,7 +53,7 @@ export class CategoriesPage implements OnInit {
             },
             error: (e) => {
                 this.messageService.add({
-                    severity: 'error',
+                    severity: 'info',
                     summary: 'Error',
                     detail: e.error.message,
                     life: 3000
