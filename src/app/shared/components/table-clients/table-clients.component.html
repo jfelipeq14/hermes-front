@@ -1,6 +1,6 @@
 <p-table
     #dt
-    [value]="clients"
+    [value]="travelers"
     [rows]="10"
     [paginator]="true"
     [globalFilterFields]="['name', 'status']"
@@ -40,12 +40,13 @@
         </tr>
     </ng-template>
 
-    <ng-template #body let-category>
+    <ng-template #body let-traveler>
         <tr>
-            <td>{{ category.id }}</td>
-            <td>{{ category.name }}</td>
+            <td>{{ getClientInfo(traveler.idTraveler)?.document }}</td>
+            <td>{{ getClientInfo(traveler.idTraveler)?.name }}</td>
+            <td>{{ getClientInfo(traveler.idTraveler)?.phone }}</td>
             <td>
-                <p-tag [value]="category.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(category.status)" />
+                <p-tag [value]="traveler.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(traveler.status)" />
             </td>
             <td>
                 <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" />
