@@ -90,10 +90,8 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="calendarDialog" header="Reserva" [modal]="true" [closeOnEscape]="true" [dismissableMask]="true" [style]="{ 'min-width': '70dvw', 'max-width': 'fit-content' }">
-    <div class="container">
-        <app-calendar [packages]="packages" />
-    </div>
+<p-dialog [(visible)]="calendarDialog" header="Reserva" [modal]="true" [style]="{ 'min-width': '90dvw' }">
+    <app-calendar *ngIf="calendarDialog" [packages]="packages"></app-calendar>
 </p-dialog>
 
 <p-toast></p-toast>

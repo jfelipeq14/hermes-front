@@ -192,6 +192,15 @@ export class ReservationsPage implements OnInit {
     }
 
     showPopup() {
+        if (this.packages.length === 0) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay paquetes disponibles para mostrar en el calendario.',
+                life: 3000
+            });
+            return;
+        }
         this.calendarDialog = true;
     }
 
@@ -208,6 +217,7 @@ export class ReservationsPage implements OnInit {
 
         this.getAllReservations();
         this.getAllDates();
+        this.getAllPackages();
         this.getAllClients();
 
         this.closePopup();
