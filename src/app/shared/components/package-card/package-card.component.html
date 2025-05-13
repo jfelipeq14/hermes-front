@@ -1,0 +1,16 @@
+<div class="p-4 mx-auto bg-gray-200 border border-gray-300 rounded-lg max-w-96">
+    <div class="mb-4">
+        <img src="{{ 'http://localhost:3000/images/' + getPackageInfo(date.idPackage)?.image }}" [alt]="getPackageInfo(date.idPackage)?.name" class="object-cover w-full h-48 rounded-t-lg" />
+    </div>
+    <div class="px-2">
+        <h3 class="mb-2 text-lg font-bold text-gray-800">{{ getPackageInfo(date.idPackage)?.name }}</h3>
+        <ul class="mb-4 text-sm text-gray-600">
+            <li *ngFor="let service of getPackageInfo(date.idPackage)?.detailPackagesServices" class="mb-1">- {{ getServiceInfo(service.idService)?.name }}</li>
+        </ul>
+        <div class="mb-4 text-sm text-gray-500">Fecha: {{ date.start }}</div>
+        <div class="flex items-center justify-between">
+            <div class="text-xl font-semibold text-primary">{{ '$' + getPackageInfo(date.idPackage)?.price }}</div>
+            <p-button *ngIf="date.id" icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary" (onClick)="onClickReservation(date.id)"></p-button>
+        </div>
+    </div>
+</div>

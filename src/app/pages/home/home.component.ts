@@ -14,7 +14,7 @@ import { CarouselModule } from 'primeng/carousel';
 
 // Componentes propios
 import { DateModel, MunicipalityModel, PackageModel, ServiceModel, UserModel } from '../../models';
-import { FormReservationComponent, LoginComponent, RegisterComponent } from '../../shared/components';
+import { FormReservationComponent, LoginComponent, PackageCardComponent, RegisterComponent } from '../../shared/components';
 import { MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
 import { MessageService } from 'primeng/api';
 
@@ -22,7 +22,7 @@ import { MessageService } from 'primeng/api';
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    imports: [CommonModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent, FormReservationComponent],
+    imports: [CommonModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent, FormReservationComponent, PackageCardComponent],
     providers: [ProgrammingService, PackageService, ServiceService, MunicipalityService, MessageService]
 })
 export class HomePage implements OnInit {
@@ -148,19 +148,6 @@ export class HomePage implements OnInit {
                 return;
             }
         });
-    }
-
-    getPackageInfo(id: number) {
-        const packageInfo = this.packages.find((pack) => pack.id === id);
-        if (!packageInfo) return;
-
-        return packageInfo;
-    }
-
-    getServiceInfo(id: number) {
-        const serviceInfo = this.services.find((service) => service.id === id);
-        if (!serviceInfo) return;
-        return serviceInfo;
     }
 
     clickReservation(idDate: number) {
