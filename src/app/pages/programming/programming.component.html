@@ -1,12 +1,4 @@
-<app-calendar
-    [packages]="packages"
-    (clickDate)="clickDate($event)"
-    (clickProgramming)="clickProgramming($event)"
-    (editProgramming)="editProgramming($event)"
-    (changeStatusDate)="changeStatusDate($event)"
-    (toReservation)="toReservation($event)"
-    (toClients)="toClients($event)"
-/>
+<app-calendar [packages]="packages" (clickDate)="clickDate($event)" (clickProgramming)="clickProgramming($event)" (editProgramming)="editProgramming($event)" (changeStatusDate)="changeStatusDate($event)" (toClients)="toClients($event)" />
 
 <!-- Modal -->
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">

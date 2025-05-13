@@ -348,11 +348,7 @@ export class ProgrammingPage implements OnInit {
         this.dialogVisible = true;
     }
 
-    clickProgramming(event: any) {
-        console.log(event);
-    }
-
-    toReservation(id: number) {
+    clickProgramming(id: number) {
         this.idDate = id;
         this.dialogType = 'reservation';
         this.dialogVisible = true;

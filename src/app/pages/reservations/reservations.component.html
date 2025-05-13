@@ -90,8 +90,13 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="calendarDialog" header="Reserva" [modal]="true" [style]="{ 'min-width': '90dvw' }">
-    <app-calendar *ngIf="calendarDialog" [packages]="packages"></app-calendar>
+<p-dialog [(visible)]="dialogVisible" header="Reserva" [modal]="true" [style]="{ 'min-width': '90dvw' }">
+    <ng-container *ngIf="dialogType === 'calendar'">
+        <app-calendar *ngIf="dialogVisible" [packages]="packages" (clickProgramming)="clickProgramming($event)"></app-calendar>
+    </ng-container>
+    <ng-container *ngIf="dialogType === 'reservation'">
+        <app-form-reservation [idDate]="idDate" />
+    </ng-container>
 </p-dialog>
 
 <p-toast></p-toast>

@@ -38,7 +38,6 @@ export class CalendarComponent implements OnInit {
     @Output() clickProgramming = new EventEmitter<any>();
     @Output() editProgramming = new EventEmitter<DateModel>();
     @Output() changeStatusDate = new EventEmitter<DateModel>();
-    @Output() toReservation = new EventEmitter<number>();
     @Output() toClients = new EventEmitter<number>();
 
     dates: DateModel[] = [];
@@ -59,13 +58,6 @@ export class CalendarComponent implements OnInit {
             icon: 'pi pi-fw pi-sync',
             command: () => {
                 this.onChangeStatusDate();
-            }
-        },
-        {
-            label: 'Crear reserva',
-            icon: 'pi pi-fw pi-calendar-plus',
-            command: () => {
-                this.onClickReservation();
             }
         },
         {
@@ -144,7 +136,7 @@ export class CalendarComponent implements OnInit {
 
         this.programmingSelect = this.dates.find((date) => date.id === +selectEvent.id);
 
-        this.clickProgramming.emit(this.programmingSelect);
+        this.clickProgramming.emit(this.programmingSelect.id);
     }
 
     onEditProgramming() {
@@ -157,11 +149,6 @@ export class CalendarComponent implements OnInit {
         if (!this.programmingSelect) return;
         const programming = this.dates.find((date) => date.id === this.programmingSelect.id);
         this.changeStatusDate.emit(programming);
-    }
-
-    onClickReservation() {
-        if (!this.programmingSelect) return;
-        this.toReservation.emit(this.programmingSelect.id);
     }
 
     onClickClients() {

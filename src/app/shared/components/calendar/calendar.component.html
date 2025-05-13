@@ -5,7 +5,7 @@
             id="{{ arg.event.id }}"
             [model]="buttons"
             [severity]="arg.event.extendedProps.status ? 'primary' : 'danger'"
-            (click)="onClickProgramming($event, arg.event)"
+            (onClick)="onClickProgramming($event, arg.event)"
             [appendTo]="'body'"
             [dropdownIcon]="'pi pi-ellipsis-h'"
             class="text-wrap"

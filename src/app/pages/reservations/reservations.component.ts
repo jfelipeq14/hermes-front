@@ -20,7 +20,7 @@ import { AuthService, ClientsService, PackageService, ProgrammingService, Reserv
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
-import { CalendarComponent } from '../../shared/components';
+import { CalendarComponent, FormReservationComponent } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
 
 import { getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
@@ -29,7 +29,7 @@ import { getSeverity, getSeverityReservation, getValue, getValueReservation } fr
     selector: 'app-reservations',
     templateUrl: './reservations.component.html',
     styleUrls: ['./reservations.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, CalendarComponent],
+    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, CalendarComponent, FormReservationComponent],
     providers: [ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
 })
 export class ReservationsPage implements OnInit {
@@ -45,16 +45,18 @@ export class ReservationsPage implements OnInit {
     getValue = getValue;
     getSeverity = getSeverity;
 
-    calendarDialog = false;
-
     expandedRows: Record<string, boolean> = {};
+
+    idDate: number = 0;
+
+    dialogVisible = false;
+    dialogType: 'calendar' | 'reservation' = 'calendar';
 
     constructor(
         private reservationService: ReservationsService,
         private programmingService: ProgrammingService,
         private packageService: PackageService,
         private clientsService: ClientsService,
-        private authService: AuthService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
@@ -191,6 +193,12 @@ export class ReservationsPage implements OnInit {
         });
     }
 
+    clickProgramming(id: number) {
+        this.idDate = id;
+        this.dialogType = 'reservation';
+        this.dialogVisible = true;
+    }
+
     showPopup() {
         if (this.packages.length === 0) {
             this.messageService.add({
@@ -201,11 +209,11 @@ export class ReservationsPage implements OnInit {
             });
             return;
         }
-        this.calendarDialog = true;
+        this.dialogVisible = true;
     }
 
     closePopup() {
-        this.calendarDialog = false;
+        this.dialogVisible = false;
     }
 
     refresh() {
@@ -213,7 +221,7 @@ export class ReservationsPage implements OnInit {
         this.clients = [];
         this.packages = [];
         this.dates = [];
-        this.calendarDialog = false;
+        this.dialogVisible = false;
 
         this.getAllReservations();
         this.getAllDates();
