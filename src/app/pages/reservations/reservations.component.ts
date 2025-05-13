@@ -209,11 +209,13 @@ export class ReservationsPage implements OnInit {
             });
             return;
         }
+        this.dialogType = 'calendar';
         this.dialogVisible = true;
     }
 
     closePopup() {
         this.dialogVisible = false;
+        this.dialogType = 'calendar';
     }
 
     refresh() {
@@ -222,6 +224,7 @@ export class ReservationsPage implements OnInit {
         this.packages = [];
         this.dates = [];
         this.dialogVisible = false;
+        this.dialogType = 'calendar';
 
         this.getAllReservations();
         this.getAllDates();
