@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Input, OnInit } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
-import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent } from '..';
+import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent, PackageCardComponent } from '..';
 import { CommonModule } from '@angular/common';
 import { PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MessageService } from 'primeng/api';
@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
     selector: 'app-form-reservation',
     templateUrl: './form-reservation.component.html',
     styleUrl: './form-reservation.component.scss',
-    imports: [CommonModule, ButtonModule, StepperModule, FormClientsComponent, FormTravelersComponent, FormPaymentsComponent],
+    imports: [CommonModule, ButtonModule, StepperModule, FormClientsComponent, FormTravelersComponent, FormPaymentsComponent, PackageCardComponent],
     providers: [AuthService, ReservationsService, ClientsService, MessageService]
 })
 export class FormReservationComponent implements OnInit {

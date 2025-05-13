@@ -15,7 +15,7 @@
 
         <p-carousel [value]="dates" [numVisible]="3" [numScroll]="3">
             <ng-template let-date #item>
-                <app-package-card [date]="date" [packages]="packages" [services]="services" (clickReservation)="clickReservation(date.id)" />
+                <app-package-card [idDate]="date.id" [disabled]="false" (clickReservation)="clickReservation(date.id)" />
             </ng-template>
         </p-carousel>
 
