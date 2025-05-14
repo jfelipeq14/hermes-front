@@ -16,7 +16,7 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { AuthService, ClientsService, PackageService, ProgrammingService, ReservationsService } from '../../services';
+import { ClientsService, PackageService, ProgrammingService, ReservationsService } from '../../services';
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
