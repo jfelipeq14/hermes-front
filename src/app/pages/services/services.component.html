@@ -75,7 +75,7 @@
 
         <div class="flex flex-col field">
             <label for="price" class="required">Precio</label>
-            <input pInputText type="number" id="price" [(ngModel)]="service.price" [pattern]="patterns.PRICE" required />
+            <p-inputNumber id="price" [(ngModel)]="service.price" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
             <small *ngIf="service.price && !service.price.toString().match(patterns.PRICE)" class="text-red-500">El precio solo puede contener números</small>
         </div>
     </ng-template>

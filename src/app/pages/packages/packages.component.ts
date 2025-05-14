@@ -19,6 +19,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivityModel, DateModel, MunicipalityModel, PackageModel, PackageServiceModel, ServiceModel } from '../../models';
 import { ActivityService, MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
 import { levels } from '../../shared/constants';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     selector: 'app-packages',
@@ -42,6 +43,7 @@ export class PackagesPage implements OnInit {
     submitted = false;
     expandedRows: Record<string, boolean> = {};
     levels = levels;
+    patterns = PATTERNS;
 
     constructor(
         private packageService: PackageService,
