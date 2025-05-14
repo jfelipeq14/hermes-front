@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/component-class-suffix */
 import { Component } from '@angular/core';
 
 @Component({

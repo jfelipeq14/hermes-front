@@ -7,26 +7,26 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class MunicipalityService {
-  constructor(private http: HttpClient) {}
-  private url = environment.SERVER_URL + '/municipalities/';
+    constructor(private http: HttpClient) {}
+    private url = environment.SERVER_URL + 'municipalities/';
 
-  getAll(): Observable<MunicipalityModel[]> {
-    return this.http.get<MunicipalityModel[]>(this.url);
-  }
+    getAll(): Observable<MunicipalityModel[]> {
+        return this.http.get<MunicipalityModel[]>(this.url);
+    }
 
-  getById(id: number): Observable<MunicipalityModel> {
-    return this.http.get<MunicipalityModel>(this.url + id);
-  }
+    getById(id: number): Observable<MunicipalityModel> {
+        return this.http.get<MunicipalityModel>(this.url + id);
+    }
 
-  create(activity: MunicipalityModel): Observable<MunicipalityModel[]> {
-    return this.http.post<MunicipalityModel[]>(this.url, activity);
-  }
+    create(activity: MunicipalityModel): Observable<MunicipalityModel[]> {
+        return this.http.post<MunicipalityModel[]>(this.url, activity);
+    }
 
-  update(activity: MunicipalityModel): Observable<MunicipalityModel[]> {
-    return this.http.put<MunicipalityModel[]>(this.url + activity.id, activity);
-  }
+    update(activity: MunicipalityModel): Observable<MunicipalityModel[]> {
+        return this.http.patch<MunicipalityModel[]>(this.url + activity.id, activity);
+    }
 
-  changeStatus(id: number): Observable<MunicipalityModel[]> {
-    return this.http.patch<MunicipalityModel[]>(this.url + id, {});
-  }
+    changeStatus(id: number): Observable<MunicipalityModel[]> {
+        return this.http.patch<MunicipalityModel[]>(this.url + id, {});
+    }
 }

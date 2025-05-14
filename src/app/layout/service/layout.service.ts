@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, effect, signal, computed } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -28,8 +29,8 @@ interface MenuChangeEvent {
 export class LayoutService {
     _config: layoutConfig = {
         preset: 'Aura',
-        primary: 'emerald',
-        surface: null,
+        primary: 'sky',
+        surface: 'ocean',
         darkTheme: false,
         menuMode: 'static'
     };
@@ -79,13 +80,6 @@ export class LayoutService {
     private initialized = false;
 
     constructor() {
-        effect(() => {
-            const config = this.layoutConfig();
-            if (config) {
-                this.onConfigUpdate();
-            }
-        });
-
         effect(() => {
             const config = this.layoutConfig();
 
@@ -164,8 +158,8 @@ export class LayoutService {
     }
 
     onConfigUpdate() {
-        this._config = { ...this.layoutConfig() };
-        this.configUpdate.next(this.layoutConfig());
+        this._config = this.layoutConfig();
+        this.configUpdate.next(this._config);
     }
 
     onMenuStateChange(event: MenuChangeEvent) {

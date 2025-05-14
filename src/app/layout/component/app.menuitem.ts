@@ -1,4 +1,5 @@
-import { Component, HostBinding, Input } from '@angular/core';
+/* eslint-disable @angular-eslint/component-class-suffix */
+import { Component, HostBinding, Input, OnInit, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
@@ -14,7 +15,9 @@ import { LayoutService } from '../service/layout.service';
     imports: [CommonModule, RouterModule, RippleModule],
     template: `
         <ng-container>
-            <div *ngIf="root && item.visible !== false" class="layout-menuitem-root-text">{{ item.label }}</div>
+            <div *ngIf="root && item.visible !== false" class="layout-menuitem-root-text">
+                {{ item.label }}
+            </div>
             <a *ngIf="(!item.routerLink || item.items) && item.visible !== false" [attr.href]="item.url" (click)="itemClick($event)" [ngClass]="item.styleClass" [attr.target]="item.target" tabindex="0" pRipple>
                 <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
                 <span class="layout-menuitem-text">{{ item.label }}</span>
@@ -26,7 +29,14 @@ import { LayoutService } from '../service/layout.service';
                 [ngClass]="item.styleClass"
                 [routerLink]="item.routerLink"
                 routerLinkActive="active-route"
-                [routerLinkActiveOptions]="item.routerLinkActiveOptions || { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' }"
+                [routerLinkActiveOptions]="
+                    item.routerLinkActiveOptions || {
+                        paths: 'exact',
+                        queryParams: 'ignored',
+                        matrixParams: 'ignored',
+                        fragment: 'ignored'
+                    }
+                "
                 [fragment]="item.fragment"
                 [queryParamsHandling]="item.queryParamsHandling"
                 [preserveFragment]="item.preserveFragment"
@@ -69,7 +79,7 @@ import { LayoutService } from '../service/layout.service';
     ],
     providers: [LayoutService]
 })
-export class AppMenuitem {
+export class AppMenuitem implements OnInit, OnDestroy {
     @Input() item!: MenuItem;
 
     @Input() index!: number;
@@ -84,7 +94,7 @@ export class AppMenuitem {
 
     menuResetSubscription: Subscription;
 
-    key: string = '';
+    key = '';
 
     constructor(
         public router: Router,
@@ -106,7 +116,7 @@ export class AppMenuitem {
             this.active = false;
         });
 
-        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((params) => {
+        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             if (this.item.routerLink) {
                 this.updateActiveStateFromRoute();
             }
@@ -122,7 +132,12 @@ export class AppMenuitem {
     }
 
     updateActiveStateFromRoute() {
-        let activeRoute = this.router.isActive(this.item.routerLink[0], { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' });
+        const activeRoute = this.router.isActive(this.item.routerLink[0], {
+            paths: 'exact',
+            queryParams: 'ignored',
+            matrixParams: 'ignored',
+            fragment: 'ignored'
+        });
 
         if (activeRoute) {
             this.layoutService.onMenuStateChange({ key: this.key, routeEvent: true });

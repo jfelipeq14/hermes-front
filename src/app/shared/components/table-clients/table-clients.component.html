@@ -1,0 +1,57 @@
+<p-table
+    #dt
+    [value]="travelers"
+    [rows]="10"
+    [paginator]="true"
+    [globalFilterFields]="['name', 'status']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 20, 30]"
+>
+    <ng-template pTemplate="caption">
+        <h3 class="p-0 m-0 text-center">Clientes</h3>
+        <div class="flex justify-content-between align-items-center">
+            <p-button label="Reservar" icon="pi pi-plus" severity="secondary" />
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
+            </p-iconfield>
+        </div>
+    </ng-template>
+
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="id" style="min-width: 12rem">
+                Identificación
+                <p-sortIcon field="id" />
+            </th>
+            <th pSortableColumn="name" style="min-width: 16rem">
+                Nombre
+                <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="status" style="min-width: 12rem">
+                Estado
+                <p-sortIcon field="status" />
+            </th>
+            <th style="min-width: 12rem"></th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-traveler>
+        <tr>
+            <td>{{ getClientInfo(traveler.idTraveler)?.document }}</td>
+            <td>{{ getClientInfo(traveler.idTraveler)?.name }}</td>
+            <td>{{ getClientInfo(traveler.idTraveler)?.phone }}</td>
+            <td>
+                <p-tag [value]="traveler.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(traveler.status)" />
+            </td>
+            <td>
+                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" />
+                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" />
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

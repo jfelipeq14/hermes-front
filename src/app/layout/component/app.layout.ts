@@ -1,4 +1,6 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @angular-eslint/component-class-suffix */
+import { Component, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -23,7 +25,7 @@ import { LayoutService } from '../service/layout.service';
         <div class="layout-mask animate-fadein"></div>
     </div> `
 })
-export class AppLayout {
+export class AppLayout implements OnDestroy {
     overlayMenuOpenSubscription: Subscription;
 
     menuOutsideClickListener: any;
@@ -65,7 +67,12 @@ export class AppLayout {
     }
 
     hideMenu() {
-        this.layoutService.layoutState.update((prev) => ({ ...prev, overlayMenuActive: false, staticMenuMobileActive: false, menuHoverActive: false }));
+        this.layoutService.layoutState.update((prev) => ({
+            ...prev,
+            overlayMenuActive: false,
+            staticMenuMobileActive: false,
+            menuHoverActive: false
+        }));
         if (this.menuOutsideClickListener) {
             this.menuOutsideClickListener();
             this.menuOutsideClickListener = null;

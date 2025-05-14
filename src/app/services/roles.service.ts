@@ -1,32 +1,32 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RoleModel } from '../models';
+import { RoleModel } from '../models/role';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class RolesService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + '/roles/';
+    private url = environment.SERVER_URL + 'roles/';
 
-  getAll(): Observable<RoleModel[]> {
-    return this.http.get<RoleModel[]>(this.url);
-  }
+    getAll(): Observable<RoleModel[]> {
+        return this.http.get<RoleModel[]>(this.url);
+    }
 
-  getById(id: number): Observable<RoleModel> {
-    return this.http.get<RoleModel>(this.url + id);
-  }
+    getById(id: number): Observable<RoleModel> {
+        return this.http.get<RoleModel>(this.url + id);
+    }
 
-  create(roles: RoleModel): Observable<RoleModel> {
-    return this.http.post<RoleModel>(this.url, roles);
-  }
+    create(role: RoleModel): Observable<RoleModel> {
+        return this.http.post<RoleModel>(this.url, role);
+    }
 
-  update(roles: RoleModel): Observable<RoleModel> {
-    return this.http.put<RoleModel>(this.url + roles.id, roles);
-  }
+    update(role: RoleModel): Observable<RoleModel> {
+        return this.http.patch<RoleModel>(this.url + role.id, role);
+    }
 
-  delete(id: number): Observable<RoleModel> {
-    return this.http.delete<RoleModel>(this.url + id);
-  }
+    changeStatus(id: number): Observable<RoleModel> {
+        return this.http.patch<RoleModel>(`${this.url}${id}/change-status`, {});
+    }
 }

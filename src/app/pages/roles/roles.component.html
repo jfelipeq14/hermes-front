@@ -1,129 +1,100 @@
-<p-toolbar styleClass="mb-6">
-    <ng-template #start>
-        <p-button label="Crear" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
-    </ng-template>
-
-    <ng-template #end>
-        <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
-    </ng-template>
-</p-toolbar>
-
+<!-- Roles Table -->
 <p-table
     #dt
     [value]="roles"
     [rows]="10"
-    [columns]="cols"
     [paginator]="true"
-    [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+    [globalFilterFields]="['name']"
     [tableStyle]="{ 'min-width': '75rem' }"
     [rowHover]="true"
     dataKey="id"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} roles"
+    [loading]="loading"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[10, 25, 50]"
 >
-    <ng-template #caption>
-        <div class="flex items-center justify-between">
-            <h5 class="m-0">Roles</h5>
+    <ng-template pTemplate="caption">
+        <h3 class="m-0 p-0 text-center">Roles</h3>
+        <div class="flex justify-content-between align-items-center">
+            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="openNew()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
-                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
             </p-iconfield>
         </div>
     </ng-template>
-    <ng-template #header>
+    <ng-template pTemplate="header">
         <tr>
-            <th style="width: 3rem">
-                <p-tableHeaderCheckbox />
-            </th>
-            <th pSortableColumn="id" style="min-width:16rem">
-                Identificación
-                <p-sortIcon field="id" />
-            </th>
-            <th pSortableColumn="name" style="min-width:16rem">
-                Nombre
-                <p-sortIcon field="name" />
-            </th>
-            <th pSortableColumn="status" style="min-width: 12rem">
-                Estado
-                <p-sortIcon field="status" />
-            </th>
-            <th style="min-width: 12rem"></th>
+            <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="status">Estado <p-sortIcon field="status"></p-sortIcon></th>
+            <th>Acciones</th>
         </tr>
     </ng-template>
-    <ng-template #body let-role>
+    <ng-template pTemplate="body" let-role>
         <tr>
-            <td style="min-width: 12rem">{{ role.id }}</td>
-            <td style="min-width: 16rem">{{ role.name }}</td>
+            <td class="cursor-pointer" (click)="editRole(role)">{{ role.name }}</td>
             <td>
-                {{role.status}}
+                <p-tag [value]="role.status ? 'Activo' : 'Inactivo'" [severity]="role.status ? 'success' : 'danger'"></p-tag>
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)" />
-                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteRole(role)" />
+                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)"></p-button>
+                <p-button
+                    [icon]="role.status ? 'pi pi-ban' : 'pi pi-check'"
+                    [rounded]="true"
+                    [outlined]="true"
+                    [severity]="role.status ? 'danger' : 'success'"
+                    (click)="changeRoleStatus(role); $event.stopPropagation()"
+                    [pTooltip]="role.status ? 'Desactivar' : 'Activar'"
+                    tooltipPosition="top"
+                ></p-button>
             </td>
         </tr>
     </ng-template>
 </p-table>
 
-<!-- <p-dialog [(visible)]="roleDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true">
-    <ng-template #content>
-        <div class="flex flex-col gap-6">
-            <img [src]="'https://primefaces.org/cdn/primeng/images/demo/role/' + role.image" [alt]="role.image" class="block m-auto pb-4" *ngIf="role.image" />
-            <div>
-                <label for="name" class="block font-bold mb-3">Name</label>
-                <input type="text" pInputText id="name" [(ngModel)]="role.name" required autofocus fluid />
-                <small class="text-red-500" *ngIf="submitted && !role.name">Name is required.</small>
-            </div>
-            <div>
-                <label for="description" class="block font-bold mb-3">Description</label>
-                <textarea id="description" pTextarea [(ngModel)]="role.description" required rows="3" cols="20" fluid></textarea>
-            </div>
+<!-- Role Dialog -->
+<p-dialog [(visible)]="roleDialog" [style]="{ width: '700px' }" header="Detalles del Rol" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="field mb-4">
+            <label for="name" class="font-bold required">Nombre</label>
+            <input type="text" pInputText id="name" [(ngModel)]="role.name" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !role.name }" />
+            <small class="p-error" *ngIf="submitted && !role.name">El nombre es requerido.</small>
+        </div>
 
-            <div>
-                <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
-                <p-select [(ngModel)]="role.inventoryStatus" inputId="inventoryStatus" [options]="statuses" optionLabel="label" optionValue="label" placeholder="Select a Status" fluid />
-            </div>
+        <!-- Privileges Section -->
+        <div class="field">
+            <div class="border-1 border-round border-300">
+                <!-- Header row with privilege names -->
+                <div class="grid border-bottom-1 border-300 bg-gray-100 p-2 m-0">
+                    <div class="col-4 font-bold">Módulo</div>
+                    <div *ngFor="let privilegeName of privilegeNames" class="col font-bold">
+                        {{ privilegeName }}
+                    </div>
+                </div>
 
-            <div>
-                <span class="block font-bold mb-4">Category</span>
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category1" name="category" value="Accessories" [(ngModel)]="role.category" />
-                        <label for="category1">Accessories</label>
+                <!-- Permit rows -->
+                <div *ngFor="let permit of permits" class="grid border-bottom-1 border-300 p-2 m-0" [ngClass]="{ 'text-gray-500': !hasPrivilegesForPermit(permit) }">
+                    <div class="col-4 font-bold">
+                        {{ permit.name }}
+                        <span *ngIf="!hasPrivilegesForPermit(permit)" class="ml-2 text-sm text-gray-500"> (Sin privilegios disponibles) </span>
                     </div>
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category2" name="category" value="Clothing" [(ngModel)]="role.category" />
-                        <label for="category2">Clothing</label>
-                    </div>
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category3" name="category" value="Electronics" [(ngModel)]="role.category" />
-                        <label for="category3">Electronics</label>
-                    </div>
-                    <div class="flex items-center gap-2 col-span-6">
-                        <p-radiobutton id="category4" name="category" value="Fitness" [(ngModel)]="role.category" />
-                        <label for="category4">Fitness</label>
+
+                    <!-- Privilege checkboxes -->
+                    <div *ngFor="let privilegeName of privilegeNames" class="col text-center">
+                        <p-checkbox *ngIf="hasPrivilegesForPermit(permit)" [binary]="true" [ngModel]="getPrivilegeSelected(permit.name, privilegeName)" (ngModelChange)="togglePrivilege(permit.name, privilegeName)"></p-checkbox>
+                        <span *ngIf="!hasPrivilegesForPermit(permit)" class="text-gray-500"> - </span>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-6">
-                    <label for="price" class="block font-bold mb-3">Price</label>
-                    <p-inputnumber id="price" [(ngModel)]="role.price" mode="currency" currency="USD" locale="en-US" fluid />
-                </div>
-                <div class="col-span-6">
-                    <label for="quantity" class="block font-bold mb-3">Quantity</label>
-                    <p-inputnumber id="quantity" [(ngModel)]="role.quantity" fluid />
-                </div>
-            </div>
+            <small class="p-error block mt-2" *ngIf="submitted && !hasSelectedPrivileges()"> Debe seleccionar al menos un privilegio. </small>
         </div>
     </ng-template>
 
-    <ng-template #footer>
-        <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
-        <p-button label="Save" icon="pi pi-check" (click)="saveProduct()" />
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" icon="pi pi-times" severity="danger" [rounded]="true" [outlined]="true" (click)="hideDialog()"></p-button>
+        <p-button icon="pi pi-check" (click)="saveRole()" [disabled]="loading"></p-button>
     </ng-template>
-</p-dialog> -->
-
-<p-confirmdialog [style]="{ width: '450px' }" />
+</p-dialog>
+<p-toast></p-toast>
+<p-confirmdialog [style]="{ width: '450px' }"></p-confirmdialog>

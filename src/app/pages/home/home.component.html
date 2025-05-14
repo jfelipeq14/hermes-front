@@ -1,0 +1,128 @@
+<!-- Landing page con TailwindCSS y PrimeNG Sakai -->
+<div class="min-h-screen">
+    <!-- Header con botones de login -->
+    <div class="fixed top-0 right-0 z-50 flex items-center gap-2 p-4 z-5">
+        <p-button icon="pi pi-user" label="Login" class="p-button-primary" (click)="showPopupLogin()"></p-button>
+
+        <p-button icon="pi pi-user" label="Registro" class="p-button-primary" (click)="showPopupRegister()"></p-button>
+    </div>
+
+    <div class="container mx-auto">
+        <section class="p-2 m-2 my-5 text-center rounded-border">
+            <h1 class="mb-3 text-4xl font-bold text-primary">Conoce los paquetes que ofrecemos</h1>
+            <p class="mb-0 text-lg text-700">Descubre destinos increíbles a precios accesibles</p>
+        </section>
+
+        <p-carousel [value]="dates" [numVisible]="3" [numScroll]="3">
+            <ng-template let-date #item>
+                <app-package-card [idDate]="date.id" [disabled]="false" (clickReservation)="clickReservation(date.id)" />
+            </ng-template>
+        </p-carousel>
+
+        <p class="my-4 font-bold text-center text-800">
+            Antes de realizar una reserva debes saber que el comprobante se sube en la aplicación, pero previamente debes registrarte.
+            <a href="#" class="font-medium text-primary hover:underline">Términos y condiciones</a>
+        </p>
+
+        <div class="p-2 m-2 my-5 text-center rounded-border">
+            <h2 class="mb-5 text-3xl font-bold text-center text-900">Preguntas frecuentes</h2>
+
+            <!-- Features/FAQ con p-card -->
+            <div class="flex">
+                <div *ngFor="let feature of features" class="p-2 col-12 md:col-6 lg:col-3">
+                    <div class="h-full p-4 text-center bg-white border-round shadow-1">
+                        <i [class]="feature.icon + ' text-4xl text-primary mb-3'"></i>
+                        <h3 class="mb-3 text-xl font-medium text-900">
+                            {{ feature.title }}
+                        </h3>
+                        <p class="m-0 text-700 line-height-3">
+                            {{ feature.description }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer con información de contacto -->
+        <div class="p-0 mb-6 overflow-hidden shadow-2 border-round">
+            <h2 class="font-bold text-center text-primary">Contacto e Información</h2>
+
+            <div class="flex p-5">
+                <!-- Información de contacto -->
+                <div class="flex-1">
+                    <h3 class="text-xl font-medium">Información de contacto:</h3>
+                    <ul class="space-y-2 list-none text-700">
+                        <li class="flex align-items-center">
+                            <i class="mr-5 pi pi-building text-primary"></i>
+                            <span>Agencia de viajes Parche Travels</span>
+                        </li>
+                        <li class="flex align-items-center">
+                            <i class="mr-5 pi pi-id-card text-primary"></i>
+                            <span>Registro Nacional de Turismo: RNT 00000</span>
+                        </li>
+                        <li class="flex align-items-center">
+                            <i class="mr-5 pi pi-phone text-primary"></i>
+                            <span>Celular: +57 3223654844</span>
+                        </li>
+                        <li class="flex align-items-center">
+                            <i class="mr-5 pi pi-envelope text-primary"></i>
+                            <span>Correo: {{ 'parchetravelsmedellin@gmail.com' }}</span>
+                        </li>
+                    </ul>
+
+                    <!-- Redes sociales -->
+                    <div class="flex gap-3 my-4">
+                        <a href="#" class="transition-colors text-primary hover:text-primary-600">
+                            <i class="text-2xl pi pi-facebook"></i>
+                        </a>
+                        <a href="#" class="transition-colors text-primary hover:text-primary-600">
+                            <i class="text-2xl pi pi-instagram"></i>
+                        </a>
+                        <a href="#" class="transition-colors text-primary hover:text-primary-600">
+                            <i class="text-2xl pi pi-twitter"></i>
+                        </a>
+                        <a href="#" class="transition-colors text-primary hover:text-primary-600">
+                            <i class="text-2xl pi pi-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PQRS -->
+                <div class="flex-1">
+                    <h3 class="mb-4 text-xl font-medium text-900">PQRS</h3>
+                    <p class="text-700 line-height-3">
+                        Si tienes alguna petición, queja o reclamo comunícate a nuestro línea +57 3223654844 o envía un correo a:
+                        {{ 'parchetravelspqrs@gmail.com' }}
+                    </p>
+
+                    <details>
+                        <summary class="font-bold text-primary">¿Cómo presentar una PQRS?</summary>
+                        <p class="p-5">Puedes presentar tu PQRS a través de nuestro correo electrónico o línea telefónica. Responderemos en un plazo máximo de 15 días hábiles.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aviso legal -->
+        <div class="py-4 text-sm text-center text-600 border-t-1 border-300">
+            <p class="mb-2">Parche Travels Rechaza la explotación, la pornografía, el turismo sexual y demás formas de abuso sexual con menores. Ley 1336 de 2009 y ley 679 de 2001</p>
+            <p class="mb-0">Parche Travels cumple la Ley 17 de 1981 y Resolución 1367 de 2000 contra la comercialización ilícita de especies de fauna y flora silvestre</p>
+            <p class="mt-3 text-xs">2025 Parche Travels. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">
+    <ng-container *ngIf="dialogType === 'login'">
+        <app-login [loginDialog]="dialogVisible" [submitted]="submitted" [user]="user"></app-login>
+    </ng-container>
+
+    <ng-container *ngIf="dialogType === 'register'">
+        <app-register [registerDialog]="dialogVisible" [submitted]="submitted" [user]="user" [municipalities]="municipalities"></app-register>
+    </ng-container>
+
+    <ng-container *ngIf="dialogType === 'reservation'">
+        <app-form-reservation [idDate]="idDate" />
+    </ng-container>
+</p-dialog>

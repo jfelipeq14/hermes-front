@@ -1,0 +1,136 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Perfil de Usuario</h5>
+            <p>Gestiona tu información personal</p>
+
+            <div *ngIf="loading" class="flex justify-content-center">
+                <p-progressSpinner></p-progressSpinner>
+            </div>
+
+            <div *ngIf="!loading" class="formgrid grid p-fluid">
+                <!-- Información Personal -->
+                <fieldset class="col-12">
+                    <legend class="my-5 font-bold">Información Personal</legend>
+                    <div class="grid">
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="typeDocument">Tipo de Documento</label>
+                                <p-dropdown id="typeDocument" [options]="typesDocument" [(ngModel)]="user.typeDocument" optionLabel="name" optionValue="value" [disabled]="!editMode" [filter]="true" filterBy="name"> </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="document">Número de Documento</label>
+                                <input id="document" type="text" pInputText [(ngModel)]="user.document" [disabled]="!editMode" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="name">Nombre</label>
+                                <input id="name" type="text" pInputText [(ngModel)]="user.name" [disabled]="!editMode" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="surName">Apellido</label>
+                                <input id="surName" type="text" pInputText [(ngModel)]="user.surName" [disabled]="!editMode" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="dateBirth">Fecha de Nacimiento</label>
+                                <p-calendar id="dateBirth" [(ngModel)]="user.dateBirth" [showIcon]="true" [disabled]="!editMode" dateFormat="dd/mm/yy"> </p-calendar>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="sex">Sexo</label>
+                                <p-dropdown id="sex" [options]="sexlist" [(ngModel)]="user.sex" optionLabel="name" optionValue="value" [disabled]="!editMode" [filter]="true" filterBy="name"> </p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Información de Contacto -->
+                <fieldset class="col-12">
+                    <legend>Información de Contacto</legend>
+                    <div class="grid">
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="email">Correo Electrónico</label>
+                                <input id="email" type="email" pInputText [(ngModel)]="user.email" [disabled]="!editMode" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="phone">Teléfono</label>
+                                <input id="phone" type="text" pInputText [(ngModel)]="user.phone" [disabled]="!editMode" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="emergency">Contacto de Emergencia</label>
+                                <input id="emergency" type="text" pInputText [(ngModel)]="user.emergency" [disabled]="!editMode" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="idMunicipality">Municipio</label>
+                                <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="user.idMunicipality" optionLabel="name" optionValue="id" [disabled]="!editMode" [filter]="true" filterBy="name"> </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-8">
+                            <div class="field flex flex-col">
+                                <label for="address">Dirección</label>
+                                <input id="address" type="text" pInputText [(ngModel)]="user.address" [disabled]="!editMode" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Información Médica -->
+                <fieldset class="col-12">
+                    <legend>Información Médica</legend>
+                    <div class="grid">
+                        <div class="col-12 md:col-6 lg:col-4">
+                            <div class="field flex flex-col">
+                                <label for="bloodType">Tipo de Sangre</label>
+                                <p-dropdown id="bloodType" [options]="bloodTypes" [(ngModel)]="user.bloodType" optionLabel="name" optionValue="value" [disabled]="!editMode" [filter]="true" filterBy="name"> </p-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6 lg:col-8">
+                            <div class="field flex flex-col">
+                                <label for="eps">EPS</label>
+                                <p-dropdown id="eps" [options]="epslist" [(ngModel)]="user.eps" optionLabel="name" optionValue="value" [disabled]="!editMode" [filter]="true" filterBy="name"> </p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Botones de acción -->
+                <div class="col-12 flex justify-content-end gap-2">
+                    <button *ngIf="!editMode" pButton pRipple label="Editar Perfil" icon="pi pi-pencil" class="p-button-primary" (click)="enableEditMode()"></button>
+
+                    <div *ngIf="editMode" class="flex gap-2">
+                        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="cancelEdit()"></button>
+                        <button pButton pRipple label="Guardar Cambios" icon="pi pi-check" class="p-button-success" (click)="saveChanges()"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

@@ -7,39 +7,40 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class PackageService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  private url = environment.SERVER_URL + '/packages/';
+    private urlPackage = environment.SERVER_URL + 'packages/';
+    private urlPackageService = environment.SERVER_URL + 'package-services/';
 
-  getAll(): Observable<PackageModel[]> {
-    return this.http.get<PackageModel[]>(this.url);
-  }
+    getAll(): Observable<PackageModel[]> {
+        return this.http.get<PackageModel[]>(this.urlPackage);
+    }
 
-  getServicePackages(idPackage: number): Observable<PackageServiceModel[]> {
-    return this.http.get<PackageServiceModel[]>(
-      this.url + 'package/' + idPackage
-    );
-  }
+    getServicePackages(idPackage: number): Observable<PackageServiceModel[]> {
+        return this.http.get<PackageServiceModel[]>(this.urlPackageService + idPackage);
+    }
 
-  getById(id: number): Observable<PackageModel> {
-    return this.http.get<PackageModel>(this.url + id);
-  }
+    getById(id: number): Observable<PackageModel> {
+        return this.http.get<PackageModel>(this.urlPackage + id);
+    }
 
-  create(pkg: PackageModel): Observable<PackageModel> {
-    return this.http.post<PackageModel>(this.url, pkg);
-  }
+    create(pkg: PackageModel): Observable<PackageModel> {
+        return this.http.post<PackageModel>(this.urlPackage, pkg);
+    }
 
-  createServicePackage(
-    servicePackage: PackageServiceModel
-  ): Observable<PackageServiceModel> {
-    return this.http.post<PackageServiceModel>(this.url, servicePackage);
-  }
+    update(pkg: PackageModel): Observable<PackageModel> {
+        return this.http.patch<PackageModel>(this.urlPackage + pkg.id, pkg);
+    }
 
-  update(pkg: PackageModel): Observable<PackageModel> {
-    return this.http.put<PackageModel>(this.url + pkg.id, pkg);
-  }
+    changeStatus(id: number): Observable<PackageModel> {
+        return this.http.patch<PackageModel>(this.urlPackage + `${id}/change-status`, {});
+    }
 
-  changeStatus(id: number): Observable<PackageModel> {
-    return this.http.patch<PackageModel>(this.url + id, {});
-  }
+    createServicePackage(servicePackage: PackageServiceModel[]): Observable<PackageServiceModel[]> {
+        return this.http.post<PackageServiceModel[]>(this.urlPackageService, servicePackage);
+    }
+
+    deleteServicePackage(id: number): Observable<PackageServiceModel[]> {
+        return this.http.delete<PackageServiceModel[]>(this.urlPackageService + id);
+    }
 }
