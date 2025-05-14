@@ -11,5 +11,6 @@ export const PATTERNS = {
     DOCUMENT_TYPE: '^(CC|CE|PA|SC|CD|TE|PEP|AS|DU|CCEX|CEEX|PAEX|SCEX|CDEX|TEX|RNEX|PEPEX|ASEX)$',
     RESERVATION_STATUS: '^(N|C|P|M|R|E|F)$',
     PAYMENT_STATUS: '^(R|P|N|A|)$',
-    IMAGE: /\.(jpg|jpeg|png)$/i
+    IMAGE: /\.(jpg|jpeg|png)$/i,
+    PRICE: '^(?!0+$)[0-9]{4,13}$'
 };

@@ -65,19 +65,18 @@
         <div class="flex flex-col field">
             <label for="category" class="required">Categoría</label>
             <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" [appendTo]="'body'"></p-dropdown>
-            <small class="p-error" *ngIf="submitted && !service.idCategoryServices"> La categoría es obligatoria. </small>
         </div>
 
         <div class="flex flex-col field">
             <label for="name" class="required">Nombre</label>
-            <input id="name" type="text" [(ngModel)]="service.name" pInputText required />
-            <small class="p-error" *ngIf="submitted && !service.name">El nombre es obligatorio.</small>
+            <input pInputText id="name" type="text" [(ngModel)]="service.name" [minLength]="3" [maxLength]="60" [pattern]="patterns.NAME" required />
+            <small *ngIf="service.name && !service.name.match(patterns.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
         </div>
 
         <div class="flex flex-col field">
             <label for="price" class="required">Precio</label>
-            <input type="number" pInputText id="price" [(ngModel)]="service.price" required />
-            <small class="p-error" *ngIf="submitted && !service.price">El precio es obligatorio.</small>
+            <input pInputText type="number" id="price" [(ngModel)]="service.price" [pattern]="patterns.PRICE" required />
+            <small *ngIf="service.price && !service.price.toString().match(patterns.PRICE)" class="text-red-500">El precio solo puede contener números</small>
         </div>
     </ng-template>
 
