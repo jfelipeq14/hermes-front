@@ -12,7 +12,7 @@
     [rowsPerPageOptions]="[10, 20, 30]"
 >
     <ng-template #caption>
-        <h3 class="m-0 p-0 text-center">Actividades</h3>
+        <h3 class="p-0 m-0 text-center">Actividades</h3>
         <div class="flex justify-content-between align-items-center">
             <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
             <p-iconfield>
@@ -55,10 +55,12 @@
 
 <p-dialog [(visible)]="activityDialog" [style]="{ width: '450px' }" header="Actividad" [modal]="true" class="p-fluid">
     <ng-template #content>
-        <div class="field flex flex-col">
+        <div class="flex flex-col field">
             <label for="name" class="required">Nombre</label>
-            <input pInputText type="text" id="name" [(ngModel)]="activity.name" required />
-            <small class="p-error" *ngIf="submitted && !activity.name">El nombre es obligatorio.</small>
+            <input pInputText type="text" id="name" [(ngModel)]="activity.name" [minLength]="3" [maxLength]="60" [pattern]="patterns.NAME" required />
+            <small *ngIf="activity.name.length < 3" class="p-error">El nombre debe tener al menos 3 caracteres.</small>
+            <small *ngIf="activity.name.length > 60" class="p-error">El nombre no puede tener más de 60 caracteres.</small>
+            <small *ngIf="activity.name && !activity.name.match(patterns.NAME)" class="p-error">El nombre solo puede contener letras, números y espacios.</small>
         </div>
     </ng-template>
 

@@ -14,6 +14,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { ActivityModel } from '../../models';
 import { ActivityService } from '../../services';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     selector: 'app-activities',
@@ -32,6 +33,7 @@ export class ActivitiesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
+    patterns = PATTERNS;
     //#endregion
 
     //#region constructor
