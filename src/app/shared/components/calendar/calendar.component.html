@@ -6,6 +6,7 @@
             [model]="buttons"
             [severity]="arg.event.extendedProps.status ? 'primary' : 'danger'"
             (onClick)="onClickProgramming($event, arg.event)"
+            (click)="clickPackage(arg.event)"
             [appendTo]="'body'"
             [dropdownIcon]="'pi pi-ellipsis-h'"
             class="text-wrap"

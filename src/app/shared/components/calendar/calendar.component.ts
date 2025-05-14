@@ -139,6 +139,11 @@ export class CalendarComponent implements OnInit {
         this.clickProgramming.emit(this.programmingSelect.id);
     }
 
+    clickPackage(selectPackage: any) {
+        if (!selectPackage) return;
+        this.programmingSelect = this.dates.find((date) => date.id === +selectPackage.id);
+    }
+
     onEditProgramming() {
         if (!this.programmingSelect) return;
         const programming = this.dates.find((date) => date.id === this.programmingSelect.id);

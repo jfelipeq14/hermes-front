@@ -2,12 +2,12 @@
     <fieldset class="flex flex-row">
         <div class="flex flex-col flex-1 field">
             <label for="package" class="required">Paquete</label>
-            <p-dropdown id="package" [(ngModel)]="date.idPackage" [options]="packages" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione un paquete" [required]="true"></p-dropdown>
+            <p-dropdown id="package" [(ngModel)]="date.idPackage" [options]="packages" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione un paquete" required></p-dropdown>
             <small class="p-error" *ngIf="submitted && !date.idPackage"> El paquete es obligatorio. </small>
         </div>
         <div class="flex flex-col flex-1 field">
             <label for="amount" class="required">Cantidad</label>
-            <input type="number" pInputText id="amount" [(ngModel)]="date.amount" required />
+            <input pInputText type="number" id="amount" [(ngModel)]="date.amount" [minlength]="1" required />
             <small class="p-error" *ngIf="submitted && !date.amount"> La cantidad es obligatoria. </small>
         </div>
     </fieldset>
