@@ -60,11 +60,7 @@
         <div class="flex flex-col field">
             <label for="name" class="required">Nombre</label>
             <input pInputText type="text" id="name" [(ngModel)]="category.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
-            <!-- agrega los small con los mensajes de error -->
-            <small *ngIf="category.name.length < 3" class="p-error">El nombre debe tener al menos 3 caracteres.</small>
-            <small *ngIf="category.name.length > 60" class="p-error">El nombre no puede tener más de 60 caracteres.</small>
-            <small *ngIf="category.name.length === 0" class="p-error">El nombre es requerido.</small>
-            <small *ngIf="!category.name?.match(pattern.NAME)" class="p-error">El nombre solo puede contener letras y espacios.</small>
+            <small *ngIf="!category.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
         </div>
     </ng-template>
 

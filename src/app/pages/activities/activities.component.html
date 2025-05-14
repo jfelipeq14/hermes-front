@@ -58,9 +58,7 @@
         <div class="flex flex-col field">
             <label for="name" class="required">Nombre</label>
             <input pInputText type="text" id="name" [(ngModel)]="activity.name" [minLength]="3" [maxLength]="60" [pattern]="patterns.NAME" required />
-            <small *ngIf="activity.name.length < 3" class="p-error">El nombre debe tener al menos 3 caracteres.</small>
-            <small *ngIf="activity.name.length > 60" class="p-error">El nombre no puede tener más de 60 caracteres.</small>
-            <small *ngIf="activity.name && !activity.name.match(patterns.NAME)" class="p-error">El nombre solo puede contener letras, números y espacios.</small>
+            <small *ngIf="activity.name && !activity.name.match(patterns.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
         </div>
     </ng-template>
 

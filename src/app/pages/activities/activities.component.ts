@@ -152,6 +152,10 @@ export class ActivitiesPage implements OnInit {
         });
     }
 
+    getSeverity(status: boolean): 'success' | 'danger' {
+        return status ? 'success' : 'danger';
+    }
+
     showPopup() {
         this.activity = new ActivityModel();
         this.submitted = false;
@@ -167,9 +171,5 @@ export class ActivitiesPage implements OnInit {
         this.getAllActivities();
         this.closePopup();
         this.submitted = false;
-    }
-
-    getSeverity(status: boolean): 'success' | 'danger' {
-        return status ? 'success' : 'danger';
     }
 }
