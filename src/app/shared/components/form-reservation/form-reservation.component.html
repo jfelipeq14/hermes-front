@@ -60,5 +60,7 @@
 <div class="flex justify-content-between">
     <p-button label="Anterior" icon="pi pi-arrow-left" (onClick)="previousStep()" [disabled]="activeStepIndex === 0"></p-button>
     <p-button *ngIf="activeStepIndex !== 2" label="Siguiente" icon="pi pi-arrow-right" (onClick)="nextStep()" [disabled]="!isStepValid(activeStepIndex)"></p-button>
-    <p-button *ngIf="activeStepIndex === 2" label="Guardar" icon="pi pi-check" (onClick)="saveReservation()" [disabled]="!isStepValid(activeStepIndex)"></p-button>
+    <p-button *ngIf="activeStepIndex === 2" label="Pagar" icon="pi pi-check" (onClick)="payReservation()" [disabled]="!isStepValid(activeStepIndex)"></p-button>
 </div>
+
+<p-toast></p-toast>

@@ -5,20 +5,22 @@ import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent, Pa
 import { CommonModule } from '@angular/common';
 import { PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MessageService } from 'primeng/api';
-import { AuthService, ClientsService, ReservationsService } from '../../../services';
+import { AuthService, ClientsService, PaymentService, ReservationsService } from '../../../services';
 import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-form-reservation',
     templateUrl: './form-reservation.component.html',
     styleUrl: './form-reservation.component.scss',
-    imports: [CommonModule, ButtonModule, StepperModule, FormClientsComponent, FormTravelersComponent, FormPaymentsComponent, PackageCardComponent],
-    providers: [AuthService, ReservationsService, ClientsService, MessageService]
+    imports: [CommonModule, ButtonModule, StepperModule, ToastModule, FormClientsComponent, FormTravelersComponent, FormPaymentsComponent, PackageCardComponent],
+    providers: [AuthService, ReservationsService, PaymentService, ClientsService, MessageService]
 })
 export class FormReservationComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private reservationService: ReservationsService,
+        private paymentService: PaymentService,
         private clientsService: ClientsService,
         private messageService: MessageService
     ) {}
@@ -42,7 +44,7 @@ export class FormReservationComponent implements OnInit {
     steps = [
         { label: 'Crear Cliente', value: 0 },
         { label: 'Agregar Viajeros', value: 1 },
-        { label: 'Confirmar Reserva', value: 2 }
+        { label: 'Pagar', value: 2 }
     ];
     submitted = false;
     isPasswordDisable = false;
@@ -182,6 +184,37 @@ export class FormReservationComponent implements OnInit {
         this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((t) => t.idTraveler !== traveler.idTraveler);
     }
 
+    payReservation() {
+        if (this.payment.idReservation === 0 || this.payment.price === 0) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Por favor, complete todos los campos requeridos',
+                life: 3000
+            });
+            return;
+        }
+
+        this.paymentService.create(this.payment).subscribe({
+            next: () => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Éxito',
+                    detail: 'Pago realizado correctamente',
+                    life: 3000
+                });
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
+        });
+    }
+
     isStepValid(step: number): boolean {
         switch (step) {
             case 0:
@@ -200,6 +233,31 @@ export class FormReservationComponent implements OnInit {
     }
 
     nextStep() {
+        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
+            this.reservation.idDate = this.idDate;
+
+            this.reservationService.create(this.reservation).subscribe({
+                next: (r) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: 'Reservación creada correctamente',
+                        life: 3000
+                    });
+                    this.payment.idReservation = r.id;
+                    this.payment.price = r.detailReservationTravelers.length * r.price;
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                }
+            });
+        }
+
         if (this.isStepValid(this.activeStepIndex) && this.activeStepIndex < this.steps.length - 1) {
             this.activeStepIndex++;
         }
