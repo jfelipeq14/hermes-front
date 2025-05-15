@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { PaymentModel } from '../../../models';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 
@@ -14,7 +15,7 @@ import { IconFieldModule } from 'primeng/iconfield';
     selector: 'app-form-payments',
     templateUrl: './form-payments.component.html',
     styleUrls: ['./form-payments.component.scss'],
-    imports: [CommonModule, FormsModule, InputTextModule, InputIconModule, IconFieldModule, ButtonModule, DropdownModule, CalendarModule]
+    imports: [CommonModule, FormsModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, ButtonModule, DropdownModule, CalendarModule]
 })
 export class FormPaymentsComponent {
     @Input() payment: PaymentModel = new PaymentModel(); // Recibe el modelo de pago
