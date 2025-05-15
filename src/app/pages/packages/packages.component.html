@@ -80,7 +80,17 @@
                                     {{ getServiceName(service.idService) }}
                                 </td>
                                 <td>{{ service.quantity }}</td>
-                                <td>{{ service.price | currency: 'COP' }}</td>
+                                <td>
+                                    <p-inputNumber
+                                        [(ngModel)]="service.price"
+                                        [min]="1"
+                                        [max]="9999999999999"
+                                        [step]="1"
+                                        [showButtons]="true"
+                                        [useGrouping]="false"
+                                        [disabled]="true"
+                                    ></p-inputNumber>
+                                </td>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">

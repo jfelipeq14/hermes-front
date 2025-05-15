@@ -194,6 +194,16 @@ export class PackagesPage implements OnInit {
     savePackage() {
         this.submitted = true;
 
+        // Convertir los precios y valores de precio como reserve a int
+        this.package.price = Math.max(1, Math.floor(Number(this.package.price)));
+        this.package.reserve = Math.max(1, Math.floor(Number(this.package.reserve)));
+        this.package.detailPackagesServices = this.package.detailPackagesServices.map((service) => ({
+            idService: service.idService,
+            quantity: Math.max(1, Math.floor(Number(service.quantity))),
+            price: Math.max(1, Math.floor(Number(service.price)))
+        }));
+        this.package.level = this.package.level ? this.package.level : 0;
+
         console.log(this.package);
 
         if (this.package.id) {
@@ -314,7 +324,7 @@ export class PackagesPage implements OnInit {
             this.package.detailPackagesServices.push({
                 idService: serviceFound.id,
                 quantity: 1,
-                price: serviceFound.price
+                price: Math.max(1, Math.floor(Number(serviceFound.price))) // Asegura entero positivo
             });
         }
     }
