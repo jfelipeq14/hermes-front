@@ -161,9 +161,12 @@ export class CategoriesPage implements OnInit {
     }
 
     refresh() {
-        this.getAllCategories();
-        this.closePopup();
+        this.category = new CategoryModel();
+        this.categories = [];
+        this.categoryDialog = false;
         this.submitted = false;
+
+        this.getAllCategories();
     }
 
     getSeverity(status: boolean): 'success' | 'danger' {

@@ -13,6 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CategoryModel, ServiceModel } from '../../models';
 import { CategoryService, ServiceService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
 import { PATTERNS } from '../../shared/helpers';
@@ -22,7 +23,7 @@ import { PATTERNS } from '../../shared/helpers';
     selector: 'app-services',
     templateUrl: './services.component.html',
     styleUrls: ['./services.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule, ConfirmDialogModule, TagModule],
+    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, DropdownModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, ConfirmDialogModule, TagModule],
     providers: [ServiceService, CategoryService, MessageService, ConfirmationService]
 })
 export class ServicesPage implements OnInit {
@@ -182,10 +183,14 @@ export class ServicesPage implements OnInit {
     }
 
     refresh() {
-        this.getAllCategories();
-        this.getAllServices();
-        this.closePopup();
+        this.service = new ServiceModel();
+        this.services = [];
+        this.categories = [];
+        this.serviceDialog = false;
         this.submitted = false;
+
+        this.getAllServices();
+        this.getAllCategories();
     }
 
     getSeverity(status: boolean): 'success' | 'error' {

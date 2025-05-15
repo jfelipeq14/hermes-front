@@ -70,13 +70,15 @@ export class PackagesPage implements OnInit {
     getAllPackages() {
         this.packageService.getAll().subscribe({
             next: (packages) => {
-                this.packages = packages;
+                this.packages = packages.map((pkg) => {
+                    return {
+                        ...pkg,
+                        price: +pkg.price,
+                        reserve: +pkg.reserve
+                    };
+                });
                 this.packages.forEach((pkg) => {
-                    this.packageService.getServicePackages(pkg.id).subscribe({
-                        next: (services) => {
-                            this.packageServices = [...this.packageServices, ...services];
-                        }
-                    });
+                    this.packageServices = pkg.detailPackagesServices;
                 });
             },
             error: (e) => {
@@ -178,14 +180,11 @@ export class PackagesPage implements OnInit {
     }
 
     onRowExpand(event: any) {
-        const packageId = event.data.id;
-        if (!event.data.services) {
-            this.packageService.getServicePackages(packageId).subscribe({
-                next: (services) => {
-                    event.data.services = services;
-                }
-            });
+        if (!event.data.detailPackagesServices) {
+            return;
         }
+
+        this.packageServices = event.data.detailPackagesServices;
     }
 
     getSeverity(status: boolean): 'success' | 'danger' {
@@ -195,54 +194,49 @@ export class PackagesPage implements OnInit {
     savePackage() {
         this.submitted = true;
 
-        if (!this.package.name?.trim()) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'El nombre del paquete es requerido',
-                life: 3000
+        console.log(this.package);
+
+        if (this.package.id) {
+            this.packageService.update(this.package).subscribe({
+                next: (updatedPackage) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: `Paquete ${updatedPackage.name} actualizado`,
+                        life: 3000
+                    });
+                    this.refresh();
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                }
             });
-            return;
-        }
-
-        if (!this.package.detailPackagesServices.some((service) => service.quantity > 0)) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Debe agregar al menos un servicio al paquete',
-                life: 3000
+        } else {
+            this.packageService.create(this.package).subscribe({
+                next: (createdPackage) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: `Paquete ${createdPackage.name} creado`,
+                        life: 3000
+                    });
+                    this.refresh();
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                }
             });
-            return;
         }
-
-        // Convert prices to integers
-        this.package.price = Math.round(this.package.price);
-        this.package.reserve = Math.round(this.package.reserve);
-        this.package.detailPackagesServices.forEach((service) => {
-            service.price = Math.round(service.price);
-        });
-
-        const savePackage$ = this.package.id ? this.packageService.update(this.package) : this.packageService.create(this.package);
-
-        savePackage$.subscribe({
-            next: (pkg) => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Éxito',
-                    detail: `${pkg.name} ${this.package.id ? 'actualizado' : 'creado'} correctamente`,
-                    life: 3000
-                });
-                this.refresh();
-            },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
-        });
     }
 
     changeStatusPackage(pkg: PackageModel): void {
@@ -282,14 +276,12 @@ export class PackagesPage implements OnInit {
     editPackage(pkg: PackageModel): void {
         this.package = { ...pkg };
 
-        // Asegúrate de que detailPackagesServices esté inicializado
         this.package.detailPackagesServices = pkg.detailPackagesServices.map((service) => ({
             idService: service.idService,
             quantity: service.quantity,
-            price: Math.round(service.price) // Asegúrate de que el precio sea un entero
+            price: service.price
         }));
 
-        // Asigna el nivel correspondiente al valor del dropdown
         const selectedLevel = this.levels.find((level) => level.value === pkg.level);
         this.package.level = selectedLevel ? selectedLevel.value : 0;
 

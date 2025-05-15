@@ -48,7 +48,7 @@
         <tr>
             <td>{{ service.id }}</td>
             <td>{{ service.name }}</td>
-            <td>{{ service.price }}</td>
+            <td>{{ service.price | currency: 'COP' }}</td>
             <td>
                 <p-tag [value]="service.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(service.status)" />
             </td>
