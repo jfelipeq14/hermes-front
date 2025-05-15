@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { CategoryService } from '../../services';
 import { CategoryModel } from '../../models';
 import { InputTextModule } from 'primeng/inputtext';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     selector: 'app-categories',
@@ -31,6 +32,7 @@ export class CategoriesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
+    pattern = PATTERNS;
 
     constructor(
         private categoryService: CategoryService,

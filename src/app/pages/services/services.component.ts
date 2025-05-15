@@ -15,6 +15,7 @@ import { CategoryService, ServiceService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     standalone: true,
@@ -34,6 +35,7 @@ export class ServicesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
+    patterns = PATTERNS;
 
     constructor(
         private serviceService: ServiceService,
