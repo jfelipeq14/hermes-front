@@ -16,21 +16,21 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { ClientsService, PackageService, ProgrammingService, ReservationsService } from '../../services';
+import { AuthService, ClientsService, PackageService, ProfileService, ProgrammingService, ReservationsService } from '../../services';
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
 import { CalendarComponent, FormReservationComponent } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
 
-import { getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
+import { ACCESS_TOKEN_KEY, getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
 
 @Component({
     selector: 'app-reservations',
     templateUrl: './reservations.component.html',
     styleUrls: ['./reservations.component.scss'],
     imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, CalendarComponent, FormReservationComponent],
-    providers: [ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
+    providers: [ProfileService, ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
 })
 export class ReservationsPage implements OnInit {
     reservations: ReservationModel[] = [];
@@ -53,6 +53,7 @@ export class ReservationsPage implements OnInit {
     dialogType: 'calendar' | 'reservation' = 'calendar';
 
     constructor(
+        private profileService: ProfileService,
         private reservationService: ReservationsService,
         private programmingService: ProgrammingService,
         private packageService: PackageService,
@@ -62,14 +63,45 @@ export class ReservationsPage implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.getAllReservations();
+        this.profileService.getCurrentUser().subscribe({
+            next: (userData) => {
+                console.log(userData.id);
+
+                if (userData.idRole === 3) {
+                    this.getAllReservationsByUser(userData.id);
+                    this.clients = [userData];
+                } else {
+                    this.getAllReservations();
+                    this.getAllClients();
+                }
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+
         this.getAllDates();
         this.getAllPackages();
-        this.getAllClients();
     }
 
     getAllReservations() {
         this.reservationService.getAll().subscribe({
+            next: (reservations) => {
+                this.reservations = reservations;
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+            }
+        });
+    }
+
+    getAllReservationsByUser(idUser: number) {
+        this.reservationService.getAllByUser(idUser).subscribe({
             next: (reservations) => {
                 this.reservations = reservations;
             },

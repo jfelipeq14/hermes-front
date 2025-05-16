@@ -47,7 +47,7 @@ export class RegisterComponent {
                     next: (response) => {
                         if (!response && !response.accessToken) return;
                         this.authService.setTokens(response.accessToken);
-                        this.router.navigate(['/home']);
+                        window.location.href = '/home';
                     },
                     error: (e) => {
                         this.messageService.add({

@@ -71,14 +71,16 @@ export class AppTopbar {
             label: 'Perfil',
             icon: 'pi pi-user',
             command: () => {
-                this.router.navigate(['/home/profile']);
+                window.location.href = '/home/profile';
+
+                // this.router.navigate(['/home/profile']);
             }
         },
         {
             label: 'Cerrar sesión',
             icon: 'pi pi-sign-out',
             command: () => {
-                this.authService.logout();
+                this.authService.clearSession();
             }
         }
     ];

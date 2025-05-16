@@ -17,13 +17,9 @@ export class ReservationsService {
     getAll(): Observable<ReservationModel[]> {
         return this.http.get<ReservationModel[]>(this.urlReservation);
     }
-    getAllTravelersByReservation(idReservation: number): Observable<ReservationTravelerModel[]> {
-        return this.http.get<ReservationTravelerModel[]>(this.urlTraveler + `reservation/${idReservation}`);
-    }
 
-    // Obtener una reservación por ID
-    getById(id: number): Observable<ReservationModel> {
-        return this.http.get<ReservationModel>(`${this.urlReservation}${id}`);
+    getAllByUser(id: number): Observable<ReservationModel[]> {
+        return this.http.get<ReservationModel[]>(`${this.urlReservation}user/${id}`);
     }
 
     // Crear una nueva reservación

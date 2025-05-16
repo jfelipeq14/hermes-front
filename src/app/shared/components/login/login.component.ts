@@ -44,7 +44,7 @@ export class LoginComponent {
 
                 this.authService.setTokens(response.accessToken);
 
-                this.router.navigate(['/home']);
+                window.location.href = '/home';
             },
             error: (e) => {
                 this.messageService.add({

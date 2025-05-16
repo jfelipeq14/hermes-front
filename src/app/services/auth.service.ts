@@ -54,10 +54,11 @@ export class AuthService {
 
     redirectBasedOnRole(roleId: number): void {
         if (!roleId) {
-            this.router.navigate(['/landing']);
+            window.location.href = '/landing';
+
             return;
         }
-        this.router.navigate(['/home']);
+        window.location.href = '/home';
     }
 
     isValidTokenFormat(token: string | null): boolean {
@@ -137,13 +138,7 @@ export class AuthService {
         localStorage.removeItem(ACCESS_TOKEN_KEY);
         this.isAuthenticated$.next(false);
         this.currentUserSubject.next(null);
-        this.authErrorSubject.next(); // Emitir evento de error de autenticación
-    }
-
-    logout(redirectToLanding = true): void {
-        this.clearSession();
-        if (redirectToLanding) {
-            this.router.navigate(['/landing']);
-        }
+        this.authErrorSubject.next();
+        window.location.href = '/landing';
     }
 }
