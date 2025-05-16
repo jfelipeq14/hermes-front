@@ -65,8 +65,6 @@ export class ReservationsPage implements OnInit {
     ngOnInit(): void {
         this.profileService.getCurrentUser().subscribe({
             next: (userData) => {
-                console.log(userData.id);
-
                 if (userData.idRole === 3) {
                     this.getAllReservationsByUser(userData.id);
                     this.clients = [userData];
@@ -90,12 +88,7 @@ export class ReservationsPage implements OnInit {
                 this.reservations = reservations;
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
@@ -106,12 +99,7 @@ export class ReservationsPage implements OnInit {
                 this.reservations = reservations;
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
@@ -119,15 +107,10 @@ export class ReservationsPage implements OnInit {
     getAllDates() {
         this.programmingService.getAll().subscribe({
             next: (dates) => {
-                this.dates = dates;
+                this.dates = dates.filter((d) => d.status === true);
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
@@ -135,15 +118,10 @@ export class ReservationsPage implements OnInit {
     getAllPackages() {
         this.packageService.getAll().subscribe({
             next: (packages) => {
-                this.packages = packages;
+                this.packages = packages.filter((r) => r.status === true);
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
@@ -151,15 +129,10 @@ export class ReservationsPage implements OnInit {
     getAllClients() {
         this.clientsService.getAll().subscribe({
             next: (clients) => {
-                this.clients = clients;
+                this.clients = clients.filter((c) => c.status === true);
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
