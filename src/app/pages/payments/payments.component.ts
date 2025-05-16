@@ -18,7 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 
-import { PaymentService, ReservationsService } from '../../services';
+import { PaymentService, ProfileService } from '../../services';
 import { PaymentModel, ReservationModel } from '../../models';
 import { paymentStatus } from '../../shared/constants';
 import { getSeverityPayment, getSeverityReservation, getValuePayment, getValueReservation } from '../../shared/helpers';
@@ -28,7 +28,7 @@ import { getSeverityPayment, getSeverityReservation, getValuePayment, getValueRe
     templateUrl: './payments.component.html',
     styleUrls: ['./payments.component.scss'],
     imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, DropdownModule, ConfirmDialogModule, CalendarModule, TagModule],
-    providers: [PaymentService, ReservationsService, MessageService, ConfirmationService]
+    providers: [ProfileService, PaymentService, MessageService, ConfirmationService]
 })
 export class PaymentsPage implements OnInit {
     payments: PaymentModel[] = [];
@@ -45,34 +45,43 @@ export class PaymentsPage implements OnInit {
     expandedRows: Record<string, boolean> = {};
 
     constructor(
+        private profileService: ProfileService,
         private paymentService: PaymentService,
-        private reservationsService: ReservationsService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
 
     ngOnInit(): void {
-        this.getAllReservations();
+        this.profileService.getCurrentUser().subscribe({
+            next: (userData) => {
+                if (userData.idRole === 3) {
+                    this.paymentService.getAllReservationWhitPayments().subscribe({
+                        next: (reservations) => {
+                            this.reservations = reservations.filter((r) => r.idUser === userData.id);
+                        },
+                        error: (e) => {
+                            console.error(e);
+                        }
+                    });
+                } else {
+                    this.paymentService.getAllReservationWhitPayments().subscribe({
+                        next: (reservations) => {
+                            this.reservations = reservations;
+                        },
+                        error: (e) => {
+                            console.error(e);
+                        }
+                    });
+                }
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
     }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-    }
-
-    getAllReservations() {
-        this.paymentService.getAllReservationWhitPayments().subscribe({
-            next: (reservations) => {
-                this.reservations = reservations;
-            },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message || 'No se pudieron cargar los pagos',
-                    life: 3000
-                });
-            }
-        });
     }
 
     getPaymentsByReservation(reservationId: number): PaymentModel[] {
@@ -224,6 +233,6 @@ export class PaymentsPage implements OnInit {
         this.getValueReservation = getValueReservation;
         this.expandedRows = {};
 
-        this.getAllReservations();
+        window.location.reload();
     }
 }
