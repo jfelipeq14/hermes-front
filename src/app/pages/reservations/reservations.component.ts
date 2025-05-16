@@ -16,14 +16,14 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { AuthService, ClientsService, PackageService, ProfileService, ProgrammingService, ReservationsService } from '../../services';
+import { ClientsService, PackageService, ProfileService, ProgrammingService, ReservationsService } from '../../services';
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
 import { CalendarComponent, FormReservationComponent } from '../../shared/components';
 import { reservationStatus } from '../../shared/constants';
 
-import { ACCESS_TOKEN_KEY, getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
+import { getSeverity, getSeverityReservation, getValue, getValueReservation } from '../../shared/helpers';
 
 @Component({
     selector: 'app-reservations',

@@ -72,8 +72,6 @@ export class AppTopbar {
             icon: 'pi pi-user',
             command: () => {
                 window.location.href = '/home/profile';
-
-                // this.router.navigate(['/home/profile']);
             }
         },
         {
