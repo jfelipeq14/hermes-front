@@ -20,7 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 
-import { MeetingService, PackageService, ProgrammingService, ReservationsService, ResponsibleService } from '../../services';
+import { MeetingService, PackageService, ProfileService, ProgrammingService, ReservationsService, ResponsibleService } from '../../services';
 import { DateModel, MeetingModel, PackageModel, ReservationModel, ReservationTravelerModel, ResponsibleModel, UserModel } from '../../models';
 import { ZONE } from '../../shared/constants';
 import { formatTime, getSeverity } from '../../shared/helpers';
@@ -50,7 +50,7 @@ import { CalendarComponent, FormProgrammingComponent, FormReservationComponent }
         FormProgrammingComponent,
         FormReservationComponent
     ],
-    providers: [ProgrammingService, PackageService, ResponsibleService, MeetingService, ReservationsService, MessageService, ConfirmationService]
+    providers: [ProfileService, ProgrammingService, PackageService, ResponsibleService, MeetingService, ReservationsService, MessageService, ConfirmationService]
 })
 export class ProgrammingPage implements OnInit {
     date: DateModel = new DateModel();
@@ -69,6 +69,7 @@ export class ProgrammingPage implements OnInit {
     dialogType: 'programming' | 'reservation' | 'clients' = 'programming';
 
     constructor(
+        private profileService: ProfileService,
         private programmingService: ProgrammingService,
         private packageService: PackageService,
         private responsibleService: ResponsibleService,
@@ -79,11 +80,22 @@ export class ProgrammingPage implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.getAllDates();
+        this.profileService.getCurrentUser().subscribe({
+            next: (userData) => {
+                if (userData.idRole === 2) {
+                    this.getAllDatesByResponsible(userData.id);
+                } else {
+                    this.getAllDates();
+                    this.getAllResponsibles();
+                    this.getAllMeetings();
+                }
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
         this.getAllPackages();
         this.getAllReservations();
-        this.getAllResponsibles();
-        this.getAllMeetings();
     }
 
     getAllDates() {
@@ -92,13 +104,17 @@ export class ProgrammingPage implements OnInit {
                 this.dates = dates;
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.log(e);
             }
+        });
+    }
+
+    getAllDatesByResponsible(idUser: number) {
+        this.programmingService.getAllByResponsible(idUser).subscribe({
+            next: (dates) => {
+                this.dates = dates;
+            },
+            error: (e) => console.log(e)
         });
     }
 
@@ -129,14 +145,7 @@ export class ProgrammingPage implements OnInit {
             next: (packages) => {
                 this.packages = packages;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -145,14 +154,7 @@ export class ProgrammingPage implements OnInit {
             next: (reservations) => {
                 this.reservations = reservations;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -164,14 +166,7 @@ export class ProgrammingPage implements OnInit {
                     fullName: `${responsible.name} ${responsible.surName}`
                 }));
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 

@@ -14,8 +14,8 @@ export class ProgrammingService {
         return this.http.get<DateModel[]>(this.url);
     }
 
-    getAllActive(): Observable<DateModel[]> {
-        return this.http.get<DateModel[]>(`${this.url}`);
+    getAllByResponsible(idResponsible: number): Observable<DateModel[]> {
+        return this.http.get<DateModel[]>(`${this.url}responsible/${idResponsible}`);
     }
 
     create(date: DateModel): Observable<DateModel> {
