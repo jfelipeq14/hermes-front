@@ -24,7 +24,7 @@ import { MeetingService, PackageService, ProfileService, ProgrammingService, Res
 import { DateModel, MeetingModel, PackageModel, ReservationModel, ReservationTravelerModel, ResponsibleModel, UserModel } from '../../models';
 import { ZONE } from '../../shared/constants';
 import { formatTime, getSeverity } from '../../shared/helpers';
-import { CalendarComponent, FormProgrammingComponent, FormReservationComponent } from '../../shared/components';
+import { CalendarComponent, FormProgrammingComponent, FormReservationComponent, TableClientsComponent } from '../../shared/components';
 
 @Component({
     selector: 'app-programming',
@@ -48,7 +48,8 @@ import { CalendarComponent, FormProgrammingComponent, FormReservationComponent }
         DropdownModule,
         CalendarComponent,
         FormProgrammingComponent,
-        FormReservationComponent
+        FormReservationComponent,
+        TableClientsComponent
     ],
     providers: [ProfileService, ProgrammingService, PackageService, ResponsibleService, MeetingService, ReservationsService, MessageService, ConfirmationService]
 })
@@ -167,6 +168,16 @@ export class ProgrammingPage implements OnInit {
                 }));
             },
             error: (e) => console.error(e)
+        });
+    }
+
+    getAllTravelers(idDate: number) {
+        this.reservationService.getTravelers(idDate).subscribe({
+            next: (reservations) => {
+                this.clients = reservations.map((r) => r.detailReservationTravelers).flat();
+                console.log(this.clients);
+            },
+            error: (e: any) => console.error(e)
         });
     }
 
@@ -351,7 +362,7 @@ export class ProgrammingPage implements OnInit {
 
     toClients(id: number) {
         this.idDate = id;
-        this.clients = this.reservations.find((r) => r.idDate === this.idDate)?.detailReservationTravelers || [];
+        this.getAllTravelers(this.idDate);
         this.dialogType = 'clients';
         this.dialogVisible = true;
     }

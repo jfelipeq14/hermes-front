@@ -9,6 +9,10 @@
     <ng-container *ngIf="dialogType === 'reservation'">
         <app-form-reservation [idDate]="idDate" />
     </ng-container>
+
+    <ng-container *ngIf="dialogType === 'clients'">
+        <app-table-clients [travelers]="clients" (toCancel)="closePopup()" />
+    </ng-container>
 </p-dialog>
 
 <p-toast></p-toast>
