@@ -9,12 +9,12 @@
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
 >
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Categorías</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
@@ -57,16 +57,20 @@
 
 <p-dialog [(visible)]="categoryDialog" [style]="{ width: '450px' }" header="Categoría" [modal]="true" class="p-fluid">
     <ng-template #content>
-        <div class="flex flex-col field">
-            <label for="name" class="required">Nombre</label>
-            <input pInputText type="text" id="name" [(ngModel)]="category.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
-            <small *ngIf="!category.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+        <div class="container flex flex-col gap-4">
+            <div class="flex flex-col field">
+                <label for="name" class="required">Nombre</label>
+                <input pInputText type="text" id="name" [(ngModel)]="category.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
+                <small *ngIf="!category.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+            </div>
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
-        <p-button label="Guardar" icon="pi pi-check" (click)="saveCategory()"></p-button>
+        <div class="flex gap-2 my-2 justify-content-end">
+            <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" (click)="saveCategory()"></p-button>
+        </div>
     </ng-template>
 </p-dialog>
 

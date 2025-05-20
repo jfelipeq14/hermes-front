@@ -1,5 +1,5 @@
 <div class="container">
-    <fieldset class="flex flex-row">
+    <fieldset class="flex flex-row gap-4">
         <div class="flex flex-col flex-1 field">
             <label for="package" class="required">Paquete</label>
             <p-dropdown id="package" [(ngModel)]="date.idPackage" [options]="packages" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione un paquete" required></p-dropdown>
@@ -12,7 +12,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="flex flex-row">
+    <fieldset class="flex flex-row gap-4">
         <div class="flex flex-col flex-1 field">
             <label for="start" class="required">Fecha inicio</label>
             <p-datepicker [(ngModel)]="date.start" [showIcon]="true" inputId="start" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'"></p-datepicker>
@@ -25,7 +25,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="flex flex-row">
+    <fieldset class="flex flex-row gap-4">
         <div class="flex flex-col flex-1 field">
             <label for="startRegistration" class="required">Inicio registro</label>
             <p-datepicker [(ngModel)]="date.startRegistration" [showIcon]="true" inputId="startRegistration" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'"></p-datepicker>
@@ -87,7 +87,7 @@
         </div>
     </fieldset>
 </div>
-<div class="flex flex-row">
+<div class="flex gap-2 my-2 justify-content-end">
     <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (onClick)="onClosePopup()"></p-button>
     <p-button label="Guardar" icon="pi pi-check" (onClick)="onCreateDate(date)"></p-button>
 </div>

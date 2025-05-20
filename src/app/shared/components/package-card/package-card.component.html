@@ -9,7 +9,7 @@
         </ul>
         <div class="mb-4 text-sm text-gray-500">Fecha: {{ getDateInfo(idDate)?.start }}</div>
         <div class="flex items-center justify-between">
-            <div class="text-xl font-semibold text-primary">{{ '$' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.price }}</div>
+            <div class="text-xl font-semibold text-primary">{{ '$' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.price }} por persona</div>
             <p-button [disabled]="disabled" icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary" (onClick)="onClickReservation(idDate)"></p-button>
         </div>
     </div>

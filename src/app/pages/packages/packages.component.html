@@ -9,14 +9,14 @@
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} paquetes"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
     [expandedRowKeys]="expandedRows"
     (onRowExpand)="onRowExpand($event)"
 >
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Paquetes</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
@@ -100,7 +100,7 @@
 <p-dialog [(visible)]="packageDialog" [style]="{ width: '800px' }" header="Paquete" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
         <div class="flex justify-content-between">
-            <div>
+            <div class="container flex flex-col gap-4">
                 <div class="flex flex-col field">
                     <label for="name" class="required">Nombre</label>
                     <input pInputText id="name" type="text" [(ngModel)]="package.name" [minLength]="3" [maxLength]="60" [pattern]="patterns.NAME" required />
@@ -152,7 +152,7 @@
                 </div>
             </div>
 
-            <p-table [value]="package.detailPackagesServices">
+            <p-table [value]="package.detailPackagesServices" class="container">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Servicio</th>
@@ -183,7 +183,7 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <div class="flex justify-content-end">
+        <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" (onClick)="closePopup()" text />
             <p-button label="Guardar" icon="pi pi-check" (onClick)="savePackage()" autofocus />
         </div>

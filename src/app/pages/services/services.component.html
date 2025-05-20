@@ -9,12 +9,12 @@
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} servicios"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
 >
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Servicios</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
@@ -81,8 +81,10 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="closePopup()" [text]="true"></p-button>
-        <p-button label="Guardar" icon="pi pi-check" (click)="saveService()"></p-button>
+        <div class="flex gap-2 my-2 justify-content-end">
+            <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="closePopup()" [text]="true"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" (click)="saveService()"></p-button>
+        </div>
     </ng-template>
 </p-dialog>
 

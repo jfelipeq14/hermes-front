@@ -1,21 +1,18 @@
-<div class="field">
-    <label for="idReservation">Reserva</label>
-    <input type="text" pInputText id="idReservation" [(ngModel)]="payment.idReservation" [disabled]="true" />
-</div>
+<div class="container flex flex-col gap-4">
+    <div class="flex flex-col">
+        <label for="date" class="required">Fecha</label>
+        <p-calendar id="date" [(ngModel)]="payment.date" [showIcon]="true" dateFormat="dd/mm/yy" [disabled]="true"></p-calendar>
+        <small class="p-error" *ngIf="submitted && !payment.date"> La fecha es obligatoria. </small>
+    </div>
 
-<div class="field">
-    <label for="date">Fecha *</label>
-    <p-calendar id="date" [(ngModel)]="payment.date" [showIcon]="true" dateFormat="dd/mm/yy" [disabled]="true"></p-calendar>
-    <small class="p-error" *ngIf="submitted && !payment.date"> La fecha es obligatoria. </small>
-</div>
+    <div class="flex flex-col">
+        <label for="price" class="required">Precio</label>
+        <p-inputNumber id="price" [(ngModel)]="payment.total" mode="currency" currency="COP" locale="es-CO" [disabled]="true"></p-inputNumber>
+        <small class="p-error" *ngIf="submitted && !payment.total"> El precio es obligatorio. </small>
+    </div>
 
-<div class="field">
-    <label for="price" class="required">Precio</label>
-    <p-inputNumber id="price" [(ngModel)]="payment.price" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
-    <small class="p-error" *ngIf="submitted && !payment.price"> El precio es obligatorio. </small>
-</div>
-
-<div class="field">
-    <label for="voucher">Comprobante</label>
-    <input type="text" pInputText id="voucher" [(ngModel)]="payment.voucher" />
+    <div class="flex flex-col">
+        <label for="voucher">Comprobante</label>
+        <input pInputText type="text" id="voucher" [(ngModel)]="payment.voucher" />
+    </div>
 </div>

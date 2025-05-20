@@ -9,14 +9,14 @@
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservaciones"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
     [expandedRowKeys]="expandedRows"
     (onRowExpand)="onRowExpand($event)"
 >
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Pagos de Reservaciones</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Crear Pago" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()"></p-button>
+            <p-button class="flex-1" label="Crear Pago" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()"></p-button>
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search"></p-inputicon>
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
@@ -49,8 +49,7 @@
             </td>
             <td>{{ reservation.idUser }}</td>
             <td>
-                {{ getPaymentsTotal(reservation.id) | currency: 'COP' }}
-                <small>({{ getPaymentsCount(reservation.id) }} pagos)</small>
+                {{ reservation.total | currency: 'COP' }}
             </td>
         </tr>
     </ng-template>
@@ -106,41 +105,7 @@
 </p-table>
 
 <p-dialog [(visible)]="paymentDialog" [style]="{ width: '500px', height: '500px' }" header="Pago" [modal]="true" class="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="field">
-            <label for="idReservation">Reserva</label>
-            <p-dropdown id="idReservation" [options]="reservations" [(ngModel)]="payment.idReservation" optionLabel="id" optionValue="id" placeholder="Seleccione una reserva" [showClear]="true" required></p-dropdown>
-            <small class="p-error" *ngIf="submitted && !payment.idReservation"> El reserva es obligatorio. </small>
-        </div>
-
-        <div class="field">
-            <label for="date">Fecha</label>
-            <p-calendar id="date" [(ngModel)]="payment.date" [showIcon]="true" dateFormat="dd/mm/yy" disabled="true" required></p-calendar>
-            <small class="p-error" *ngIf="submitted && !payment.date">La fecha es obligatoria.</small>
-        </div>
-
-        <div class="field">
-            <label for="price" class="required">Precio</label>
-            <p-inputNumber id="price" [(ngModel)]="payment.price" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
-            <small class="p-error" *ngIf="submitted && !payment.price">El precio es obligatorio.</small>
-        </div>
-
-        <div class="field">
-            <label for="voucher">Comprobante</label>
-            <input type="text" pInputText id="voucher" [(ngModel)]="payment.voucher" />
-        </div>
-
-        <div class="field">
-            <label for="status">Estado*</label>
-            <p-dropdown id="status" [options]="statuses" [(ngModel)]="payment.status" optionLabel="name" optionValue="value" placeholder="Seleccione un Estado" [showClear]="true" required></p-dropdown>
-            <small class="p-error" *ngIf="submitted && !payment.status"> El estado es obligatorio. </small>
-        </div>
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-        <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="closePopup()" [text]="true"></p-button>
-        <p-button label="Guardar" icon="pi pi-check" (click)="savePayment()"></p-button>
-    </ng-template>
+    <app-form-payments [payment]="payment" />
 </p-dialog>
 
 <p-toast></p-toast>

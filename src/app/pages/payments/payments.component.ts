@@ -22,12 +22,29 @@ import { PaymentService, ProfileService } from '../../services';
 import { PaymentModel, ReservationModel } from '../../models';
 import { paymentStatus } from '../../shared/constants';
 import { getSeverityPayment, getSeverityReservation, getValuePayment, getValueReservation } from '../../shared/helpers';
+import { FormPaymentsComponent } from '../../shared/components';
 
 @Component({
     selector: 'app-payments',
     templateUrl: './payments.component.html',
     styleUrls: ['./payments.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, DropdownModule, ConfirmDialogModule, CalendarModule, TagModule],
+    imports: [
+        CommonModule,
+        TableModule,
+        FormsModule,
+        ButtonModule,
+        ToastModule,
+        DialogModule,
+        InputTextModule,
+        InputNumberModule,
+        InputIconModule,
+        IconFieldModule,
+        DropdownModule,
+        ConfirmDialogModule,
+        CalendarModule,
+        TagModule,
+        FormPaymentsComponent
+    ],
     providers: [ProfileService, PaymentService, MessageService, ConfirmationService]
 })
 export class PaymentsPage implements OnInit {
@@ -86,15 +103,6 @@ export class PaymentsPage implements OnInit {
 
     getPaymentsByReservation(reservationId: number): PaymentModel[] {
         return this.payments.filter((payment) => payment.idReservation === reservationId);
-    }
-
-    getPaymentsTotal(reservationId: number): number {
-        const reservationPayments = this.getPaymentsByReservation(reservationId);
-        return reservationPayments.reduce((total, payment) => total + payment.price, 0);
-    }
-
-    getPaymentsCount(reservationId: number): number {
-        return this.getPaymentsByReservation(reservationId).length;
     }
 
     onRowExpand(event: any) {

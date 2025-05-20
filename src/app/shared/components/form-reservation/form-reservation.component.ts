@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent, PackageCardComponent } from '..';
 import { CommonModule } from '@angular/common';
@@ -30,6 +30,7 @@ export class FormReservationComponent implements OnInit {
     }
 
     @Input() idDate = 0;
+    @Output() toCancel = new EventEmitter<void>();
 
     reservation: ReservationModel = new ReservationModel();
     payment: PaymentModel = new PaymentModel();
@@ -151,7 +152,12 @@ export class FormReservationComponent implements OnInit {
         }
 
         this.reservationService.create(this.reservation).subscribe({
-            next: () => {
+            next: (r) => {
+                this.payment.idReservation = r.id;
+                this.payment.total = r.detailReservationTravelers.length * r.price;
+
+                this.activeStepIndex++;
+
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Éxito',
@@ -185,7 +191,7 @@ export class FormReservationComponent implements OnInit {
     }
 
     payReservation() {
-        if (this.payment.idReservation === 0 || this.payment.price === 0) {
+        if (this.payment.idReservation === 0 || this.payment.total === 0) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -215,51 +221,22 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
-    isStepValid(step: number): boolean {
-        switch (step) {
-            case 0:
-                return this.reservation.idUser > 0;
-            case 1:
-                return this.reservation.detailReservationTravelers.length > 0;
-            case 2:
-                return this.reservation.idUser > 0 && this.reservation.detailReservationTravelers.length > 0;
-            default:
-                return false;
-        }
-    }
-
-    previousStep() {
-        if (this.activeStepIndex > 0) this.activeStepIndex--;
-    }
-
     nextStep() {
-        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
-            this.reservation.idDate = this.idDate;
-
-            this.reservationService.create(this.reservation).subscribe({
-                next: (r) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Reservación creada correctamente',
-                        life: 3000
-                    });
-                    this.payment.idReservation = r.id;
-                    this.payment.price = r.detailReservationTravelers.length * r.price;
-                },
-                error: (e) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: e.error.message,
-                        life: 3000
-                    });
-                }
-            });
-        }
-
-        if (this.isStepValid(this.activeStepIndex) && this.activeStepIndex < this.steps.length - 1) {
+        if (this.activeStepIndex === 0 && this.reservation.idUser > 0) {
             this.activeStepIndex++;
         }
+
+        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
+            this.reservation.idDate = this.idDate;
+            this.saveReservation();
+        }
+
+        if (this.activeStepIndex === 2 && this.payment.pay > 0 && this.payment.total > 0 && this.payment.idReservation > 0) {
+            this.payReservation();
+        }
+    }
+
+    onClosePopup() {
+        this.toCancel.emit();
     }
 }
