@@ -1,10 +1,9 @@
 <!-- Landing page con TailwindCSS y PrimeNG Sakai -->
 <div class="min-h-screen">
     <!-- Header con botones de login -->
-    <div class="fixed top-0 right-0 z-50 flex items-center gap-2 p-4 z-5">
-        <p-button icon="pi pi-user" label="Login" class="p-button-primary" (click)="showPopupLogin()"></p-button>
-
-        <p-button icon="pi pi-user" label="Registro" class="p-button-primary" (click)="showPopupRegister()"></p-button>
+    <div class="fixed top-0 right-0 z-50 flex items-center gap-2 p-4">
+        <p-button icon="pi pi-user" label="Registrarse" severity="secondary" (click)="showPopupRegister()"></p-button>
+        <p-button icon="pi pi-user" label="Iniciar sesión" (click)="showPopupLogin()"></p-button>
     </div>
 
     <div class="container mx-auto">
