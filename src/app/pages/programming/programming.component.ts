@@ -175,7 +175,6 @@ export class ProgrammingPage implements OnInit {
         this.reservationService.getTravelers(idDate).subscribe({
             next: (reservations) => {
                 this.clients = reservations.map((r) => r.detailReservationTravelers).flat();
-                console.log(this.clients);
             },
             error: (e: any) => console.error(e)
         });

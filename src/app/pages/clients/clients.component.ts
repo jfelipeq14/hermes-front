@@ -11,12 +11,13 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ClientsService } from '../../services';
 import { UserModel } from '../../models';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
     selector: 'app-clients',
     templateUrl: './clients.component.html',
     styleUrl: './clients.component.scss',
-    imports: [CommonModule, TableModule, TagModule, ButtonModule, ToastModule, InputIconModule, IconFieldModule, ConfirmDialogModule],
+    imports: [CommonModule, TableModule, TagModule, ButtonModule, ToastModule, InputTextModule, InputIconModule, IconFieldModule, ConfirmDialogModule],
     providers: [ClientsService, MessageService, ConfirmationService]
 })
 export class ClientsPage implements OnInit {
