@@ -1,12 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
 import { UserModel } from '../../../models';
 import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
@@ -18,12 +16,11 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, ToastModule, RouterModule, RippleModule, CommonModule, DialogModule, ResetPasswordComponent],
+    imports: [ButtonModule, InputTextModule, PasswordModule, FormsModule, ToastModule, CommonModule, DialogModule],
     providers: [AuthService, MessageService]
 })
 export class LoginComponent {
     constructor(
-        private router: Router,
         private authService: AuthService,
         private messageService: MessageService
     ) {}
@@ -31,9 +28,9 @@ export class LoginComponent {
     @Input() loginDialog!: boolean;
     @Input() submitted!: boolean;
     @Input() user: UserModel = new UserModel();
-    // @Output() openResetPassword = new EventEmitter<boolean>();
 
-    resetPasswordDialog = false;
+    @Output() showPopupRestore = new EventEmitter<void>();
+    @Output() closePopup = new EventEmitter<void>();
 
     onSubmit() {
         this.submitted = true;
@@ -57,12 +54,10 @@ export class LoginComponent {
         });
     }
 
-    onClose() {
-        this.loginDialog = false;
-        this.submitted = false;
+    onOpenPopup() {
+        this.showPopupRestore.emit();
     }
-
-    openResetPasswordPopup() {
-        this.resetPasswordDialog = !this.resetPasswordDialog;
+    onClosePopup() {
+        this.closePopup.emit();
     }
 }

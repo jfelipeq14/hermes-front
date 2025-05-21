@@ -114,11 +114,19 @@
 <!-- Modal -->
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">
     <ng-container *ngIf="dialogType === 'login'">
-        <app-login [loginDialog]="dialogVisible" [submitted]="submitted" [user]="user"></app-login>
+        <app-login [loginDialog]="dialogVisible" [submitted]="submitted" [user]="user" (showPopupRestore)="showPopupRestore()"></app-login>
     </ng-container>
 
     <ng-container *ngIf="dialogType === 'register'">
-        <app-register [registerDialog]="dialogVisible" [submitted]="submitted" [user]="user" [municipalities]="municipalities"></app-register>
+        <app-register [registerDialog]="dialogVisible" [submitted]="submitted" [activateModel]="activateModel" [user]="user" [municipalities]="municipalities" (closePopup)="closePopup()"></app-register>
+    </ng-container>
+
+    <ng-container *ngIf="dialogType === 'restore'">
+        <app-restore-password [restoreDialog]="dialogVisible" [submitted]="submitted" [user]="user" [resetModel]="resetModel" (showPopupReset)="showPopupReset()" (closePopup)="closePopup()"></app-restore-password>
+    </ng-container>
+
+    <ng-container *ngIf="dialogType === 'reset'">
+        <app-reset-password [resetDialog]="dialogVisible" [submitted]="submitted" [resetModel]="resetModel" (closePopup)="closePopup()"></app-reset-password>
     </ng-container>
 
     <ng-container *ngIf="dialogType === 'reservation'">

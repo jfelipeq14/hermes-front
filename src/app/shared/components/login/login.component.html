@@ -16,14 +16,10 @@
         </div>
     </div>
 
-    <div class="flex flex-col items-center justify-center gap-4 w-full my-5">
+    <div class="flex flex-col items-center justify-center w-full gap-4 my-5">
         <p-button label="Ingresar" icon="pi pi-user" severity="primary" (click)="onSubmit()" />
-        <p-button label="Restablecer contraseña" severity="secondary" class="p-button-text" (click)="openResetPasswordPopup()" />
+        <p-button label="Restablecer contraseña" severity="secondary" class="p-button-text" (click)="onOpenPopup()" />
     </div>
 </section>
 
 <p-toast></p-toast>
-
-<p-dialog [(visible)]="resetPasswordDialog" [modal]="true" [closable]="true" [dismissableMask]="true" header="Recuperar cuenta">
-    <app-reset-password [resetPasswordDialog]="resetPasswordDialog" [submitted]="submitted" [user]="user"></app-reset-password>
-</p-dialog>

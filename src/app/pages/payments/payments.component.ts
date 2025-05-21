@@ -28,7 +28,23 @@ import { FormPaymentsComponent } from '../../shared/components';
     selector: 'app-payments',
     templateUrl: './payments.component.html',
     styleUrls: ['./payments.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, DropdownModule, ConfirmDialogModule, CalendarModule, TagModule],
+    imports: [
+        CommonModule,
+        TableModule,
+        FormsModule,
+        ButtonModule,
+        ToastModule,
+        DialogModule,
+        InputTextModule,
+        InputNumberModule,
+        InputIconModule,
+        IconFieldModule,
+        DropdownModule,
+        ConfirmDialogModule,
+        CalendarModule,
+        TagModule,
+        FormPaymentsComponent
+    ],
     providers: [ProfileService, PaymentService, ReservationsService, MessageService, ConfirmationService]
 })
 export class PaymentsPage implements OnInit {

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ACCESS_TOKEN_KEY } from '../shared/helpers';
 import { jwtDecode } from 'jwt-decode';
+import { ActivateModel, ResetModel } from '../models';
 
 export interface User {
     id: number;
@@ -25,19 +25,19 @@ export class AuthService {
     authError$ = this.authErrorSubject.asObservable();
 
     private http: HttpClient = inject(HttpClient);
-    private router: Router = inject(Router);
     private url = environment.SERVER_URL + 'auth/';
 
     constructor() {
         if (this.hasToken()) {
             const token = this.getAccessToken();
+
             if (!this.isValidTokenFormat(token) || this.isTokenExpired(token)) {
-                console.error('Invalid or expired token during initialization');
                 this.clearSession();
                 return;
             }
 
             const decodedToken = this.getDecodedAccessToken(token);
+
             if (decodedToken) {
                 this.currentUserSubject.next(decodedToken);
             }
@@ -50,6 +50,18 @@ export class AuthService {
 
     register(user: any): Observable<any> {
         return this.http.post<any>(this.url + 'sign-up', user);
+    }
+
+    activateAccount(activateModel: ActivateModel): Observable<any> {
+        return this.http.post<any>(this.url + 'activate', activateModel);
+    }
+
+    restorePassword(email: string): Observable<any> {
+        return this.http.post<any>(this.url + 'restore-password', { email });
+    }
+
+    resetPassword(resetModel: ResetModel): Observable<any> {
+        return this.http.patch<any>(this.url + 'reset-password', resetModel);
     }
 
     redirectBasedOnRole(roleId: number): void {

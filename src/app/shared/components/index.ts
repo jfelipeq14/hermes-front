@@ -7,4 +7,6 @@ export * from './form-programming/form-programming.component';
 export * from './form-travelers/form-travelers.component';
 export * from './form-reservation/form-reservation.component';
 export * from './package-card/package-card.component';
+export * from './reset-password/reset-password.component';
+export * from './restore-password/restore-password.component';
 export * from './table-clients/table-clients.component';

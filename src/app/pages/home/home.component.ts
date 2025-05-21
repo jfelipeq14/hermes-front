@@ -11,26 +11,46 @@ import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { AccordionModule } from 'primeng/accordion';
 import { CarouselModule } from 'primeng/carousel';
+import { MessageService } from 'primeng/api';
 
 // Componentes propios
-import { DateModel, MunicipalityModel, PackageModel, ServiceModel, UserModel } from '../../models';
-import { FormReservationComponent, LoginComponent, PackageCardComponent, RegisterComponent } from '../../shared/components';
+import { ActivateModel, DateModel, MunicipalityModel, PackageModel, ResetModel, ServiceModel, UserModel } from '../../models';
+
+import { FormReservationComponent, LoginComponent, PackageCardComponent, RegisterComponent, ResetPasswordComponent, RestorePasswordComponent } from '../../shared/components';
+
 import { MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
-import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    imports: [CommonModule, RippleModule, StyleClassModule, ButtonModule, DividerModule, DialogModule, CardModule, AccordionModule, CarouselModule, LoginComponent, RegisterComponent, FormReservationComponent, PackageCardComponent],
+    imports: [
+        CommonModule,
+        RippleModule,
+        StyleClassModule,
+        ButtonModule,
+        DividerModule,
+        DialogModule,
+        CardModule,
+        AccordionModule,
+        CarouselModule,
+        LoginComponent,
+        RegisterComponent,
+        RestorePasswordComponent,
+        ResetPasswordComponent,
+        FormReservationComponent,
+        PackageCardComponent
+    ],
     providers: [ProgrammingService, PackageService, ServiceService, MunicipalityService, MessageService]
 })
 export class HomePage implements OnInit {
     submitted = false;
     dialogVisible = false;
-    dialogType: 'login' | 'register' | 'reservation' = 'login';
+    dialogType: 'login' | 'register' | 'restore' | 'reset' | 'reservation' = 'login';
 
     user: UserModel = new UserModel();
+    activateModel: ActivateModel = new ActivateModel();
+    resetModel: ResetModel = new ResetModel();
     idDate = 0;
     municipalities: MunicipalityModel[] = [];
 
@@ -166,8 +186,21 @@ export class HomePage implements OnInit {
         this.dialogVisible = true;
     }
 
+    showPopupRestore(): void {
+        this.dialogType = 'restore';
+        this.dialogVisible = true;
+    }
+
+    showPopupReset(): void {
+        this.dialogType = 'reset';
+        this.dialogVisible = true;
+    }
+
     closePopup() {
+        this.submitted = false;
         this.dialogVisible = false;
         this.user = new UserModel();
+        this.activateModel = new ActivateModel();
+        this.resetModel = new ResetModel();
     }
 }

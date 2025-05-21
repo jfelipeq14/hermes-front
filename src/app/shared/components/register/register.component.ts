@@ -1,13 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
-import { MunicipalityModel, UserModel } from '../../../models';
+import { ActivateModel, MunicipalityModel, UserModel } from '../../../models';
 import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -18,22 +17,21 @@ import { DropdownModule } from 'primeng/dropdown';
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, DropdownModule, ToastModule, RouterModule, RippleModule, CommonModule],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, DropdownModule, ToastModule, RippleModule, CommonModule],
     providers: [AuthService, MessageService]
 })
 export class RegisterComponent {
     constructor(
-        private router: Router,
         private authService: AuthService,
         private messageService: MessageService
     ) {}
 
-    @Input() registerDialog!: boolean;
-    @Input() submitted!: boolean;
+    @Input() activateModel: ActivateModel = new ActivateModel();
+    @Input() registerDialog: boolean = false;
+    @Input() submitted: boolean = false;
     @Input() user: UserModel = new UserModel();
     @Input() municipalities: MunicipalityModel[] = [];
-
-    // @Output() close = new EventEmitter<void>();
+    @Output() closePopup = new EventEmitter<void>();
 
     typesDocument = typesDocument;
 
@@ -43,20 +41,22 @@ export class RegisterComponent {
         this.authService.register(this.user).subscribe({
             next: (response) => {
                 if (!response) return;
-                this.authService.login(this.user).subscribe({
+
+                this.activateModel.email = response.email;
+                this.activateModel.activationUserToken = response.activationToken;
+
+                this.authService.activateAccount(this.activateModel).subscribe({
                     next: (response) => {
-                        if (!response && !response.accessToken) return;
-                        this.authService.setTokens(response.accessToken);
-                        window.location.href = '/home';
-                    },
-                    error: (e) => {
+                        if (!response) return;
                         this.messageService.add({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: e.error.message,
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Tu cuenta fue activada. Inicia sesión.',
                             life: 3000
                         });
-                    }
+                        this.registerDialog = false;
+                    },
+                    error: (e) => console.error(e)
                 });
             },
             error: (e) => {
@@ -70,10 +70,8 @@ export class RegisterComponent {
             }
         });
     }
-
-    // onCancel() {
-    //   this.close.emit(); // Emite el evento al cancelar
-    //   this.submitted = false; // Reinicia el estado de enviado
-    //   this.user = new UserModel(); // Reinicia el modelo de usuario
-    // }
+    onClosePopup() {
+        this.registerDialog = false;
+        this.closePopup.emit();
+    }
 }
