@@ -82,11 +82,14 @@ export class FormClientsComponent implements OnInit {
         this.handleTravel.emit(event.target.checked);
     }
 
-    onSearchClient(document: string) {
-        this.searchClient.emit(document);
-    }
-
     onCreateClient(user: UserModel) {
         this.createClient.emit(user);
+    }
+
+    onKeyPress(event: any, document: any) {
+        if (event.key === 'Enter') {
+            this.searchClient.emit(document);
+            this.isFormDisabled = true;
+        }
     }
 }
