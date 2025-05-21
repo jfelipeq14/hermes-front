@@ -59,14 +59,7 @@ export class ServicesPage implements OnInit {
             next: (categories) => {
                 this.categories = categories;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -75,14 +68,7 @@ export class ServicesPage implements OnInit {
             next: (services) => {
                 this.services = services;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -156,6 +142,7 @@ export class ServicesPage implements OnInit {
                             detail: `${s.name} ${s.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
+                        this.refresh();
                     },
                     error: (e) => {
                         this.messageService.add({
@@ -166,7 +153,6 @@ export class ServicesPage implements OnInit {
                         });
                     }
                 });
-                this.refresh();
             }
         });
     }
@@ -193,7 +179,7 @@ export class ServicesPage implements OnInit {
         this.getAllCategories();
     }
 
-    getSeverity(status: boolean): 'success' | 'error' {
-        return status ? 'success' : 'error';
+    getSeverity(status: boolean): 'success' | 'danger' {
+        return status ? 'success' : 'danger';
     }
 }

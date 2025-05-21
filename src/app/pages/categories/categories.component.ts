@@ -54,12 +54,7 @@ export class CategoriesPage implements OnInit {
                 this.categories = categories;
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'info',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.log(e);
             }
         });
     }
@@ -75,6 +70,7 @@ export class CategoriesPage implements OnInit {
                         detail: `${c.name} creado`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({

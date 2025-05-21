@@ -22,6 +22,7 @@ import { PaymentService, ProfileService, ReservationsService } from '../../servi
 import { PaymentModel, ReservationModel } from '../../models';
 import { paymentStatus } from '../../shared/constants';
 import { getSeverityPayment, getSeverityReservation, getValuePayment, getValueReservation } from '../../shared/helpers';
+import { FormPaymentsComponent } from '../../shared/components';
 
 @Component({
     selector: 'app-payments',
@@ -87,15 +88,6 @@ export class PaymentsPage implements OnInit {
 
     getPaymentsByReservation(reservationId: number): PaymentModel[] {
         return this.payments.filter((payment) => payment.idReservation === reservationId);
-    }
-
-    getPaymentsTotal(reservationId: number): number {
-        const reservationPayments = this.getPaymentsByReservation(reservationId);
-        return reservationPayments.reduce((total, payment) => total + payment.price, 0);
-    }
-
-    getPaymentsCount(reservationId: number): number {
-        return this.getPaymentsByReservation(reservationId).length;
     }
 
     onRowExpand(event: any) {
@@ -233,7 +225,5 @@ export class PaymentsPage implements OnInit {
         this.getValuePayment = getValuePayment;
         this.getValueReservation = getValueReservation;
         this.expandedRows = {};
-
-        window.location.reload();
     }
 }

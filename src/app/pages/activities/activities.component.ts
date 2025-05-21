@@ -57,14 +57,7 @@ export class ActivitiesPage implements OnInit {
             next: (activities) => {
                 this.activities = activities;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 

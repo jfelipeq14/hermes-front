@@ -81,14 +81,7 @@ export class PackagesPage implements OnInit {
                     this.packageServices = pkg.detailPackagesServices;
                 });
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -97,14 +90,7 @@ export class PackagesPage implements OnInit {
             next: (services) => {
                 this.services = services;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -113,14 +99,7 @@ export class PackagesPage implements OnInit {
             next: (activities) => {
                 this.activities = activities;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -129,14 +108,7 @@ export class PackagesPage implements OnInit {
             next: (municipalities) => {
                 this.municipalities = municipalities;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -145,14 +117,7 @@ export class PackagesPage implements OnInit {
             next: (dates) => {
                 this.dates = dates;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 

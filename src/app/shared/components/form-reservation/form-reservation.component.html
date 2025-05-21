@@ -17,7 +17,7 @@
                     [clients]="clients"
                     [client]="client"
                     [submitted]="submitted"
-                    [isPasswordDisable]="isPasswordDisable"
+                    [isFormDisabled]="isFormDisabled"
                     (searchClient)="searchClient($event)"
                     (createClient)="createClient($event)"
                     (handleTravel)="handleTravel($event)"
@@ -57,10 +57,9 @@
     </div>
 </div>
 
-<div class="flex justify-content-between">
-    <p-button label="Anterior" icon="pi pi-arrow-left" (onClick)="previousStep()" [disabled]="activeStepIndex === 0"></p-button>
-    <p-button *ngIf="activeStepIndex !== 2" label="Siguiente" icon="pi pi-arrow-right" (onClick)="nextStep()" [disabled]="!isStepValid(activeStepIndex)"></p-button>
-    <p-button *ngIf="activeStepIndex === 2" label="Pagar" icon="pi pi-check" (onClick)="payReservation()" [disabled]="!isStepValid(activeStepIndex)"></p-button>
+<div class="flex gap-2 my-2 justify-content-end">
+    <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="onClosePopup()"></p-button>
+    <p-button *ngIf="activeStepIndex !== 2" label="Continuar" icon="pi pi-arrow-right" (onClick)="nextStep()"></p-button>
 </div>
 
 <p-toast></p-toast>

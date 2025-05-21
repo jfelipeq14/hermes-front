@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent, PackageCardComponent } from '..';
 import { CommonModule } from '@angular/common';
@@ -30,6 +30,7 @@ export class FormReservationComponent implements OnInit {
     }
 
     @Input() idDate = 0;
+    @Output() toCancel = new EventEmitter<void>();
 
     reservation: ReservationModel = new ReservationModel();
     payment: PaymentModel = new PaymentModel();
@@ -47,7 +48,7 @@ export class FormReservationComponent implements OnInit {
         { label: 'Pagar', value: 2 }
     ];
     submitted = false;
-    isPasswordDisable = false;
+    isFormDisabled = false;
 
     getAllClients() {
         this.clientsService.getAll().subscribe({
@@ -79,18 +80,18 @@ export class FormReservationComponent implements OnInit {
                 detail: 'No se encontró el cliente',
                 life: 3000
             });
-            this.isPasswordDisable = false;
+            this.isFormDisabled = false;
         }
 
         if (this.reservation.idUser !== 0 && clientFound) {
             this.traveler = clientFound;
-            this.isPasswordDisable = true;
+            this.isFormDisabled = true;
         }
 
         if (this.reservation.idUser === 0 && clientFound) {
             this.client = clientFound;
             this.reservation.idUser = clientFound.id;
-            this.isPasswordDisable = true;
+            this.isFormDisabled = true;
         }
     }
 
@@ -151,7 +152,12 @@ export class FormReservationComponent implements OnInit {
         }
 
         this.reservationService.create(this.reservation).subscribe({
-            next: () => {
+            next: (r) => {
+                this.payment.idReservation = r.id;
+                this.payment.total = r.detailReservationTravelers.length * r.price;
+
+                this.activeStepIndex++;
+
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Éxito',
@@ -185,7 +191,7 @@ export class FormReservationComponent implements OnInit {
     }
 
     payReservation() {
-        if (this.payment.idReservation === 0 || this.payment.price === 0) {
+        if (this.payment.idReservation === 0 || this.payment.total === 0) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -215,51 +221,42 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
-    isStepValid(step: number): boolean {
-        switch (step) {
-            case 0:
-                return this.reservation.idUser > 0;
-            case 1:
-                return this.reservation.detailReservationTravelers.length > 0;
-            case 2:
-                return this.reservation.idUser > 0 && this.reservation.detailReservationTravelers.length > 0;
-            default:
-                return false;
+    validateStep(step: number) {
+        if (step === 0) {
+            return this.reservation.idUser > 0;
         }
-    }
-
-    previousStep() {
-        if (this.activeStepIndex > 0) this.activeStepIndex--;
+        if (step === 1) {
+            return this.reservation.detailReservationTravelers.length > 0;
+        }
+        if (step === 2) {
+            return this.payment.pay > 0 && this.payment.total > 0 && this.payment.idReservation > 0;
+        }
+        return false;
     }
 
     nextStep() {
-        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
-            this.reservation.idDate = this.idDate;
-
-            this.reservationService.create(this.reservation).subscribe({
-                next: (r) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Reservación creada correctamente',
-                        life: 3000
-                    });
-                    this.payment.idReservation = r.id;
-                    this.payment.price = r.detailReservationTravelers.length * r.price;
-                },
-                error: (e) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: e.error.message,
-                        life: 3000
-                    });
-                }
-            });
+        if (this.activeStepIndex === 0 && this.reservation.idUser === 0) {
+            this.submitted = true;
+            return;
         }
+    }
 
-        if (this.isStepValid(this.activeStepIndex) && this.activeStepIndex < this.steps.length - 1) {
-            this.activeStepIndex++;
-        }
+    onClosePopup() {
+        this.reservation = new ReservationModel();
+        this.payment = new PaymentModel();
+
+        this.traveler = new UserModel();
+        this.travel = false;
+
+        this.client = new UserModel();
+        this.clients = [];
+
+        this.activeStepIndex = 0;
+        this.submitted = false;
+        this.isFormDisabled = false;
+
+        this.getAllClients();
+
+        this.toCancel.emit();
     }
 }

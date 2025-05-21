@@ -33,7 +33,7 @@ export class FormClientsComponent implements OnInit {
     @Input() clients: UserModel[] = [];
     @Input() client: UserModel = new UserModel();
     @Input() submitted = false;
-    @Input() isPasswordDisable = false;
+    @Input() isFormDisabled = false;
 
     @Output() searchClient = new EventEmitter<any>();
     @Output() createClient = new EventEmitter<any>();
