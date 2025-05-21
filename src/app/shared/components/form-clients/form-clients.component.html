@@ -1,13 +1,24 @@
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1">
         <label for="typeDocument" class="required">Tipo de Documento</label>
-        <p-dropdown id="typeDocument" [options]="typesDocument" [(ngModel)]="client.typeDocument" name="typeDocument" optionLabel="name" optionValue="value" placeholder="Seleccione un tipo de documento" required></p-dropdown>
+        <p-dropdown
+            id="typeDocument"
+            [options]="typesDocument"
+            [(ngModel)]="client.typeDocument"
+            name="typeDocument"
+            optionLabel="name"
+            optionValue="value"
+            placeholder="Seleccione un tipo de documento"
+            required
+            [disabled]="isFormDisabled"
+        ></p-dropdown>
         <small class="p-error" *ngIf="submitted && !client.typeDocument">El tipo de documento es obligatorio.</small>
     </div>
 
     <div class="flex flex-col flex-1">
         <label for="document" class="required">Número de Documento</label>
         <input pInputText type="text" id="document" [(ngModel)]="client.document" (keypress)="onKeyPress($event, client.document)" required />
+
         <small class="p-error" *ngIf="submitted && !client.document">El documento es obligatorio.</small>
     </div>
 </fieldset>
@@ -15,39 +26,50 @@
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1">
         <label for="name" class="required">Nombres</label>
-        <input type="text" pInputText id="name" [(ngModel)]="client.name" required />
+        <input type="text" pInputText id="name" [(ngModel)]="client.name" required [disabled]="isFormDisabled" />
         <small class="p-error" *ngIf="submitted && !client.name">El nombre es obligatorio.</small>
     </div>
 
     <div class="flex flex-col flex-1">
         <label for="surName" class="required">Apellidos</label>
-        <input type="text" pInputText id="surName" [(ngModel)]="client.surName" required />
+        <input type="text" pInputText id="surName" [(ngModel)]="client.surName" required [disabled]="isFormDisabled" />
         <small class="p-error" *ngIf="submitted && !client.surName">El apellido es obligatorio.</small>
     </div>
 </fieldset>
 
 <div class="flex flex-col">
     <label for="email" class="required">Correo Electrónico</label>
-    <input type="email" pInputText id="email" [(ngModel)]="client.email" required />
+    <input type="email" pInputText id="email" [(ngModel)]="client.email" required [disabled]="isFormDisabled" />
     <small class="p-error" *ngIf="submitted && !client.email">El correo es obligatorio.</small>
 </div>
 
 <div class="flex flex-col">
     <label for="password" class="required">Contraseña</label>
-    <input type="password" pInputText id="password" [(ngModel)]="client.password" required />
+    <input type="password" pInputText id="password" [(ngModel)]="client.password" required [disabled]="isFormDisabled" />
     <small class="p-error" *ngIf="submitted && !client.password">La contraseña es obligatoria.</small>
 </div>
 
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1">
         <label for="idMunicipality" class="required">Municipio</label>
-        <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="client.idMunicipality" name="idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required></p-dropdown>
+        <p-dropdown
+            id="idMunicipality"
+            [options]="municipalities"
+            [(ngModel)]="client.idMunicipality"
+            name="idMunicipality"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Seleccione un municipio"
+            [showClear]="true"
+            required
+            [disabled]="isFormDisabled"
+        ></p-dropdown>
         <small class="p-error" *ngIf="submitted && !client.idMunicipality">El municipio es obligatorio.</small>
     </div>
 
     <div class="flex flex-col flex-1">
         <label for="phone" class="required">Teléfono</label>
-        <input type="text" pInputText id="phone" [(ngModel)]="client.phone" required />
+        <input type="text" pInputText id="phone" [(ngModel)]="client.phone" required [disabled]="isFormDisabled" />
         <small class="p-error" *ngIf="submitted && !client.phone">El teléfono es obligatorio.</small>
     </div>
 </fieldset>

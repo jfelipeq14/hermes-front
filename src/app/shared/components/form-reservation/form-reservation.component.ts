@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent, PackageCardComponent } from '..';
 import { CommonModule } from '@angular/common';
-import { PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
+import { ActivateModel, PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MessageService } from 'primeng/api';
 import { AuthService, ClientsService, PaymentService, ReservationsService } from '../../../services';
 import { ButtonModule } from 'primeng/button';
@@ -40,6 +40,7 @@ export class FormReservationComponent implements OnInit {
 
     client: UserModel = new UserModel();
     clients: UserModel[] = [];
+    activateModel: ActivateModel = new ActivateModel();
 
     activeStepIndex = 0;
     steps = [
@@ -67,10 +68,6 @@ export class FormReservationComponent implements OnInit {
     }
 
     searchClient(document: string) {
-        if (!document) {
-            return;
-        }
-
         const clientFound = this.clients.find((u) => u.document === document);
 
         if (!clientFound) {
@@ -80,19 +77,22 @@ export class FormReservationComponent implements OnInit {
                 detail: 'No se encontró el cliente',
                 life: 3000
             });
-            this.isFormDisabled = false;
+            this.client = new UserModel();
+            this.client.document = document;
+            this.isFormDisabled = false; // Permitir nuevas búsquedas
+            return;
+        } else {
+            this.client = clientFound;
         }
 
-        if (this.reservation.idUser !== 0 && clientFound) {
+        if (this.reservation.idUser !== 0) {
             this.traveler = clientFound;
-            this.isFormDisabled = true;
-        }
-
-        if (this.reservation.idUser === 0 && clientFound) {
+        } else {
             this.client = clientFound;
             this.reservation.idUser = clientFound.id;
-            this.isFormDisabled = true;
         }
+
+        this.isFormDisabled = true; // Bloquear campos si se encuentra un cliente
     }
 
     handleTravel(travel: boolean) {
@@ -102,42 +102,43 @@ export class FormReservationComponent implements OnInit {
                 idTraveler: this.client.id
             });
         } else {
-            //remove traveler
             this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((traveler) => traveler.idTraveler !== this.client.id);
         }
     }
 
-    createClient(event: any) {
-        if (!event.value) {
-            return;
-        }
+    createClient(client: UserModel) {
+        if (!client) return;
 
-        if (this.submitted) {
-            this.authService.register(this.client).subscribe({
-                next: (client) => {
-                    if (this.reservation.idUser === 0 && !this.travel) {
-                        this.reservation.idUser = client.id;
-                    }
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: 'Client created successfully',
-                        life: 3000
-                    });
-                    this.reservation.detailReservationTravelers.push({
-                        idTraveler: client.id
-                    });
-                },
-                error: (e) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: e.error.message,
-                        life: 3000
-                    });
-                }
-            });
-        }
+        this.authService.register(this.client).subscribe({
+            next: (response) => {
+                if (!response) return;
+
+                this.activateModel.email = response.email;
+                this.activateModel.activationUserToken = response.activationToken;
+
+                this.authService.activateAccount(this.activateModel).subscribe({
+                    next: (response) => {
+                        if (!response) return;
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Tu cuenta fue activada. Inicia sesión.',
+                            life: 3000
+                        });
+                    },
+                    error: (e) => console.error(e)
+                });
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+                this.submitted = false;
+            }
+        });
     }
 
     saveReservation() {
@@ -172,6 +173,7 @@ export class FormReservationComponent implements OnInit {
                     detail: e.error.message,
                     life: 3000
                 });
+                this.activeStepIndex--;
             }
         });
     }
@@ -235,9 +237,28 @@ export class FormReservationComponent implements OnInit {
     }
 
     nextStep() {
-        if (this.activeStepIndex === 0 && this.reservation.idUser === 0) {
-            this.submitted = true;
-            return;
+        if (this.activeStepIndex === 0 && this.client.id === 0) {
+            this.createClient(this.client);
+        } else if (this.activeStepIndex === 0 && this.client.id > 0) {
+            this.reservation.idUser = this.client.id;
+            this.reservation.idDate = this.idDate;
+            this.reservation.detailReservationTravelers = [];
+            this.reservation.detailReservationTravelers.push({
+                idTraveler: this.client.id
+            });
+            this.activeStepIndex++;
+        }
+
+        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
+            this.saveReservation();
+        }
+
+        if (this.activeStepIndex === 2 && this.payment.idReservation > 0) {
+            this.payReservation();
+        }
+
+        if (this.validateStep(this.activeStepIndex)) {
+            this.activeStepIndex++;
         }
     }
 

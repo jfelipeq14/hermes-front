@@ -87,9 +87,8 @@ export class FormClientsComponent implements OnInit {
     }
 
     onKeyPress(event: any, document: any) {
-        if (event.key === 'Enter') {
-            this.searchClient.emit(document);
-            this.isFormDisabled = true;
-        }
+        if (event.key !== 'Enter' || !document) return;
+
+        this.searchClient.emit(document);
     }
 }
