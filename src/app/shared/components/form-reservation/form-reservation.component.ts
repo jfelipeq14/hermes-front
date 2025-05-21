@@ -48,7 +48,7 @@ export class FormReservationComponent implements OnInit {
         { label: 'Pagar', value: 2 }
     ];
     submitted = false;
-    isPasswordDisable = false;
+    isFormDisabled = false;
 
     getAllClients() {
         this.clientsService.getAll().subscribe({
@@ -80,18 +80,18 @@ export class FormReservationComponent implements OnInit {
                 detail: 'No se encontró el cliente',
                 life: 3000
             });
-            this.isPasswordDisable = false;
+            this.isFormDisabled = false;
         }
 
         if (this.reservation.idUser !== 0 && clientFound) {
             this.traveler = clientFound;
-            this.isPasswordDisable = true;
+            this.isFormDisabled = true;
         }
 
         if (this.reservation.idUser === 0 && clientFound) {
             this.client = clientFound;
             this.reservation.idUser = clientFound.id;
-            this.isPasswordDisable = true;
+            this.isFormDisabled = true;
         }
     }
 
@@ -221,22 +221,42 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
+    validateStep(step: number) {
+        if (step === 0) {
+            return this.reservation.idUser > 0;
+        }
+        if (step === 1) {
+            return this.reservation.detailReservationTravelers.length > 0;
+        }
+        if (step === 2) {
+            return this.payment.pay > 0 && this.payment.total > 0 && this.payment.idReservation > 0;
+        }
+        return false;
+    }
+
     nextStep() {
-        if (this.activeStepIndex === 0 && this.reservation.idUser > 0) {
-            this.activeStepIndex++;
-        }
-
-        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
-            this.reservation.idDate = this.idDate;
-            this.saveReservation();
-        }
-
-        if (this.activeStepIndex === 2 && this.payment.pay > 0 && this.payment.total > 0 && this.payment.idReservation > 0) {
-            this.payReservation();
+        if (this.activeStepIndex === 0 && this.reservation.idUser === 0) {
+            this.submitted = true;
+            return;
         }
     }
 
     onClosePopup() {
+        this.reservation = new ReservationModel();
+        this.payment = new PaymentModel();
+
+        this.traveler = new UserModel();
+        this.travel = false;
+
+        this.client = new UserModel();
+        this.clients = [];
+
+        this.activeStepIndex = 0;
+        this.submitted = false;
+        this.isFormDisabled = false;
+
+        this.getAllClients();
+
         this.toCancel.emit();
     }
 }

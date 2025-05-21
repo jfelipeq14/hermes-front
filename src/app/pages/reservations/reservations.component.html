@@ -95,7 +95,7 @@
         <app-calendar *ngIf="dialogVisible" [packages]="packages" (clickProgramming)="clickProgramming($event)"></app-calendar>
     </ng-container>
     <ng-container *ngIf="dialogType === 'reservation'">
-        <app-form-reservation [idDate]="idDate" />
+        <app-form-reservation [idDate]="idDate" (toCancel)="closePopup()" />
     </ng-container>
 </p-dialog>
 

@@ -240,7 +240,5 @@ export class PaymentsPage implements OnInit {
         this.getValuePayment = getValuePayment;
         this.getValueReservation = getValueReservation;
         this.expandedRows = {};
-
-        window.location.reload();
     }
 }
