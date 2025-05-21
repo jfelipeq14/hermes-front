@@ -18,7 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 
-import { PaymentService, ProfileService } from '../../services';
+import { PaymentService, ProfileService, ReservationsService } from '../../services';
 import { PaymentModel, ReservationModel } from '../../models';
 import { paymentStatus } from '../../shared/constants';
 import { getSeverityPayment, getSeverityReservation, getValuePayment, getValueReservation } from '../../shared/helpers';
@@ -28,7 +28,7 @@ import { getSeverityPayment, getSeverityReservation, getValuePayment, getValueRe
     templateUrl: './payments.component.html',
     styleUrls: ['./payments.component.scss'],
     imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, DropdownModule, ConfirmDialogModule, CalendarModule, TagModule],
-    providers: [ProfileService, PaymentService, MessageService, ConfirmationService]
+    providers: [ProfileService, PaymentService, ReservationsService, MessageService, ConfirmationService]
 })
 export class PaymentsPage implements OnInit {
     payments: PaymentModel[] = [];
@@ -47,6 +47,7 @@ export class PaymentsPage implements OnInit {
     constructor(
         private profileService: ProfileService,
         private paymentService: PaymentService,
+        private reservationService: ReservationsService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
@@ -55,7 +56,7 @@ export class PaymentsPage implements OnInit {
         this.profileService.getCurrentUser().subscribe({
             next: (userData) => {
                 if (userData.idRole === 3) {
-                    this.paymentService.getAllReservationWhitPayments().subscribe({
+                    this.reservationService.getAllByUser(userData.id).subscribe({
                         next: (reservations) => {
                             this.reservations = reservations.filter((r) => r.idUser === userData.id);
                         },
