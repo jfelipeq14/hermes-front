@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -19,7 +19,7 @@ import { ZONE } from '../../constants';
     styleUrl: './form-programming.component.scss',
     imports: [CommonModule, FormsModule, ButtonModule, IconFieldModule, InputTextModule, InputNumberModule, InputIconModule, MultiSelectModule, TextareaModule, DatePickerModule, DropdownModule]
 })
-export class FormProgrammingComponent {
+export class FormProgrammingComponent implements OnInit {
     constructor() {}
 
     @Input() date: DateModel = new DateModel();
@@ -31,6 +31,10 @@ export class FormProgrammingComponent {
 
     @Output() toSave = new EventEmitter<void>();
     @Output() toCancel = new EventEmitter<void>();
+
+    today: Date = new Date();
+
+    ngOnInit(): void {}
 
     onChangeResponsible(event: any) {
         if (!event.value) return;

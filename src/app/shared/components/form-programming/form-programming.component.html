@@ -14,12 +14,12 @@
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1">
         <label for="start" class="required">Fecha inicio</label>
-        <p-datepicker [(ngModel)]="date.start" [showIcon]="true" inputId="start" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'"></p-datepicker>
+        <p-datepicker [(ngModel)]="date.start" [showIcon]="true" inputId="start" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today"></p-datepicker>
         <small class="p-error" *ngIf="submitted && !date.start"> La fecha de inicio es obligatoria. </small>
     </div>
     <div class="flex flex-col flex-1">
         <label for="end" class="required">Fecha fin</label>
-        <p-datepicker [(ngModel)]="date.end" [showIcon]="true" inputId="end" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'"></p-datepicker>
+        <p-datepicker [(ngModel)]="date.end" [showIcon]="true" inputId="end" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today"></p-datepicker>
         <small class="p-error" *ngIf="submitted && !date.end"> La fecha de fin es obligatoria. </small>
     </div>
 </fieldset>
@@ -27,12 +27,12 @@
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1">
         <label for="startRegistration" class="required">Inicio registro</label>
-        <p-datepicker [(ngModel)]="date.startRegistration" [showIcon]="true" inputId="startRegistration" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'"></p-datepicker>
+        <p-datepicker [(ngModel)]="date.startRegistration" [showIcon]="true" inputId="startRegistration" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today"></p-datepicker>
         <small class="p-error" *ngIf="submitted && !date.startRegistration"> La fecha de inicio de registro es obligatoria. </small>
     </div>
     <div class="flex flex-col flex-1">
         <label for="endRegistration" class="required">Fin registro</label>
-        <p-datepicker [(ngModel)]="date.endRegistration" [showIcon]="true" inputId="endRegistration" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'"></p-datepicker>
+        <p-datepicker [(ngModel)]="date.endRegistration" [showIcon]="true" inputId="endRegistration" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today"></p-datepicker>
         <small class="p-error" *ngIf="submitted && !date.endRegistration"> La fecha de fin de registro es obligatoria. </small>
     </div>
 </fieldset>
