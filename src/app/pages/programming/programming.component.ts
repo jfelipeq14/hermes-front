@@ -130,14 +130,7 @@ export class ProgrammingPage implements OnInit {
                     };
                 });
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
