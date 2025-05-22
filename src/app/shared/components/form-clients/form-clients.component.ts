@@ -13,12 +13,13 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { bloodTypes, epslist, sexlist, typesDocument } from '../../constants';
 import { MunicipalityModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MunicipalityService } from '../../../services';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-form-clients',
     templateUrl: './form-clients.component.html',
     styleUrls: ['./form-clients.component.scss'],
-    imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule],
+    imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule, DatePickerModule],
     providers: [MunicipalityService, MessageService]
 })
 export class FormClientsComponent implements OnInit {

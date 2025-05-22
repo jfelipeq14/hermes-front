@@ -26,19 +26,7 @@
     </div>
 </fieldset>
 
-<div class="flex flex-col">
-    <label for="email" class="required">Correo Electrónico</label>
-    <input type="email" pInputText id="email" [(ngModel)]="user.email" required />
-    <small class="p-error" *ngIf="submitted && !user.email">El correo es obligatorio.</small>
-</div>
-
-<div class="flex flex-col">
-    <label for="password" class="required">Contraseña</label>
-    <input type="password" pInputText id="password" [(ngModel)]="user.password" required />
-    <small class="p-error" *ngIf="submitted && !user.password">La contraseña es obligatoria.</small>
-</div>
-
-<fieldset class="flex flex-row gap-2">
+<fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1">
         <label for="idMunicipality" class="required">Municipio</label>
         <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="user.idMunicipality" name="idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required></p-dropdown>
@@ -51,6 +39,24 @@
         <small class="p-error" *ngIf="submitted && !user.phone">El teléfono es obligatorio.</small>
     </div>
 </fieldset>
+
+<div class="flex flex-col">
+    <label for="dateBirth" class="required">Fecha de nacimiento</label>
+    <p-datepicker [(ngModel)]="user.dateBirth" inputId="start" [required]="true" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [maxDate]="maxDate"></p-datepicker>
+    <small class="p-error" *ngIf="submitted && !user.dateBirth">La fecha de nacimiento es obligatoria.</small>
+</div>
+
+<div class="flex flex-col">
+    <label for="email" class="required">Correo Electrónico</label>
+    <input type="email" pInputText id="email" [(ngModel)]="user.email" required />
+    <small class="p-error" *ngIf="submitted && !user.email">El correo es obligatorio.</small>
+</div>
+
+<div class="flex flex-col">
+    <label for="password" class="required">Contraseña</label>
+    <input type="password" pInputText id="password" [(ngModel)]="user.password" required />
+    <small class="p-error" *ngIf="submitted && !user.password">La contraseña es obligatoria.</small>
+</div>
 
 <div class="flex gap-2 my-5 align-items-center justify-content-end">
     <p-button label="Cancelar" styleClass="p-button-text" icon="pi pi-times" severity="danger" (onClick)="onClosePopup()"></p-button>

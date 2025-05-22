@@ -12,12 +12,13 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { typesDocument } from '../../constants';
 import { DropdownModule } from 'primeng/dropdown';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, DropdownModule, ToastModule, RippleModule, CommonModule],
+    imports: [ButtonModule, FormsModule, CheckboxModule, InputTextModule, PasswordModule, DropdownModule, DatePickerModule, ToastModule, CommonModule],
     providers: [AuthService, MessageService]
 })
 export class RegisterComponent {
@@ -34,6 +35,8 @@ export class RegisterComponent {
     @Output() closePopup = new EventEmitter<void>();
 
     typesDocument = typesDocument;
+
+    maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
 
     onSubmit() {
         this.submitted = true;
