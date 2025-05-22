@@ -43,7 +43,7 @@
             <td>{{ reservation.date | date: 'short' }}</td>
             <td>{{ reservation.price | currency: 'COP' }}</td>
             <td>
-                <p-dropdown [options]="statuses" [(ngModel)]="reservation.status" optionLabel="name" optionValue="value" (onChange)="changeStatusReservation(reservation)" styleClass="p-dropdown-sm" [appendTo]="'body'">
+                <p-dropdown [options]="statuses" [(ngModel)]="reservation.status" optionLabel="name" optionValue="value" (onChange)="changeStatusReservation(reservation)" styleClass="p-dropdown-sm" [appendTo]="'body'" [disabled]="disabled">
                     <ng-template pTemplate="selectedItem">
                         <p-tag [value]="getValueReservation(reservation.status)" [severity]="getSeverityReservation(reservation.status)"></p-tag>
                     </ng-template>

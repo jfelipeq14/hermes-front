@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -18,7 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 
-import { PaymentService, ProfileService, ReservationsService } from '../../services';
+import { AuthService, PaymentService, ProfileService, ReservationsService } from '../../services';
 import { PaymentModel, ReservationModel } from '../../models';
 import { paymentStatus } from '../../shared/constants';
 import { getSeverityPayment, getSeverityReservation, getValuePayment, getValueReservation } from '../../shared/helpers';
@@ -48,6 +48,8 @@ import { FormPaymentsComponent } from '../../shared/components';
     providers: [ProfileService, PaymentService, ReservationsService, MessageService, ConfirmationService]
 })
 export class PaymentsPage implements OnInit {
+    authService = inject(AuthService);
+
     payments: PaymentModel[] = [];
     reservations: ReservationModel[] = [];
     payment: PaymentModel = new PaymentModel();
@@ -61,6 +63,8 @@ export class PaymentsPage implements OnInit {
     getValueReservation = getValueReservation;
     expandedRows: Record<string, boolean> = {};
 
+    disabled = false;
+
     constructor(
         private profileService: ProfileService,
         private paymentService: PaymentService,
@@ -70,14 +74,24 @@ export class PaymentsPage implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.loadData();
+    }
+
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    loadData() {
         this.profileService.getCurrentUser().subscribe({
             next: (userData) => {
                 if (userData.idRole === 3) {
                     this.reservationService.getAllByUser(userData.id).subscribe({
                         next: (reservations) => {
                             this.reservations = reservations.filter((r) => r.idUser === userData.id);
+                            this.disabled = true;
                         },
                         error: (e) => {
+                            this.disabled = false;
                             console.error(e);
                         }
                     });
@@ -96,10 +110,6 @@ export class PaymentsPage implements OnInit {
                 console.error(error);
             }
         });
-    }
-
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
     getPaymentsByReservation(reservationId: number): PaymentModel[] {
@@ -178,6 +188,17 @@ export class PaymentsPage implements OnInit {
     }
 
     changeStatusPayment(payment: PaymentModel) {
+        // validar el rol
+        if (this.authService.hasRole([3])) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No tienes permisos para cambiar el estado de los pagos',
+                life: 3000
+            });
+            return;
+        }
+
         this.confirmationService.confirm({
             message: '¿Está seguro de que desea cambiar el estado de ' + payment.id + '?',
             header: 'Confirmar',
@@ -195,7 +216,18 @@ export class PaymentsPage implements OnInit {
                             detail: `${pay.id} cambiado a ${this.getValuePayment(pay.status)}`,
                             life: 3000
                         });
-                        this.refresh();
+                        if (pay.status === 'N') {
+                            this.reservationService.changeStatus(pay.idReservation, 'C').subscribe({
+                                next: (res) => {
+                                    this.messageService.add({
+                                        severity: 'success',
+                                        summary: 'Éxito',
+                                        detail: `${res.id} cambiado a ${this.getValueReservation(res.status)}`,
+                                        life: 3000
+                                    });
+                                }
+                            });
+                        }
                     },
                     error: (e) => {
                         this.messageService.add({
@@ -206,9 +238,6 @@ export class PaymentsPage implements OnInit {
                         });
                     }
                 });
-            },
-            reject: () => {
-                this.refresh();
             }
         });
     }
@@ -217,8 +246,11 @@ export class PaymentsPage implements OnInit {
         console.log(payment);
     }
 
-    showPopup() {
+    showPopup(idReservation: number) {
         this.payment = new PaymentModel();
+        this.payment.idReservation = idReservation;
+        this.payment.total = 140000;
+        this.payment.pay = 70000;
         this.submitted = false;
         this.paymentDialog = true;
     }
@@ -241,5 +273,7 @@ export class PaymentsPage implements OnInit {
         this.getValuePayment = getValuePayment;
         this.getValueReservation = getValueReservation;
         this.expandedRows = {};
+        this.disabled = false;
+        this.loadData();
     }
 }
