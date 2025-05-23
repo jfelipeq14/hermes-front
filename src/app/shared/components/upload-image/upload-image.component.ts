@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
 import { FileUploadModule } from 'primeng/fileupload';
@@ -15,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
     providers: [MessageService, ImageService]
 })
 export class UploadImageComponent {
-    @Input() image: string = '';
+    @Output() uploadImage = new EventEmitter<any>();
     uploadedFiles: any[] = [];
 
     constructor(
@@ -23,29 +23,17 @@ export class UploadImageComponent {
         private messageService: MessageService
     ) {}
 
-    // onUpload(event: any) {
-    //     for (const file of event.files) {
-    //         this.uploadedFiles.push(file);
-    //     }
-
-    //     this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
-    // }
-
     onSend(fu: any) {
-        for (const file of fu.files) {
-            this.imageService.upload(file).subscribe({
-                next: (res) => {
-                    if (!res.filePath) {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'File Upload Failed' });
-                        return;
-                    }
-
-                    this.image = res.filePath;
-                },
-                error: (err) => {
+        this.imageService.upload(fu.files[0]).subscribe({
+            next: (res) => {
+                if (!res.filePath) {
                     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'File Upload Failed' });
+                    return;
                 }
-            });
-        }
+
+                this.uploadImage.emit(res.filePath);
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'File Uploaded' });
+            }
+        });
     }
 }

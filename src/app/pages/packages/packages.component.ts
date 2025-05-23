@@ -173,6 +173,11 @@ export class PackagesPage implements OnInit {
         return status ? 'success' : 'danger';
     }
 
+    uploadImage(filePath: string) {
+        this.package.image = filePath;
+        console.log('Imagen subida:', this.package.image);
+    }
+
     savePackage() {
         this.submitted = true;
 
