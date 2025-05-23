@@ -4,7 +4,6 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
 import { ActivateModel, MunicipalityModel, UserModel } from '../../../models';
 import { AuthService } from '../../../services';
