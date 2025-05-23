@@ -27,6 +27,11 @@ export class FormPaymentsComponent {
     @Output() save = new EventEmitter<PaymentModel>(); // Emite el modelo de pago al guardar
     // @Output() cancel = new EventEmitter<void>(); // Emite un evento al cancelar
 
+    uploadImage(filePath: string) {
+        this.payment.voucher = filePath;
+        console.log('Imagen subida:', this.payment.voucher);
+    }
+
     onSave() {
         this.save.emit(this.payment); // Emite el modelo de pago al guardar
     }
