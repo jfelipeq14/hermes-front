@@ -32,21 +32,35 @@
     </ng-template>
     <ng-template pTemplate="body" let-role>
         <tr>
-            <td class="cursor-pointer" (click)="editRole(role)">{{ role.name }}</td>
-            <td>
-                <p-tag [value]="role.status ? 'Activo' : 'Inactivo'" [severity]="role.status ? 'success' : 'danger'"></p-tag>
+            <td class="cursor-pointer" 
+                [class.cursor-not-allowed]="role.id === 1" 
+                (click)="role.id !== 1 && editRole(role)">
+                {{ role.name }}
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)"></p-button>
-                <p-button
-                    [icon]="role.status ? 'pi pi-ban' : 'pi pi-check'"
-                    [rounded]="true"
-                    [outlined]="true"
-                    [severity]="role.status ? 'danger' : 'success'"
-                    (click)="changeRoleStatus(role); $event.stopPropagation()"
-                    [pTooltip]="role.status ? 'Desactivar' : 'Activar'"
-                    tooltipPosition="top"
-                ></p-button>
+                <p-tag [value]="role.status ? 'Activo' : 'Inactivo'" 
+                       [severity]="role.status ? 'success' : 'danger'">
+                </p-tag>
+            </td>
+            <td>
+                <p-button icon="pi pi-pencil" 
+                          class="mr-2" 
+                          [rounded]="true" 
+                          [outlined]="true"
+                          [disabled]="role.id === 1"
+                          (click)="editRole(role)"
+                          [pTooltip]="role.id === 1 ? 'No se puede editar el rol Administrador' : ''"
+                          tooltipPosition="top">
+                </p-button>
+                <p-button [icon]="role.status ? 'pi pi-ban' : 'pi pi-check'"
+                          [rounded]="true"
+                          [outlined]="true"
+                          [severity]="role.status ? 'danger' : 'success'"
+                          [disabled]="role.id === 1"
+                          (click)="changeRoleStatus(role); $event.stopPropagation()"
+                          [pTooltip]="role.id === 1 ? 'No se puede modificar el estado del rol Administrador' : (role.status ? 'Desactivar' : 'Activar')"
+                          tooltipPosition="top">
+                </p-button>
             </td>
         </tr>
     </ng-template>
@@ -55,39 +69,53 @@
 <!-- Role Dialog -->
 <p-dialog [(visible)]="roleDialog" [style]="{ width: '700px' }" header="Detalles del Rol" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="mb-4 field">
-            <label for="name" class="font-bold required">Nombre</label>
-            <input type="text" pInputText id="name" [(ngModel)]="role.name" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !role.name }" />
-            <small class="p-error" *ngIf="submitted && !role.name">El nombre es requerido.</small>
-        </div>
+        <div class="role-dialog-content">
+            <!-- Name Input Section -->
+            <div class="name-section">
+                <label 
+                for="name" 
+                class="font-bold required"
+                >Nombre</label>
+                <input 
+                type="text" 
+                id="name" 
+                pInputText 
+                [pattern]="patterns.NAME"
+                [(ngModel)]="role.name" 
+                [ngClass]="{ 'ng-invalid ng-dirty': submitted && !role.name }" 
+                required
+                />
+                 
+                <small  
+                *ngIf="submitted && !role.name.match(patterns.NAME)"class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+            </div>
 
-        <!-- Privileges Section -->
-        <div class="field">
-            <div class="border-1 border-round border-300">
-                <!-- Header row with privilege names -->
-                <div class="grid p-2 m-0 bg-gray-100 border-bottom-1 border-300">
-                    <div class="font-bold col-4">Módulo</div>
-                    <div *ngFor="let privilegeName of privilegeNames" class="font-bold col">
-                        {{ privilegeName }}
+            <!-- Privileges Grid Section -->
+            <div class="privileges-grid">
+                <!-- Header -->
+                <div class="grid-header">
+                    <div class="module-cell">Módulos</div>
+                    <div class="privileges-header">
+                        <div *ngFor="let privilegeName of privilegeNames">{{ privilegeName }}</div>
                     </div>
                 </div>
 
-                <!-- Permit rows -->
-                <div *ngFor="let permit of permits" class="grid p-2 m-0 border-bottom-1 border-300" [ngClass]="{ 'text-gray-500': !hasPrivilegesForPermit(permit) }">
-                    <div class="font-bold col-4">
-                        {{ permit.name }}
-                        <span *ngIf="!hasPrivilegesForPermit(permit)" class="ml-2 text-sm text-gray-500"> (Sin privilegios disponibles) </span>
-                    </div>
-
-                    <!-- Privilege checkboxes -->
-                    <div *ngFor="let privilegeName of privilegeNames" class="text-center col">
-                        <p-checkbox *ngIf="hasPrivilegesForPermit(permit)" [binary]="true" [ngModel]="getPrivilegeSelected(permit.name, privilegeName)" (ngModelChange)="togglePrivilege(permit.name, privilegeName)"></p-checkbox>
-                        <span *ngIf="!hasPrivilegesForPermit(permit)" class="text-gray-500"> - </span>
+                <!-- Rows -->
+                <div class="grid-rows">
+                    <div *ngFor="let permit of permits" class="permit-row" [class.disabled]="!hasPrivilegesForPermit(permit)">
+                        <div class="module-cell">
+                            {{ permit.name }}
+                            <span *ngIf="!hasPrivilegesForPermit(permit)" class="unavailable"> (Sin privilegios disponibles) </span>
+                        </div>
+                        <div class="privileges-cells">
+                            <div *ngFor="let privilegeName of privilegeNames" class="privilege-cell">
+                                <p-checkbox *ngIf="hasPrivilegesForPermit(permit)" [binary]="true" [ngModel]="getPrivilegeSelected(permit.name, privilegeName)" (ngModelChange)="togglePrivilege(permit.name, privilegeName)"> </p-checkbox>
+                                <span *ngIf="!hasPrivilegesForPermit(permit)" class="disabled-mark">-</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <small class="block mt-2 p-error" *ngIf="submitted && !hasSelectedPrivileges()"> Debe seleccionar al menos un privilegio. </small>
         </div>
     </ng-template>
 

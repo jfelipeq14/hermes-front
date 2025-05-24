@@ -1,0 +1,85 @@
+.role-dialog-content {
+    display: grid;
+    gap: 1.5rem;
+
+    .name-section {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .privileges-grid {
+        display: grid;
+        gap: 0;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        overflow: hidden;
+
+        .grid-header {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+
+            .module-cell {
+                padding: 1rem;
+                font-weight: bold;
+            }
+
+            .privileges-header {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                padding: 1rem;
+                gap: 1rem;
+                font-weight: bold;
+                text-align: center;
+            }
+        }
+
+        .grid-rows {
+            display: grid;
+            gap: 0;
+
+            .permit-row {
+                display: grid;
+                grid-template-columns: 200px 1fr;
+                border-bottom: 1px solid #dee2e6;
+                
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &.disabled {
+                    color: #6c757d;
+                }
+
+                .module-cell {
+                    padding: 1rem;
+                    font-weight: bold;
+
+                    .unavailable {
+                        font-size: 0.875rem;
+                        color: #6c757d;
+                        margin-left: 0.5rem;
+                        font-weight: normal;
+                    }
+                }
+
+                .privileges-cells {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    padding: 1rem;
+                    gap: 1rem;
+
+                    .privilege-cell {
+                        display: grid;
+                        place-items: center;
+
+                        .disabled-mark {
+                            color: #6c757d;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

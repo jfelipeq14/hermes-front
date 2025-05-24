@@ -103,8 +103,16 @@
             <div class="container flex flex-col gap-4">
                 <div class="flex flex-col field">
                     <label for="name" class="required">Nombre</label>
-                    <input pInputText id="name" type="text" [(ngModel)]="package.name" [minLength]="3" [maxLength]="60" [pattern]="patterns.NAME" required />
-                    <small *ngIf="package.name && !package.name.match(patterns.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+                    <input 
+                    pInputText 
+                    id="name" 
+                    type="text" 
+                    [(ngModel)]="package.name" 
+                    [minLength]="3" [maxLength]="60" 
+                    [pattern]="patterns.NAME" 
+                    required />
+                    <small *ngIf="package.name && !package.name.match(patterns.NAME)" 
+                    class="text-red-500">El nombre solo puede contener letras y espacios.</small>
                 </div>
 
                 <div class="flex flex-col field">
