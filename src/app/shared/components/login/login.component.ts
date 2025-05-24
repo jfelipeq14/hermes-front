@@ -9,6 +9,7 @@ import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
+import { PATTERNS } from '../../helpers';
 
 @Component({
     selector: 'app-login',
@@ -18,6 +19,8 @@ import { DialogModule } from 'primeng/dialog';
     providers: [AuthService, MessageService]
 })
 export class LoginComponent {
+    patterns = PATTERNS;
+
     constructor(
         private authService: AuthService,
         private messageService: MessageService
