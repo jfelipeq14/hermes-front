@@ -83,6 +83,7 @@ export class FormReservationComponent implements OnInit {
             return;
         } else {
             this.client = clientFound;
+            this.isFormDisabled = true; // Bloquear campos si se encuentra un cliente
         }
 
         if (this.reservation.idUser !== 0) {
@@ -109,6 +110,8 @@ export class FormReservationComponent implements OnInit {
     createClient(client: UserModel) {
         if (!client) return;
 
+        this.client.idRole = 3;
+
         this.authService.register(this.client).subscribe({
             next: (response) => {
                 if (!response) return;
@@ -125,6 +128,7 @@ export class FormReservationComponent implements OnInit {
                             detail: 'Tu cuenta fue activada. Inicia sesión.',
                             life: 3000
                         });
+                        this.activeStepIndex++;
                     },
                     error: (e) => console.error(e)
                 });
@@ -242,12 +246,6 @@ export class FormReservationComponent implements OnInit {
         } else if (this.activeStepIndex === 0 && this.client.id > 0) {
             this.reservation.idUser = this.client.id;
             this.reservation.idDate = this.idDate;
-            this.reservation.detailReservationTravelers = [];
-            if (this.travel) {
-                this.reservation.detailReservationTravelers.push({
-                    idTraveler: this.client.id
-                });
-            }
             this.activeStepIndex++;
         }
 
