@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
 import { FileUploadModule } from 'primeng/fileupload';
