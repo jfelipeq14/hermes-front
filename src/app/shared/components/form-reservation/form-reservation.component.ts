@@ -243,9 +243,11 @@ export class FormReservationComponent implements OnInit {
             this.reservation.idUser = this.client.id;
             this.reservation.idDate = this.idDate;
             this.reservation.detailReservationTravelers = [];
-            this.reservation.detailReservationTravelers.push({
-                idTraveler: this.client.id
-            });
+            if (this.travel) {
+                this.reservation.detailReservationTravelers.push({
+                    idTraveler: this.client.id
+                });
+            }
             this.activeStepIndex++;
         }
 
