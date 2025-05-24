@@ -18,6 +18,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { MunicipalityModel, RoleModel, UserModel } from '../../models';
 import { MunicipalityService, RolesService, UserService } from '../../services';
 import { bloodTypes, epslist, sexlist, typesDocument } from '../../shared/constants';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     selector: 'app-users',
@@ -40,6 +41,8 @@ export class UsersPage implements OnInit {
     bloodTypes = bloodTypes;
     epsList = epslist;
     roles: RoleModel[] = [];
+
+    patterns = PATTERNS;
 
     constructor(
         private userService: UserService,
