@@ -20,12 +20,29 @@ import { ActivityModel, DateModel, MunicipalityModel, PackageModel, PackageServi
 import { ActivityService, MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
 import { levels } from '../../shared/constants';
 import { PATTERNS } from '../../shared/helpers';
+import { UploadImageComponent } from '../../shared/components/upload-image/upload-image.component';
 
 @Component({
     selector: 'app-packages',
     templateUrl: './packages.component.html',
     styleUrls: ['./packages.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule, InputNumberModule, TextareaModule, TagModule, ConfirmDialogModule],
+    imports: [
+        CommonModule,
+        TableModule,
+        FormsModule,
+        ButtonModule,
+        ToastModule,
+        DialogModule,
+        DropdownModule,
+        InputTextModule,
+        InputIconModule,
+        IconFieldModule,
+        InputNumberModule,
+        TextareaModule,
+        TagModule,
+        ConfirmDialogModule,
+        UploadImageComponent
+    ],
     providers: [PackageService, ServiceService, ActivityService, MunicipalityService, ProgrammingService, MessageService, ConfirmationService]
 })
 export class PackagesPage implements OnInit {
@@ -156,6 +173,11 @@ export class PackagesPage implements OnInit {
         return status ? 'success' : 'danger';
     }
 
+    uploadImage(filePath: string) {
+        this.package.image = filePath;
+        console.log('Imagen subida:', this.package.image);
+    }
+
     savePackage() {
         this.submitted = true;
 
@@ -169,7 +191,11 @@ export class PackagesPage implements OnInit {
         }));
         this.package.level = this.package.level ? this.package.level : 0;
 
-        console.log(this.package);
+        if (!this.package.image) {
+            console.log('No se ha seleccionado una imagen');
+
+            return;
+        }
 
         if (this.package.id) {
             this.packageService.update(this.package).subscribe({

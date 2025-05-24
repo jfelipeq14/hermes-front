@@ -1,10 +1,6 @@
-<div class="container flex flex-col gap-4">
-    <div class="flex flex-col">
-        <label for="date" class="required">Fecha</label>
-        <p-calendar id="date" [(ngModel)]="payment.date" [showIcon]="true" dateFormat="dd/mm/yy" [disabled]="true"></p-calendar>
-        <small class="p-error" *ngIf="submitted && !payment.date"> La fecha es obligatoria. </small>
-    </div>
+<app-payment-methods />
 
+<div class="container flex flex-col gap-4">
     <div class="flex flex-col">
         <label for="price" class="required">Precio</label>
         <p-inputNumber id="price" [(ngModel)]="payment.total" mode="currency" currency="COP" locale="es-CO" [disabled]="true"></p-inputNumber>
@@ -12,7 +8,12 @@
     </div>
 
     <div class="flex flex-col">
-        <label for="voucher">Comprobante</label>
-        <input pInputText type="text" id="voucher" [(ngModel)]="payment.voucher" />
+        <label for="price" class="required">¿Cuanto vas a pagar? ({{ payment.total / 2 | currency: 'COP' }})</label>
+        <p-inputNumber id="price" [(ngModel)]="payment.pay" mode="currency" currency="COP" locale="es-CO"></p-inputNumber>
+        <small class="p-error" *ngIf="submitted && !payment.pay"> El precio es obligatorio. </small>
+    </div>
+
+    <div class="flex flex-col">
+        <app-upload-image (uploadImage)="uploadImage($event)" />
     </div>
 </div>

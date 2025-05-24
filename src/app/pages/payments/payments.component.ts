@@ -216,8 +216,20 @@ export class PaymentsPage implements OnInit {
                             detail: `${pay.id} cambiado a ${this.getValuePayment(pay.status)}`,
                             life: 3000
                         });
-                        if (pay.status === 'N') {
+                        if (pay.status === 'N' && pay.pay >= pay.total / 2) {
                             this.reservationService.changeStatus(pay.idReservation, 'C').subscribe({
+                                next: (res) => {
+                                    this.messageService.add({
+                                        severity: 'success',
+                                        summary: 'Éxito',
+                                        detail: `${res.id} cambiado a ${this.getValueReservation(res.status)}`,
+                                        life: 3000
+                                    });
+                                }
+                            });
+                        }
+                        if (pay.status === 'P' && pay.pay === pay.total) {
+                            this.reservationService.changeStatus(pay.idReservation, 'P').subscribe({
                                 next: (res) => {
                                     this.messageService.add({
                                         severity: 'success',

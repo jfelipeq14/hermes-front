@@ -1,0 +1,48 @@
+<div class="p-2 my-2 bg-white border-2 shadow-sm rounded-2xl">
+    <h5 class="text-center text-bold">Seleccione un metodo de pago</h5>
+    <div class="flex justify-center gap-4 my-5">
+        <p-button label="Nequi" icon="pi pi-money-bill" [severity]="selectedMethod === 'nequi' ? 'primary' : 'secondary'" rounded (onClick)="selectPaymentMethod('nequi')"></p-button>
+
+        <p-button label="Bancolombia" icon="pi pi-credit-card" severity="secondary" rounded (onClick)="selectPaymentMethod('bancolombia')" [severity]="selectedMethod === 'bancolombia' ? 'primary' : 'secondary'"></p-button>
+
+        <p-button label="Davivienda" icon="pi pi-wallet" severity="secondary" rounded (onClick)="selectPaymentMethod('davivienda')" [severity]="selectedMethod === 'davivienda' ? 'primary' : 'secondary'"></p-button>
+    </div>
+
+    <div *ngIf="selectedMethod">
+        <ng-container *ngIf="selectedMethod === 'nequi'">
+            <div class="container flex justify-between gap-2">
+                <div>
+                    <p>Nombre: <strong>Juan Sebastian Castaño</strong></p>
+                    <p>Cédula: <strong>1111111111</strong></p>
+                    <p>Teléfono: <strong>3111111111</strong></p>
+                </div>
+                <div>
+                    <img src="/hermes.png" alt="Nequi" class="w-28" />
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedMethod === 'bancolombia'">
+            <div class="container flex justify-between gap-2">
+                <div>
+                    <p>Nombre: <strong>Juan Sebastian Castaño</strong></p>
+                    <p>Cuenta: <strong>1111111111</strong></p>
+                </div>
+                <div>
+                    <img src="/hermes.png" alt="Nequi" class="w-28" />
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedMethod === 'davivienda'">
+            <div class="container flex justify-between gap-2">
+                <div>
+                    <p>Nombre: <strong>Juan Sebastian Castaño</strong></p>
+                    <p>Cuenta: <strong>1111111111</strong></p>
+                </div>
+                <div>
+                    <img src="/hermes.png" alt="Nequi" class="w-28" />
+                </div>
+            </div>
+        </ng-container>
+        <p class="px-2 text-sm text-center text-muted-color">Debes pagar un monto minimo para reservar y debes tener pago el 100% minimo 2 dias antes del viaje. Conoce más de nuestros <a href="" class="text-primary">terminos y condiciones</a></p>
+    </div>
+</div>

@@ -78,7 +78,7 @@
                             <tr>
                                 <td>{{ payment.id }}</td>
                                 <td>{{ payment.date | date: 'short' }}</td>
-                                <td>{{ payment.price | currency: 'COP' }}</td>
+                                <td>{{ payment.total | currency: 'COP' }}</td>
                                 <td>{{ payment.voucher || 'N/A' }}</td>
                                 <td>
                                     <p-dropdown [options]="statuses" [(ngModel)]="payment.status" optionLabel="name" optionValue="value" (onChange)="changeStatusPayment(payment)" styleClass="p-dropdown-sm" [appendTo]="'body'" [disabled]="disabled">

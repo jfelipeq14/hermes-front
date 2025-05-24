@@ -11,11 +11,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 
+import { PaymentMethodsComponent } from '../payment-methods/payment-methods.component';
+import { UploadImageComponent } from '../upload-image/upload-image.component';
+
 @Component({
     selector: 'app-form-payments',
     templateUrl: './form-payments.component.html',
     styleUrls: ['./form-payments.component.scss'],
-    imports: [CommonModule, FormsModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, ButtonModule, DropdownModule, CalendarModule]
+    imports: [CommonModule, FormsModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, ButtonModule, DropdownModule, CalendarModule, PaymentMethodsComponent, UploadImageComponent]
 })
 export class FormPaymentsComponent {
     @Input() payment: PaymentModel = new PaymentModel(); // Recibe el modelo de pago
@@ -23,6 +26,11 @@ export class FormPaymentsComponent {
 
     @Output() save = new EventEmitter<PaymentModel>(); // Emite el modelo de pago al guardar
     // @Output() cancel = new EventEmitter<void>(); // Emite un evento al cancelar
+
+    uploadImage(filePath: string) {
+        this.payment.voucher = filePath;
+        console.log('Imagen subida:', this.payment.voucher);
+    }
 
     onSave() {
         this.save.emit(this.payment); // Emite el modelo de pago al guardar

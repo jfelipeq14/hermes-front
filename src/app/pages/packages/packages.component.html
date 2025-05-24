@@ -45,7 +45,7 @@
             </td>
             <td>{{ package.name }}</td>
             <td>
-                <img [src]="package.image ? package.image : 'https://primefaces.org/cdn/primeng/images/demo/product/default.jpg'" [alt]="package.name" width="50" class="shadow-lg" />
+                <img [src]="package.image ? package.image : 'http://localhost:3000'" [alt]="package.name" width="50" class="shadow-lg" />
             </td>
             <td>{{ package.price | currency: 'COP' }}</td>
             <td>{{ getMunicipalityName(package.idMunicipality) }}</td>
@@ -135,8 +135,8 @@
                 </div>
 
                 <div class="flex flex-col field">
-                    <label for="image">Imagen</label>
-                    <input id="image" type="text" [(ngModel)]="package.image" pInputText />
+                    <label for="image" class="required">Imagen</label>
+                    <app-upload-image (uploadImage)="uploadImage($event)" />
                 </div>
 
                 <div class="flex flex-col field">
