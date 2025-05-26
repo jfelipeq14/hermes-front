@@ -119,6 +119,9 @@ export class FormReservationComponent implements OnInit {
                 this.activateModel.email = response.email;
                 this.activateModel.activationUserToken = response.activationToken;
 
+                this.client = response;
+                this.reservation.idUser = response.id;
+
                 this.authService.activateAccount(this.activateModel).subscribe({
                     next: (response) => {
                         if (!response) return;
@@ -128,7 +131,8 @@ export class FormReservationComponent implements OnInit {
                             detail: 'Tu cuenta fue activada. Inicia sesión.',
                             life: 3000
                         });
-                        this.activeStepIndex++;
+                        this.getAllClients();
+                        this.activeStepIndex = 1;
                     },
                     error: (e) => console.error(e)
                 });
@@ -161,8 +165,6 @@ export class FormReservationComponent implements OnInit {
                 this.payment.idReservation = r.id;
                 this.payment.total = r.detailReservationTravelers.length * r.price;
 
-                this.activeStepIndex++;
-
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Éxito',
@@ -177,7 +179,6 @@ export class FormReservationComponent implements OnInit {
                     detail: e.error.message,
                     life: 3000
                 });
-                this.activeStepIndex--;
             }
         });
     }
@@ -229,34 +230,32 @@ export class FormReservationComponent implements OnInit {
 
     validateStep(step: number) {
         if (step === 0) {
-            return this.reservation.idUser > 0;
-        }
-        if (step === 1) {
-            return this.reservation.detailReservationTravelers.length > 0;
-        }
-        if (step === 2) {
-            return this.payment.pay > 0 && this.payment.total > 0 && this.payment.idReservation > 0;
+            if (this.client.id === 0) {
+                return this.createClient(this.client);
+            } else if (this.client.id > 0) {
+                this.reservation.idUser = this.client.id;
+            }
+
+            this.reservation.idDate = this.idDate;
+
+            return this.reservation.idUser > 0 ? true : false;
+        } else if (step === 1) {
+            if (this.reservation.detailReservationTravelers.length > 0) {
+                this.saveReservation();
+                return true;
+            }
+            return false;
+        } else if (step === 2) {
+            if (this.payment.pay > 0 && this.payment.total > 0 && this.payment.idReservation > 0) {
+                this.payReservation();
+                return true;
+            }
+            return false;
         }
         return false;
     }
 
     nextStep() {
-        if (this.activeStepIndex === 0 && this.client.id === 0) {
-            this.createClient(this.client);
-        } else if (this.activeStepIndex === 0 && this.client.id > 0) {
-            this.reservation.idUser = this.client.id;
-            this.reservation.idDate = this.idDate;
-            this.activeStepIndex++;
-        }
-
-        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
-            this.saveReservation();
-        }
-
-        if (this.activeStepIndex === 2 && this.payment.idReservation > 0) {
-            this.payReservation();
-        }
-
         if (this.validateStep(this.activeStepIndex)) {
             this.activeStepIndex++;
         }
