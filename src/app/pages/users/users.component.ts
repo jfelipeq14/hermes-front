@@ -15,17 +15,18 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MunicipalityModel, RoleModel, UserModel } from '../../models';
-import { MunicipalityService, RolesService, UserService } from '../../services';
+import { ActivateModel, MunicipalityModel, RoleModel, UserModel } from '../../models';
+import { AuthService, MunicipalityService, RolesService, UserService } from '../../services';
 import { bloodTypes, epslist, sexlist, typesDocument } from '../../shared/constants';
 import { PATTERNS } from '../../shared/helpers';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-users',
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.scss'],
-    imports: [CommonModule, TableModule, TagModule, ButtonModule, ToastModule, ConfirmDialogModule, DialogModule, FormsModule, InputTextModule, InputIconModule, IconFieldModule, DropdownModule, CalendarModule],
-    providers: [UserService, MunicipalityService, RolesService, MessageService, ConfirmationService]
+    imports: [CommonModule, TableModule, TagModule, ButtonModule, ToastModule, ConfirmDialogModule, DialogModule, FormsModule, InputTextModule, InputIconModule, IconFieldModule, DropdownModule, DatePickerModule],
+    providers: [UserService, MunicipalityService, RolesService, MessageService, ConfirmationService, AuthService]
 })
 export class UsersPage implements OnInit {
     users: UserModel[] = [];
@@ -36,7 +37,7 @@ export class UsersPage implements OnInit {
 
     // Dropdown options
     municipalities: MunicipalityModel[] = [];
-    documentTypes = typesDocument;
+    typesDocument = typesDocument;
     sexOptions = sexlist;
     bloodTypes = bloodTypes;
     epsList = epslist;
@@ -44,12 +45,17 @@ export class UsersPage implements OnInit {
 
     patterns = PATTERNS;
 
+    maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
+    activateModel: ActivateModel = new ActivateModel();
+    isFormDisabled = false;
+
     constructor(
         private userService: UserService,
         private municipalityService: MunicipalityService,
         private rolesService: RolesService,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private authService: AuthService
     ) {}
 
     ngOnInit(): void {
@@ -118,18 +124,51 @@ export class UsersPage implements OnInit {
         return role ? role.name : 'No asignado';
     }
 
-    saveUser() {
-        this.submitted = true;
+    createUser() {
+        if (!this.user.id) {
+            this.authService.register(this.user).subscribe({
+                next: (response) => {
+                    if (!response) return;
 
-        if (this.user.id) {
+                    this.activateModel.email = response.email;
+                    this.activateModel.activationUserToken = response.activationToken;
+
+                    this.authService.activateAccount(this.activateModel).subscribe({
+                        next: (response) => {
+                            if (!response) return;
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: 'Tu cuenta fue activada. Inicia sesión.',
+                                life: 3000
+                            });
+                        },
+                        error: (e) => console.error(e)
+                    });
+                    this.refresh();
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                    this.submitted = false;
+                }
+            });
+            this.refresh();
+        } else {
             this.userService.update(this.user).subscribe({
-                next: (u) => {
+                next: (response) => {
+                    if (!response) return;
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${u.name} actualizado`,
+                        detail: 'Usuario actualizado correctamente',
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -140,28 +179,8 @@ export class UsersPage implements OnInit {
                     });
                 }
             });
-        } else {
-            this.userService.create(this.user).subscribe({
-                next: (u) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: `${u.name} creado`,
-                        life: 3000
-                    });
-                },
-                error: (e) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: e.error.message || 'No se pudo crear el usuario',
-                        life: 3000
-                    });
-                }
-            });
+            this.refresh();
         }
-        this.refresh();
-        this.closePopup();
     }
 
     editUser(user: UserModel) {
@@ -170,6 +189,8 @@ export class UsersPage implements OnInit {
         date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajustar desfase de zona horaria
         this.user.dateBirth = date;
         this.userDialog = true;
+
+        this.isFormDisabled = true;
     }
 
     changeStatusUser(user: UserModel) {
@@ -192,10 +213,6 @@ export class UsersPage implements OnInit {
                                 life: 3000
                             });
                         }
-                        // const index = this.users.findIndex((u) => u.id === updatedUser.id);
-                        // if (index !== -1) {
-                        //   this.users[index] = updatedUser;
-                        // }
                         this.messageService.add({
                             severity: this.getSeverity(updatedUser.status),
                             summary: 'Éxito',
@@ -232,6 +249,8 @@ export class UsersPage implements OnInit {
     }
 
     refresh() {
+        this.userDialog = false;
+        this.submitted = false;
         this.getAllUsers();
     }
 }

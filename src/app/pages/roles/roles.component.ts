@@ -303,6 +303,39 @@ export class RolesPage implements OnInit {
             return;
         }
 
+        if (this.role.name.length < 3) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'El nombre debe tener al menos 3 caracteres',
+                life: 3000
+            });
+            return;
+        }
+
+        if (this.role.name.length > 30) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'El nombre no puede tener más de 30 caracteres',
+                life: 3000
+            });
+            return;
+        }
+
+        // Validación de nombre duplicado
+        const isDuplicateName = this.roles.some((existingRole) => existingRole.name.toLowerCase() === this.role.name.toLowerCase() && existingRole.id !== this.role.id);
+
+        if (isDuplicateName) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Ya existe un rol con este nombre',
+                life: 3000
+            });
+            return;
+        }
+
         if (!this.hasSelectedPrivileges()) {
             this.messageService.add({
                 severity: 'error',
@@ -327,10 +360,18 @@ export class RolesPage implements OnInit {
                 this.hideDialog();
             },
             error: (error: HttpErrorResponse) => {
+                let errorMessage = 'No se pudo guardar el rol';
+
+                if (error.error?.message?.includes('duplicate')) {
+                    errorMessage = 'Ya existe un rol con este nombre';
+                } else if (error.error?.message) {
+                    errorMessage = error.error.message;
+                }
+
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: error.error.message || 'No se pudo guardar el rol',
+                    detail: errorMessage,
                     life: 3000
                 });
             }
