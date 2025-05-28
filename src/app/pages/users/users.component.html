@@ -67,105 +67,88 @@
 
 <p-dialog [(visible)]="userDialog" [style]="{ width: '450px' }" header="Usuario" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="container flex flex-col gap-4">
-            <div class="flex flex-col">
-                <label for="role" class="required">Rol</label>
-                <p-dropdown id="role" [options]="roles" [(ngModel)]="user.idRole" optionLabel="name" optionValue="id" placeholder="Seleccione un rol" [required]="true"></p-dropdown>
-                <small class="text-red-500" *ngIf="submitted && !user.idRole">El rol es obligatorio.</small>
-            </div>
+        <div class="flex flex-col flex-1">
+            <label for="idRole" class="required">Rol</label>
+            <p-dropdown id="idRole" [options]="roles" [(ngModel)]="user.idRole" [showClear]="true" name="idRole" optionLabel="name" optionValue="id" placeholder="Seleccione un rol" required></p-dropdown>
+            <small class="p-error" *ngIf="submitted && !user.idRole">El municipio es obligatorio.</small>
+        </div>
 
-            <div class="flex flex-col">
+        <fieldset class="flex flex-row gap-4">
+            <div class="flex flex-col flex-1">
                 <label for="typeDocument" class="required">Tipo de Documento</label>
-                <p-dropdown id="typeDocument" [options]="documentTypes" [(ngModel)]="user.typeDocument" [pattern]="patterns.DOCUMENT_TYPE" optionLabel="name" placeholder="Seleccione un tipo" required></p-dropdown>
-                <small class="text-red-500" *ngIf="submitted && !user.typeDocument.match(patterns.DOCUMENT_TYPE)"> El tipo de documento es obligatorio</small>
+                <p-dropdown
+                    id="typeDocument"
+                    [options]="typesDocument"
+                    [(ngModel)]="user.typeDocument"
+                    name="typeDocument"
+                    optionLabel="name"
+                    optionValue="value"
+                    placeholder="Seleccione un tipo de documento"
+                    [pattern]="patterns.DOCUMENT_TYPE"
+                    required
+                ></p-dropdown>
+                <small class="p-error" *ngIf="submitted && !user.typeDocument.match(patterns.DOCUMENT_TYPE)">El tipo de documento es obligatorio.</small>
             </div>
 
-            <div class="flex flex-col">
-                <label for="document" class="required">Documento</label>
-                <input type="text" id="document" pInputText [(ngModel)]="user.document" required />
-                <small class="text-red-500" *ngIf="submitted && !user.document"> El documento es obligatorio</small>
-            </div>
+            <div class="flex flex-col flex-1">
+                <label for="document" class="required">Número de Documento</label>
+                <input pInputText type="text" id="document" [(ngModel)]="user.document" required />
 
-            <div class="flex flex-col">
-                <label for="name" class="required">Nombre</label>
+                <small class="p-error" *ngIf="submitted && !user.document">El documento es obligatorio.</small>
+            </div>
+        </fieldset>
+
+        <fieldset class="flex flex-row gap-4">
+            <div class="flex flex-col flex-1">
+                <label for="name" class="required">Nombres</label>
                 <input type="text" pInputText id="name" [(ngModel)]="user.name" [pattern]="patterns.NAME" required />
-                <small class="text-red-500" *ngIf="submitted && !user.name.match(patterns.NAME)"> El nombre es obligatorio.</small>
+                <small class="p-error" *ngIf="submitted && !user.name.match(patterns.NAME)">El nombre es obligatorio.</small>
             </div>
 
-            <div class="flex flex-col">
-                <label for="surName" class="required">Apellido</label>
+            <div class="flex flex-col flex-1">
+                <label for="surName" class="required">Apellidos</label>
                 <input type="text" pInputText id="surName" [(ngModel)]="user.surName" [pattern]="patterns.NAME" required />
-                <small class="text-red-500" *ngIf="submitted && !user.surName.match(patterns.NAME)"> El apellido es obligatorio.</small>
+                <small class="p-error" *ngIf="submitted && !user.surName.match(patterns.NAME)">El apellido es obligatorio.</small>
+            </div>
+        </fieldset>
+
+        <fieldset class="flex flex-row gap-4">
+            <div class="flex flex-col flex-1">
+                <label for="idMunicipality" class="required">Municipio</label>
+                <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="user.idMunicipality" name="idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required></p-dropdown>
+                <small class="p-error" *ngIf="submitted && !user.idMunicipality">El municipio es obligatorio.</small>
             </div>
 
-            <div class="flex flex-col">
-                <label for="email" class="required">Email</label>
-                <input type="email" pInputText id="email" [(ngModel)]="user.email" [pattern]="patterns.EMAIL" required />
-                <small class="text-red-500" *ngIf="submitted && !user.email.match(patterns.EMAIL)"> El email es obligatorio.</small>
-            </div>
-
-            <div class="flex flex-col">
-                <label for="password" class="required">Contraseña</label>
-                <input type="password" pInputText id="password" [(ngModel)]="user.password" [required]="!user.id" required />
-                <small class="text-red-500" *ngIf="submitted && !user.password && !user.id"> La contraseña es obligatoria para crear nuevos usuarios</small>
-            </div>
-
-            <div class="flex flex-col">
-                <label for="dateBirth" class="required">Fecha de Nacimiento</label>
-                <p-calendar id="dateBirth" [(ngModel)]="user.dateBirth" [showIcon]="true" patterns dateFormat="dd/mm/yy" required> </p-calendar>
-                <small class="text-red-500" *ngIf="submitted && !user.dateBirth"> La fecha de nacimiento es obligatoria.</small>
-            </div>
-
-            <div class="flex flex-col">
+            <div class="flex flex-col flex-1">
                 <label for="phone" class="required">Teléfono</label>
                 <input type="text" pInputText id="phone" [(ngModel)]="user.phone" [pattern]="patterns.PHONE" required />
-                <small class="text-red-500" *ngIf="submitted && !user.phone.match(patterns.PHONE)"> El teléfono es obligatorio.</small>
+                <small class="p-error" *ngIf="submitted && !user.phone.match(patterns.PHONE)">El teléfono es obligatorio.</small>
             </div>
+        </fieldset>
 
-            <div class="flex flex-col">
-                <label for="municipality" class="required">Municipio</label>
-                <p-dropdown id="municipality" [options]="municipalities" [(ngModel)]="user.idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [required]="true"></p-dropdown>
+        <div class="flex flex-col">
+            <label for="dateBirth" class="required">Fecha de nacimiento</label>
+            <p-datepicker [(ngModel)]="user.dateBirth" inputId="start" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [maxDate]="maxDate" required></p-datepicker>
+            <small class="p-error" *ngIf="submitted && !user.dateBirth">La fecha de nacimiento es obligatoria.</small>
+        </div>
 
-                <small class="text-red-500" *ngIf="submitted && !user.idMunicipality"> El municipio es obligatorio.</small>
-            </div>
+        <div class="flex flex-col">
+            <label for="email" class="required">Correo Electrónico</label>
+            <input type="email" pInputText id="email" [(ngModel)]="user.email" [pattern]="patterns.EMAIL" [disabled]="isFormDisabled" required />
+            <small class="p-error" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo es obligatorio.</small>
+        </div>
 
-            <div class="flex flex-col">
-                <label for="address" class="required">Dirección</label>
-                <input type="text" pInputText id="address" [(ngModel)]="user.address" required />
-                <small class="text-red-500" *ngIf="submitted && !user.address"> La dirección es obligatoria.</small>
-            </div>
-
-            <div class="flex flex-col">
-                <label for="emergency" class="required">Teléfono de Emergencia</label>
-                <input type="text" pInputText id="emergency" [(ngModel)]="user.emergency" required />
-                <small class="text-red-500" *ngIf="submitted && !user.emergency"> El teléfono de emergencia es obligatorio.</small>
-            </div>
-
-            <!-- Posible solucion al problema del match -->
-            <div class="flex flex-col">
-                <label for="sex" class="required">Sexo</label>
-                <p-dropdown id="sex" [options]="sexOptions" [(ngModel)]="user.sex" optionLabel="name" optionValue="value" placeholder="Seleccione un sexo" [pattern]="patterns.SEX" required></p-dropdown>
-                <small class="text-red-500" *ngIf="submitted && !user.sex?.match(patterns.SEX)"> El sexo es obligatorio.</small>
-            </div>
-
-            <div class="flex flex-col">
-                <label for="bloodType" class="required">Tipo de Sangre</label>
-                <p-dropdown id="bloodType" [options]="bloodTypes" [(ngModel)]="user.bloodType" optionLabel="name" optionValue="value" placeholder="Seleccione un tipo de sangre" [pattern]="patterns.BLOOD" required></p-dropdown>
-                <small class="text-red-500" *ngIf="submitted && !user.bloodType?.match(patterns.BLOOD)"> El tipo de sangre es obligatorio.</small>
-            </div>
-
-            <div class="flex flex-col">
-                <label for="eps" class="required">EPS</label>
-                <p-dropdown id="eps" [options]="epsList" [(ngModel)]="user.eps" optionLabel="name" optionValue="value" placeholder="Seleccione una EPS" required></p-dropdown>
-                <small class="text-red-500" *ngIf="submitted && !user.eps"> La EPS es obligatoria.</small>
-            </div>
+        <div class="flex flex-col">
+            <label for="password" class="required">Contraseña</label>
+            <input type="password" pInputText id="password" [(ngModel)]="user.password" [pattern]="patterns.PASSWORD" [disabled]="isFormDisabled" required />
+            <small class="p-error" *ngIf="submitted && !user.password.match(patterns.PASSWORD)">La contraseña es obligatoria.</small>
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
         <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="closePopup()" [text]="true"></p-button>
-            <p-button label="Guardar" icon="pi pi-check" (click)="saveUser()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" (click)="createUser()"></p-button>
         </div>
     </ng-template>
 </p-dialog>

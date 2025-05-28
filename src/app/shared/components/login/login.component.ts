@@ -44,11 +44,11 @@ export class LoginComponent {
 
                 window.location.href = '/home';
             },
-            error: (e) => {
+            error: () => {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: e.error.message,
+                    detail: 'El correo o la contraseña son incorrectos, verifique sus datos e intente nuevamente.',
                     life: 3000
                 });
             }
@@ -60,5 +60,14 @@ export class LoginComponent {
     }
     onClosePopup() {
         this.closePopup.emit();
+    }
+
+    onKeyPress(event: any) {
+        if (event.key !== 'Enter') return;
+        if (event.target.id === 'email') {
+            event.target.nextElementSibling.focus();
+        } else if (event.target.id === 'password') {
+            this.onSubmit();
+        }
     }
 }

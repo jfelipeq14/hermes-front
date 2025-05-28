@@ -64,9 +64,21 @@
             <!-- Name Input Section -->
             <div class="name-section">
                 <label for="name" class="font-bold required">Nombre</label>
-                <input type="text" id="name" pInputText [pattern]="patterns.NAME" [(ngModel)]="role.name" [ngClass]="{ 'ng-invalid ng-dirty': submitted && !role.name }" required />
-
-                <small *ngIf="submitted && !role.name.match(patterns.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+                <input
+                    type="text"
+                    id="name"
+                    pInputText
+                    [(ngModel)]="role.name"
+                    [pattern]="patterns.NAME"
+                    minlength="3"
+                    maxlength="30"
+                    [ngClass]="{ 'ng-invalid ng-dirty': submitted && (!role.name || role.name.length < 3 || role.name.length > 30) }"
+                    required
+                />
+                <small class="text-red-500" *ngIf="submitted && !role.name"> El nombre es requerido. </small>
+                <small class="text-red-500" *ngIf="submitted && role.name && role.name.length < 3"> El nombre debe tener al menos 3 caracteres. </small>
+                <small class="text-red-500" *ngIf="submitted && role.name && role.name.length > 30"> El nombre no puede tener más de 30 caracteres. </small>
+                <small class="text-red-500" *ngIf="submitted && role.name && !role.name.match(patterns.NAME)"> El nombre solo puede contener letras y espacios. </small>
             </div>
 
             <!-- Privileges Grid Section -->
