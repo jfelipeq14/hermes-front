@@ -21,11 +21,11 @@
         <div class="card">
             <h3 class="text-xl font-semibold mb-4">TOP 3 CLIENTES 2024</h3>
             <div class="flex justify-around items-center">
-                <div *ngFor="let client of topClients.slice(0,3)" class="flex flex-col items-center">
+                <div *ngFor="let client of topClients.slice(0, 3)" class="flex flex-col items-center">
                     <div class="w-16 h-16 rounded-full bg-gray-200 mb-2"></div>
-                    <h4 class="font-semibold">{{client.name}}</h4>
-                    <p class="text-sm text-gray-600">Paquetes totales: {{client.purchases}}</p>
-                    <p class="text-sm text-gray-600">Total en dinero: ${{client.total}}</p>
+                    <h4 class="font-semibold">{{ client.name }}</h4>
+                    <p class="text-sm text-gray-600">Paquetes totales: {{ client.purchases }}</p>
+                    <p class="text-sm text-gray-600">Total en dinero: ${{ client.total }}</p>
                 </div>
             </div>
         </div>

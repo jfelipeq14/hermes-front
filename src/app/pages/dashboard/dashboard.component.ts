@@ -94,9 +94,6 @@ export class DashboardPage implements OnInit {
     }
 
     setupPackagesChart() {
-        const packageNames = this.packages.map((p) => p.name);
-        const packageSales = this.packages.map((p) => p.sales);
-
         this.dataPackages = {
             labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
             datasets: [
