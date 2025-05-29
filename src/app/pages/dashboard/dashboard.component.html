@@ -1,46 +1,33 @@
-<div class="grid grid-cols-3 gap-2 max-w-full max-h-full grid-rows-2">
-    <div class="grid-col-start-1 grid-row-start-1 grid-row-end-3">
-        <div class="card m-0 h-full">
-            <div class="font-semibold">Paquetes Mas Vendidos</div>
+<div class="flex flex-wrap gap-4 p-4">
+    <!-- Sales Chart Section -->
+    <div class="flex-1 min-w-[300px]">
+        <div class="card">
+            <h3 class="text-xl font-semibold mb-4">VENTAS 2024</h3>
+            <p-chart type="pie" [data]="salesChartData" [options]="pieOptions"></p-chart>
+            <div class="text-sm text-gray-600 mt-2">Total: {{ sales.total }}</div>
+        </div>
+    </div>
+
+    <!-- Package Sales Chart Section -->
+    <div class="flex-1 min-w-[300px]">
+        <div class="card">
+            <h3 class="text-xl font-semibold mb-4">Venta de paquetes</h3>
             <p-chart type="bar" [data]="dataPackages" [options]="barOptions"></p-chart>
         </div>
     </div>
 
-    <div class="grid-col-start-2 grid-col-end-4 grid-row-start-1">
-        <div class="card m-0">
-            <div class="flex justify-between my-4">
-                <div>
-                    <span class="block text-muted-color font-medium mb-4">Ventas</span>
-                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">
-                        {{ sales.total }}
-                    </div>
-                </div>
-                <div class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-border">
-                    <i class="pi pi-dollar text-orange-500 !text-xl"></i>
+    <!-- Top Clients Section -->
+    <div class="w-full">
+        <div class="card">
+            <h3 class="text-xl font-semibold mb-4">TOP 3 CLIENTES 2024</h3>
+            <div class="flex justify-around items-center">
+                <div *ngFor="let client of topClients.slice(0,3)" class="flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-full bg-gray-200 mb-2"></div>
+                    <h4 class="font-semibold">{{client.name}}</h4>
+                    <p class="text-sm text-gray-600">Paquetes totales: {{client.purchases}}</p>
+                    <p class="text-sm text-gray-600">Total en dinero: ${{client.total}}</p>
                 </div>
             </div>
-            <span class="text-primary font-medium">%{{ sales.growth }}+ </span>
-            <span class="text-muted-color">Este mes</span>
-        </div>
-    </div>
-
-    <div class="grid-col-start-2 grid-col-end-4 grid-row-start-2">
-        <div class="card m-0">
-            <div class="font-semibold">Top Clientes</div>
-            <p-table [value]="topClients" responsiveLayout="scroll" [rows]="3" [paginator]="true">
-                <ng-template #header>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Compras</th>
-                    </tr>
-                </ng-template>
-                <ng-template #body let-client>
-                    <tr>
-                        <td>{{ client.name }} {{ client.surname }}</td>
-                        <td>{{ client.purchases }}</td>
-                    </tr>
-                </ng-template>
-            </p-table>
         </div>
     </div>
 </div>

@@ -65,83 +65,91 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="userDialog" [style]="{ width: '450px' }" header="Usuario" [modal]="true" class="p-fluid">
+<p-dialog [(visible)]="userDialog" [style]="{ width: '900px' }" header="Usuario" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="flex flex-col flex-1">
-            <label for="idRole" class="required">Rol</label>
-            <p-dropdown id="idRole" [options]="roles" [(ngModel)]="user.idRole" [showClear]="true" name="idRole" optionLabel="name" optionValue="id" placeholder="Seleccione un rol" required></p-dropdown>
-            <small class="p-error" *ngIf="submitted && !user.idRole">El municipio es obligatorio.</small>
-        </div>
-
-        <fieldset class="flex flex-row gap-4">
-            <div class="flex flex-col flex-1">
-                <label for="typeDocument" class="required">Tipo de Documento</label>
-                <p-dropdown
-                    id="typeDocument"
-                    [options]="typesDocument"
-                    [(ngModel)]="user.typeDocument"
-                    name="typeDocument"
-                    optionLabel="name"
-                    optionValue="value"
-                    placeholder="Seleccione un tipo de documento"
-                    [pattern]="patterns.DOCUMENT_TYPE"
-                    required
-                ></p-dropdown>
-                <small class="p-error" *ngIf="submitted && !user.typeDocument.match(patterns.DOCUMENT_TYPE)">El tipo de documento es obligatorio.</small>
+        <div class="flex flex-col gap-4 p-4">
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col flex-1">
+                    <label for="idRole" class="required mb-2">Rol</label>
+                    <p-dropdown id="idRole" [options]="roles" [(ngModel)]="user.idRole" [showClear]="true" name="idRole" optionLabel="name" optionValue="id" placeholder="Seleccione un rol" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.idRole}"></p-dropdown>
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.idRole">El rol es obligatorio.</small>
+                </div>
             </div>
 
-            <div class="flex flex-col flex-1">
-                <label for="document" class="required">Número de Documento</label>
-                <input pInputText type="text" id="document" [(ngModel)]="user.document" required />
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col flex-1">
+                    <label for="typeDocument" class="required mb-2">Tipo de Documento</label>
+                    <p-dropdown
+                        id="typeDocument"
+                        [options]="typesDocument"
+                        [(ngModel)]="user.typeDocument"
+                        name="typeDocument"
+                        optionLabel="name"
+                        optionValue="value"
+                        placeholder="Seleccione un tipo de documento"
+                        [pattern]="patterns.DOCUMENT_TYPE"
+                        required
+                        [ngClass]="{'ng-invalid ng-dirty': submitted && !user.typeDocument}"
+                    ></p-dropdown>
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.typeDocument.match(patterns.DOCUMENT_TYPE)">El tipo de documento es obligatorio.</small>
+                </div>
 
-                <small class="p-error" *ngIf="submitted && !user.document">El documento es obligatorio.</small>
-            </div>
-        </fieldset>
-
-        <fieldset class="flex flex-row gap-4">
-            <div class="flex flex-col flex-1">
-                <label for="name" class="required">Nombres</label>
-                <input type="text" pInputText id="name" [(ngModel)]="user.name" [pattern]="patterns.NAME" required />
-                <small class="p-error" *ngIf="submitted && !user.name.match(patterns.NAME)">El nombre es obligatorio.</small>
-            </div>
-
-            <div class="flex flex-col flex-1">
-                <label for="surName" class="required">Apellidos</label>
-                <input type="text" pInputText id="surName" [(ngModel)]="user.surName" [pattern]="patterns.NAME" required />
-                <small class="p-error" *ngIf="submitted && !user.surName.match(patterns.NAME)">El apellido es obligatorio.</small>
-            </div>
-        </fieldset>
-
-        <fieldset class="flex flex-row gap-4">
-            <div class="flex flex-col flex-1">
-                <label for="idMunicipality" class="required">Municipio</label>
-                <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="user.idMunicipality" name="idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required></p-dropdown>
-                <small class="p-error" *ngIf="submitted && !user.idMunicipality">El municipio es obligatorio.</small>
+                <div class="flex flex-col flex-1">
+                    <label for="document" class="required mb-2">Número de Documento</label>
+                    <input pInputText type="text" id="document" [(ngModel)]="user.document" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.document}" />
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.document">El documento es obligatorio.</small>
+                </div>
             </div>
 
-            <div class="flex flex-col flex-1">
-                <label for="phone" class="required">Teléfono</label>
-                <input type="text" pInputText id="phone" [(ngModel)]="user.phone" [pattern]="patterns.PHONE" required />
-                <small class="p-error" *ngIf="submitted && !user.phone.match(patterns.PHONE)">El teléfono es obligatorio.</small>
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col flex-1">
+                    <label for="name" class="required mb-2">Nombres</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="user.name" [pattern]="patterns.NAME" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.name}" />
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.name.match(patterns.NAME)">El nombre es obligatorio.</small>
+                </div>
+
+                <div class="flex flex-col flex-1">
+                    <label for="surName" class="required mb-2">Apellidos</label>
+                    <input type="text" pInputText id="surName" [(ngModel)]="user.surName" [pattern]="patterns.NAME" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.surName}" />
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.surName.match(patterns.NAME)">El apellido es obligatorio.</small>
+                </div>
             </div>
-        </fieldset>
 
-        <div class="flex flex-col">
-            <label for="dateBirth" class="required">Fecha de nacimiento</label>
-            <p-datepicker [(ngModel)]="user.dateBirth" inputId="start" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [maxDate]="maxDate" required></p-datepicker>
-            <small class="p-error" *ngIf="submitted && !user.dateBirth">La fecha de nacimiento es obligatoria.</small>
-        </div>
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col flex-1">
+                    <label for="idMunicipality" class="required mb-2">Municipio</label>
+                    <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="user.idMunicipality" name="idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.idMunicipality}"></p-dropdown>
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.idMunicipality">El municipio es obligatorio.</small>
+                </div>
 
-        <div class="flex flex-col">
-            <label for="email" class="required">Correo Electrónico</label>
-            <input type="email" pInputText id="email" [(ngModel)]="user.email" [pattern]="patterns.EMAIL" [disabled]="isFormDisabled" required />
-            <small class="p-error" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo es obligatorio.</small>
-        </div>
+                <div class="flex flex-col flex-1">
+                    <label for="phone" class="required mb-2">Teléfono</label>
+                    <input type="text" pInputText id="phone" [(ngModel)]="user.phone" [pattern]="patterns.PHONE" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.phone}" />
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.phone.match(patterns.PHONE)">El teléfono es obligatorio.</small>
+                </div>
+            </div>
 
-        <div class="flex flex-col">
-            <label for="password" class="required">Contraseña</label>
-            <input type="password" pInputText id="password" [(ngModel)]="user.password" [pattern]="patterns.PASSWORD" [disabled]="isFormDisabled" required />
-            <small class="p-error" *ngIf="submitted && !user.password.match(patterns.PASSWORD)">La contraseña es obligatoria.</small>
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col flex-1">
+                    <label for="dateBirth" class="required mb-2">Fecha de nacimiento</label>
+                    <p-datepicker [(ngModel)]="user.dateBirth" inputId="start" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [maxDate]="maxDate" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.dateBirth}"></p-datepicker>
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.dateBirth">La fecha de nacimiento es obligatoria.</small>
+                </div>
+            </div>
+
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col flex-1">
+                    <label for="email" class="required mb-2">Correo Electrónico</label>
+                    <input type="email" pInputText id="email" [(ngModel)]="user.email" [pattern]="patterns.EMAIL" [disabled]="isFormDisabled" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.email}" />
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo es obligatorio.</small>
+                </div>
+
+                <div class="flex flex-col flex-1">
+                    <label for="password" class="required mb-2">Contraseña</label>
+                    <input type="password" pInputText id="password" [(ngModel)]="user.password" [pattern]="patterns.PASSWORD" [disabled]="isFormDisabled" required [ngClass]="{'ng-invalid ng-dirty': submitted && !user.password}" />
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.password.match(patterns.PASSWORD)">La contraseña es obligatoria.</small>
+                </div>
+            </div>
         </div>
     </ng-template>
 

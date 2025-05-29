@@ -1,5 +1,5 @@
 <div class="card">
-    <h3 class="p-0 m-0 text-center">Perfil de Usuario</h3>
+    <h3 class="my-8 text-center">Perfil de Usuario</h3>
 
     <div *ngIf="loading" class="flex justify-content-center">
         <p-progressSpinner></p-progressSpinner>
@@ -9,7 +9,7 @@
         <div class="flex flex-row gap-4">
             <!-- Información Personal -->
             <fieldset class="container flex flex-col flex-1 gap-4">
-                <legend class="my-2 font-bold">Información Personal</legend>
+                <legend class="my-8 font-bold text-2xl">Información Personal</legend>
                 <div class="flex flex-col">
                     <label for="typeDocument" class="flex-1">Tipo de Documento</label>
                     <p-dropdown id="typeDocument" class="flex-1" [options]="typesDocument" [(ngModel)]="user.typeDocument" optionLabel="name" optionValue="value" [disabled]="!editMode" [filter]="true" filterBy="name"> </p-dropdown>
@@ -43,7 +43,7 @@
 
             <!-- Información de Contacto -->
             <fieldset class="container flex flex-col flex-1 gap-4">
-                <legend class="my-2 font-bold">Información de Contacto</legend>
+                <legend class="my-8 font-bold text-2xl">Información de Contacto</legend>
                 <div class="flex flex-col">
                     <label for="email">Correo Electrónico</label>
                     <input id="email" type="email" pInputText [(ngModel)]="user.email" [disabled]="!editMode" />
@@ -72,7 +72,7 @@
 
             <!-- Información Médica -->
             <fieldset class="container flex flex-col flex-1 gap-4">
-                <legend class="my-2 font-bold">Información Médica</legend>
+                <legend class="my-8 font-bold text-2xl">Información Médica</legend>
                 <div class="flex flex-col">
                     <label for="bloodType">Tipo de Sangre</label>
                     <p-dropdown id="bloodType" [options]="bloodTypes" [(ngModel)]="user.bloodType" optionLabel="name" optionValue="value" [disabled]="!editMode" [filter]="true" filterBy="name"> </p-dropdown>
