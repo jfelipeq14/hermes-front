@@ -131,7 +131,6 @@ export class FormReservationComponent implements OnInit {
                             detail: 'Tu cuenta fue activada. Inicia sesión.',
                             life: 3000
                         });
-                        this.getAllClients();
                         this.activeStepIndex = 1;
                     },
                     error: (e) => console.error(e)
