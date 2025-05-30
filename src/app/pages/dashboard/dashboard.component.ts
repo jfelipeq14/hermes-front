@@ -25,6 +25,8 @@ export class DashboardPage implements OnInit {
     // Chart data and options
     dataPackages: any;
     barOptions: any;
+    salesChartData: any;
+    pieOptions: any;
 
     constructor(
         private mockDataService: MockDataService,
@@ -92,16 +94,28 @@ export class DashboardPage implements OnInit {
     }
 
     setupPackagesChart() {
-        const packageNames = this.packages.map((p) => p.name);
-        const packageSales = this.packages.map((p) => p.sales);
-
         this.dataPackages = {
-            labels: packageNames,
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
             datasets: [
                 {
-                    label: 'Ventas por paquete',
-                    backgroundColor: '#42A5F5',
-                    data: packageSales
+                    label: 'Cartagena',
+                    backgroundColor: '#FCD34D',
+                    data: [10, 8, 15, 12, 22]
+                },
+                {
+                    label: 'Baru',
+                    backgroundColor: '#22C55E',
+                    data: [8, 7, 12, 15, 10]
+                },
+                {
+                    label: 'Santa Marta',
+                    backgroundColor: '#EC4899',
+                    data: [12, 10, 18, 14, 8]
+                },
+                {
+                    label: 'Covenas',
+                    backgroundColor: '#8B5CF6',
+                    data: [9, 8, 10, 11, 7]
                 }
             ]
         };
@@ -110,30 +124,28 @@ export class DashboardPage implements OnInit {
             plugins: {
                 legend: {
                     labels: {
-                        color: 'yellow'
+                        color: '#495057'
                     }
                 }
             },
             scales: {
                 x: {
                     ticks: {
-                        color: 'green',
+                        color: '#495057',
                         font: {
                             weight: 500
                         }
                     },
                     grid: {
-                        display: false,
-                        drawBorder: false
+                        display: false
                     }
                 },
                 y: {
                     ticks: {
-                        color: 'grey'
+                        color: '#495057'
                     },
                     grid: {
-                        color: 'black',
-                        drawBorder: false
+                        color: '#ebedef'
                     }
                 }
             }
@@ -141,6 +153,25 @@ export class DashboardPage implements OnInit {
     }
 
     setupMonthlySalesChart() {
-        // Placeholder for monthly sales chart setup
+        this.salesChartData = {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+            datasets: [
+                {
+                    data: [12500000, 15000000, 9000000, 7500000, 10000000],
+                    backgroundColor: ['#6366F1', '#F59E0B', '#EC4899', '#581C87', '#DC2626']
+                }
+            ]
+        };
+
+        this.pieOptions = {
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: '#495057'
+                    }
+                }
+            }
+        };
     }
 }

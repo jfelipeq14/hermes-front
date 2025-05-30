@@ -34,6 +34,14 @@ export class UsersPage implements OnInit {
     submitted = false;
     loading = false;
 
+    isFieldInvalid(field: any, pattern?: string): boolean {
+        if (!this.submitted) return false;
+        if (pattern) {
+            return !field || !field.toString().match(pattern);
+        }
+        return !field;
+    }
+
     // Dropdown options
     municipalities: MunicipalityModel[] = [];
     typesDocument = typesDocument;
@@ -123,7 +131,55 @@ export class UsersPage implements OnInit {
         return role ? role.name : 'No asignado';
     }
 
+    validateForm(): boolean {
+        this.submitted = true;
+
+        if (!this.user.idRole || !this.user.typeDocument || !this.user.document || !this.user.name || !this.user.surName || !this.user.idMunicipality || !this.user.phone || !this.user.dateBirth || !this.user.email) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'Por favor complete todos los campos obligatorios',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.user.email.match(this.patterns.EMAIL)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'El correo electrónico no es válido',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.user.phone.match(this.patterns.PHONE)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'El número de teléfono no es válido',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.isFormDisabled && !this.user.password?.match(this.patterns.PASSWORD)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número',
+                life: 3000
+            });
+            return false;
+        }
+
+        return true;
+    }
+
     createUser() {
+        if (!this.validateForm()) return;
+
         if (!this.user.id) {
             this.authService.register(this.user).subscribe({
                 next: (response) => {
@@ -137,26 +193,31 @@ export class UsersPage implements OnInit {
                             if (!response) return;
                             this.messageService.add({
                                 severity: 'success',
-                                summary: 'Success',
-                                detail: 'Tu cuenta fue activada. Inicia sesión.',
+                                summary: 'Éxito',
+                                detail: 'Usuario creado y activado correctamente',
                                 life: 3000
                             });
+                            this.refresh();
                         },
-                        error: (e) => console.error(e)
+                        error: (e) => {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Error al activar la cuenta: ' + (e.error.message || 'Error desconocido'),
+                                life: 3000
+                            });
+                        }
                     });
-                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: e.error.message,
+                        detail: 'Error al crear el usuario: ' + (e.error.message || 'Error desconocido'),
                         life: 3000
                     });
-                    this.submitted = false;
                 }
             });
-            this.refresh();
         } else {
             this.userService.update(this.user).subscribe({
                 next: (response) => {
@@ -173,12 +234,11 @@ export class UsersPage implements OnInit {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: e.error.message || 'No se pudo actualizar el usuario',
+                        detail: 'Error al actualizar el usuario: ' + (e.error.message || 'Error desconocido'),
                         life: 3000
                     });
                 }
             });
-            this.refresh();
         }
     }
 
@@ -212,12 +272,14 @@ export class UsersPage implements OnInit {
                                 life: 3000
                             });
                         }
+                        this.refresh();
                         this.messageService.add({
                             severity: this.getSeverity(updatedUser.status),
                             summary: 'Éxito',
                             detail: `${updatedUser.name} ${updatedUser.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
+                        this.refresh();
                     },
                     error: (e) => {
                         this.messageService.add({
@@ -230,6 +292,7 @@ export class UsersPage implements OnInit {
                 });
             }
         });
+        this.refresh();
     }
 
     getSeverity(status: boolean): 'success' | 'danger' {
@@ -245,6 +308,8 @@ export class UsersPage implements OnInit {
     closePopup() {
         this.userDialog = false;
         this.submitted = false;
+        this.isFormDisabled = false;
+        this.user = new UserModel();
     }
 
     refresh() {
