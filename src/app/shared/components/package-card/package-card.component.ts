@@ -48,9 +48,7 @@ export class PackageCardComponent implements OnInit {
             next: (packages) => {
                 this.packages = packages;
             },
-            error: (e) => {
-                console.error(e);
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -59,9 +57,7 @@ export class PackageCardComponent implements OnInit {
             next: (services) => {
                 this.services = services;
             },
-            error: (e) => {
-                console.error(e);
-            }
+            error: (e) => console.error(e)
         });
     }
 

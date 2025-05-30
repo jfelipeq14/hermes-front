@@ -3,9 +3,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent, PackageCardComponent } from '..';
 import { CommonModule } from '@angular/common';
-import { ActivateModel, PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
+import { ActivateModel, DateModel, PackageModel, PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MessageService } from 'primeng/api';
-import { AuthService, ClientsService, PaymentService, ReservationsService } from '../../../services';
+import { AuthService, ClientsService, PackageService, PaymentService, ProgrammingService, ReservationsService } from '../../../services';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 
@@ -14,12 +14,14 @@ import { ToastModule } from 'primeng/toast';
     templateUrl: './form-reservation.component.html',
     styleUrl: './form-reservation.component.scss',
     imports: [CommonModule, ButtonModule, StepperModule, ToastModule, FormClientsComponent, FormTravelersComponent, FormPaymentsComponent, PackageCardComponent],
-    providers: [AuthService, ReservationsService, PaymentService, ClientsService, MessageService]
+    providers: [AuthService, ReservationsService, ProgrammingService, PackageService, PaymentService, ClientsService, MessageService]
 })
 export class FormReservationComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private reservationService: ReservationsService,
+        private programmingService: ProgrammingService,
+        private packageService: PackageService,
         private paymentService: PaymentService,
         private clientsService: ClientsService,
         private messageService: MessageService
@@ -27,6 +29,8 @@ export class FormReservationComponent implements OnInit {
 
     ngOnInit() {
         this.getAllClients();
+        this.getAllDates();
+        this.getAllPackages();
     }
 
     @Input() idDate = 0;
@@ -41,6 +45,9 @@ export class FormReservationComponent implements OnInit {
     client: UserModel = new UserModel();
     clients: UserModel[] = [];
     activateModel: ActivateModel = new ActivateModel();
+
+    dates: DateModel[] = [];
+    packages: PackageModel[] = [];
 
     activeStepIndex = 0;
     steps = [
@@ -65,6 +72,37 @@ export class FormReservationComponent implements OnInit {
                 });
             }
         });
+    }
+
+    getAllDates() {
+        this.programmingService.getAll().subscribe({
+            next: (dates) => {
+                this.dates = dates;
+            },
+            error: (e) => console.error(e)
+        });
+    }
+
+    getAllPackages() {
+        this.packageService.getAll().subscribe({
+            next: (packages) => {
+                this.packages = packages;
+            },
+            error: (e) => console.error(e)
+        });
+    }
+
+    getDateInfo(idDate: number) {
+        if (!idDate) return;
+        const dateInfo = this.dates.find((date) => date.id === idDate);
+        return dateInfo || new DateModel();
+    }
+
+    getPackageInfo(id: number) {
+        const packageInfo = this.packages.find((pack) => pack.id === id);
+        if (!packageInfo) return;
+
+        return packageInfo || new PackageModel();
     }
 
     searchClient(document: string) {
@@ -149,11 +187,11 @@ export class FormReservationComponent implements OnInit {
     }
 
     saveReservation() {
-        if (this.reservation.idDate === 0 || this.reservation.idUser === 0 || this.reservation.detailReservationTravelers.length === 0) {
+        if (!this.reservation.price || this.reservation.price <= 0) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'Por favor, complete todos los campos requeridos',
+                detail: 'El precio de la reservación no puede ser cero o negativo',
                 life: 3000
             });
             return;
@@ -162,7 +200,6 @@ export class FormReservationComponent implements OnInit {
         this.reservationService.create(this.reservation).subscribe({
             next: (r) => {
                 this.payment.idReservation = r.id;
-                this.payment.total = r.detailReservationTravelers.length * r.price;
 
                 this.messageService.add({
                     severity: 'success',
@@ -240,7 +277,24 @@ export class FormReservationComponent implements OnInit {
             return this.reservation.idUser > 0 ? true : false;
         } else if (step === 1) {
             if (this.reservation.detailReservationTravelers.length > 0) {
+                this.reservation.price = this.getPackageInfo(this.getDateInfo(this.idDate)?.idPackage || 0)?.price || 0 * this.reservation.detailReservationTravelers.length;
+
+                if (this.reservation.price <= 0) {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'El precio de la reservación no puede ser cero o negativo',
+                        life: 3000
+                    });
+                    return false;
+                }
+
                 this.saveReservation();
+
+                this.payment.idReservation = this.reservation.id;
+                this.payment.total = this.reservation.detailReservationTravelers.length * this.reservation.price;
+                this.payment.pay = this.payment.total / 2;
+
                 return true;
             }
             return false;

@@ -1,4 +1,4 @@
-<div class="container flex gap-4">
+<div class="container flex gap-2">
     <p-stepper [value]="activeStepIndex" class="flex-1">
         <p-step-list>
             <p-step [value]="0" label="Crear Cliente"></p-step>
@@ -6,9 +6,7 @@
             <p-step [value]="2" label="Confirmar Reserva"></p-step>
         </p-step-list>
 
-        <!-- Contenido del Step 1 -->
         <div *ngIf="activeStepIndex === 0" class="step-content">
-            <!-- Aquí irá el contenido del primer paso -->
             <ng-container>
                 <app-form-clients
                     [reservation]="reservation"
@@ -25,9 +23,7 @@
             </ng-container>
         </div>
 
-        <!-- Contenido del Step 2 -->
         <div *ngIf="activeStepIndex === 1" class="step-content">
-            <!-- Aquí irá el contenido del segundo paso -->
             <ng-container>
                 <app-form-travelers
                     [reservation]="reservation"
@@ -44,9 +40,7 @@
             </ng-container>
         </div>
 
-        <!-- Contenido del Step 3 -->
         <div *ngIf="activeStepIndex === 2" class="step-content">
-            <!-- Aquí irá el contenido del tercer paso -->
             <ng-container>
                 <app-form-payments [payment]="payment" [submitted]="submitted" />
             </ng-container>
@@ -59,7 +53,7 @@
 
 <div class="flex gap-2 my-2 justify-content-end">
     <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="onClosePopup()"></p-button>
-    <p-button *ngIf="activeStepIndex !== 2" label="Continuar" icon="pi pi-arrow-right" (onClick)="nextStep()"></p-button>
+    <p-button label="Continuar" icon="pi pi-arrow-right" (onClick)="nextStep()"></p-button>
 </div>
 
 <p-toast></p-toast>

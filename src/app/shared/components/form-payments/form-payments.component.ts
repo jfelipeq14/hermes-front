@@ -21,22 +21,16 @@ import { UploadImageComponent } from '../upload-image/upload-image.component';
     imports: [CommonModule, FormsModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, ButtonModule, DropdownModule, CalendarModule, PaymentMethodsComponent, UploadImageComponent]
 })
 export class FormPaymentsComponent {
-    @Input() payment: PaymentModel = new PaymentModel(); // Recibe el modelo de pago
-    @Input() submitted = false; // Indica si el formulario fue enviado
+    @Input() payment: PaymentModel = new PaymentModel();
+    @Input() submitted = false;
 
-    @Output() save = new EventEmitter<PaymentModel>(); // Emite el modelo de pago al guardar
-    // @Output() cancel = new EventEmitter<void>(); // Emite un evento al cancelar
+    @Output() save = new EventEmitter<PaymentModel>();
 
     uploadImage(filePath: string) {
         this.payment.voucher = filePath;
-        console.log('Imagen subida:', this.payment.voucher);
     }
 
     onSave() {
-        this.save.emit(this.payment); // Emite el modelo de pago al guardar
+        this.save.emit(this.payment);
     }
-
-    // onCancel() {
-    //   this.cancel.emit(); // Emite el evento al cancelar
-    // }
 }
