@@ -315,7 +315,9 @@ export class FormReservationComponent implements OnInit {
         if (this.validateStep(this.activeStepIndex)) {
             this.activeStepIndex++;
             if (this.activeStepIndex >= this.steps.length) {
-                this.onClosePopup();
+                setTimeout(() => {
+                    this.onClosePopup();
+                }, 3000);
             }
         }
     }
