@@ -28,6 +28,7 @@ export class FormPaymentsComponent {
 
     uploadImage(filePath: string) {
         this.payment.voucher = filePath;
+        console.log('Imagen subida:', this.payment.voucher);
     }
 
     onSave() {

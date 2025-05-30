@@ -279,6 +279,9 @@ export class FormReservationComponent implements OnInit {
             if (this.reservation.detailReservationTravelers.length > 0) {
                 this.reservation.price = this.getPackageInfo(this.getDateInfo(this.idDate)?.idPackage || 0)?.price || 0 * this.reservation.detailReservationTravelers.length;
 
+                // formato de int al precio
+                this.reservation.price = Math.round(this.reservation.price);
+
                 if (this.reservation.price <= 0) {
                     this.messageService.add({
                         severity: 'error',
@@ -299,7 +302,7 @@ export class FormReservationComponent implements OnInit {
             }
             return false;
         } else if (step === 2) {
-            if (this.payment.pay > 0 && this.payment.total > 0 && this.payment.idReservation > 0) {
+            if (this.payment.idReservation > 0 && this.payment.total > 0 && this.payment.pay > 0) {
                 this.payReservation();
                 return true;
             }
@@ -311,6 +314,9 @@ export class FormReservationComponent implements OnInit {
     nextStep() {
         if (this.validateStep(this.activeStepIndex)) {
             this.activeStepIndex++;
+            if (this.activeStepIndex >= this.steps.length) {
+                this.onClosePopup();
+            }
         }
     }
 
