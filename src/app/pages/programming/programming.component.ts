@@ -91,9 +91,7 @@ export class ProgrammingPage implements OnInit {
                     this.getAllMeetings();
                 }
             },
-            error: (error) => {
-                console.error(error);
-            }
+            error: (error) => console.error(error)
         });
         this.getAllPackages();
         this.getAllReservations();
