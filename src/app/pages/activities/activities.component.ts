@@ -33,7 +33,7 @@ export class ActivitiesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
-    patterns = PATTERNS;
+    pattern = PATTERNS;
     //#endregion
 
     //#region constructor

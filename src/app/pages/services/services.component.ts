@@ -36,7 +36,7 @@ export class ServicesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
-    patterns = PATTERNS;
+    pattern = PATTERNS;
 
     constructor(
         private serviceService: ServiceService,
@@ -155,6 +155,10 @@ export class ServicesPage implements OnInit {
                 });
             }
         });
+    }
+
+    validateService(): boolean {
+        return this.service.idCategoryServices > 0 && this.service.name && this.service.price > 0 ? false : true;
     }
 
     showPopup() {
