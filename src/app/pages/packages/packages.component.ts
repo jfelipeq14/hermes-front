@@ -60,7 +60,7 @@ export class PackagesPage implements OnInit {
     submitted = false;
     expandedRows: Record<string, boolean> = {};
     levels = levels;
-    patterns = PATTERNS;
+    pattern = PATTERNS;
 
     constructor(
         private packageService: PackageService,
