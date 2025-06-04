@@ -149,6 +149,7 @@
                 <div class="flex flex-col">
                     <label for="image" class="required">Imagen</label>
                     <app-upload-image (uploadImage)="uploadImage($event)" />
+                    <small *ngIf="!package.image" class="text-red-500">Debe agregar una imagen</small>
                 </div>
 
                 <div class="flex flex-col">
