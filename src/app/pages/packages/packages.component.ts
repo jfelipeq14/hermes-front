@@ -199,11 +199,11 @@ export class PackagesPage implements OnInit {
 
         if (this.package.id) {
             this.packageService.update(this.package).subscribe({
-                next: (updatedPackage) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `Paquete ${updatedPackage.name} actualizado`,
+                        detail: `Paquete actualizado correctamente`,
                         life: 3000
                     });
                     this.refresh();
@@ -219,11 +219,11 @@ export class PackagesPage implements OnInit {
             });
         } else {
             this.packageService.create(this.package).subscribe({
-                next: (createdPackage) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `Paquete ${createdPackage.name} creado`,
+                        detail: `Paquete creado correctamente`,
                         life: 3000
                     });
                     this.refresh();
@@ -255,7 +255,7 @@ export class PackagesPage implements OnInit {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Éxito',
-                            detail: `Paquete ${updatedPackage.name} ${updatedPackage.status ? 'activado' : 'desactivado'}`,
+                            detail: `Paquete ${updatedPackage.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
                         this.refresh();

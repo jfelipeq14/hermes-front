@@ -38,20 +38,14 @@ export class ClientsPage implements OnInit {
             next: (clients) => {
                 this.clients = clients;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message || 'No se pudieron cargar los clientes',
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
     getReservationsByClient(id: number) {
         return [id];
     }
+
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }

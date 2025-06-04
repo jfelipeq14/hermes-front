@@ -53,9 +53,7 @@ export class CategoriesPage implements OnInit {
             next: (categories) => {
                 this.categories = categories;
             },
-            error: (e) => {
-                console.log(e);
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -63,11 +61,11 @@ export class CategoriesPage implements OnInit {
         this.submitted = true;
         if (!this.category.id) {
             this.categoryService.create(this.category).subscribe({
-                next: (c) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${c.name} creado`,
+                        detail: `Categoria creada correctamente`,
                         life: 3000
                     });
                     this.refresh();
@@ -84,11 +82,11 @@ export class CategoriesPage implements OnInit {
             this.refresh();
         } else {
             this.categoryService.update(this.category).subscribe({
-                next: (c) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${c.name} actualizado`,
+                        detail: `Categoria actualizada correctamente`,
                         life: 3000
                     });
                 },
@@ -126,7 +124,7 @@ export class CategoriesPage implements OnInit {
                         this.messageService.add({
                             severity: this.getSeverity(c.status),
                             summary: 'Éxito',
-                            detail: `${c.name} ${c.status ? 'activado' : 'desactivado'}`,
+                            detail: `Categoria ${c.status ? 'activada' : 'desactivada'}`,
                             life: 3000
                         });
                         this.refresh();
