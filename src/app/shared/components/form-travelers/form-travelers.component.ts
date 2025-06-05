@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { FormClientsComponent } from '../form-clients/form-clients.component';
 import { ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
-import { MunicipalityService } from '../../../services';
+import { ClientsService, MunicipalityService } from '../../../services';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -13,13 +13,9 @@ import { MessageService } from 'primeng/api';
     templateUrl: './form-travelers.component.html',
     styleUrl: './form-travelers.component.scss',
     imports: [TableModule, ButtonModule, CommonModule, FormClientsComponent],
-    providers: [MunicipalityService, MessageService]
+    providers: [ClientsService, MunicipalityService, MessageService]
 })
 export class FormTravelersComponent {
-    constructor(
-        private readonly municipalityService: MunicipalityService,
-        private readonly messageService: MessageService
-    ) {}
     @Input() reservation: ReservationModel = new ReservationModel();
     @Input() travel = false;
     @Input() traveler: UserModel = new UserModel();

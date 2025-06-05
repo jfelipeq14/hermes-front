@@ -91,9 +91,7 @@ export class ProgrammingPage implements OnInit {
                     this.getAllMeetings();
                 }
             },
-            error: (error) => {
-                console.error(error);
-            }
+            error: (error) => console.error(error)
         });
         this.getAllPackages();
         this.getAllReservations();
@@ -191,7 +189,7 @@ export class ProgrammingPage implements OnInit {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Éxito',
-                            detail: `Programación ${updatedDate.id} actualizada`,
+                            detail: `Programación actualizada correctamente`,
                             life: 3000
                         });
                         this.createMeeting(updatedDate.id);
@@ -212,7 +210,7 @@ export class ProgrammingPage implements OnInit {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Éxito',
-                            detail: `Programación ${date.id} creada`,
+                            detail: `Programación creada correctamente`,
                             life: 3000
                         });
 
@@ -240,11 +238,11 @@ export class ProgrammingPage implements OnInit {
 
         if (this.meeting.id) {
             this.meetingService.update(this.meeting).subscribe({
-                next: (meeting) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `Encuentro actualizado con ID ${meeting.id}`,
+                        detail: `Encuentro actualizado correctamente`,
                         life: 3000
                     });
                     this.refresh();
@@ -260,11 +258,11 @@ export class ProgrammingPage implements OnInit {
             });
         } else {
             this.meetingService.create(this.meeting).subscribe({
-                next: (meeting) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `Encuentro creado con ID ${meeting.id}`,
+                        detail: `Encuentro creado correctamente`,
                         life: 3000
                     });
                     this.refresh();
@@ -321,7 +319,7 @@ export class ProgrammingPage implements OnInit {
                         this.messageService.add({
                             severity: getSeverity(d.status),
                             summary: 'Éxito',
-                            detail: `${d.id} ${d.status ? 'activado' : 'desactivado'}`,
+                            detail: `Programación ${d.status ? 'activada' : 'desactivada'}`,
                             life: 3000
                         });
                         this.refresh();

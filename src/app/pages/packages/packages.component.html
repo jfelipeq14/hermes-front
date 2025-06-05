@@ -27,13 +27,13 @@
     <ng-template pTemplate="header">
         <tr>
             <th style="width: 3rem"></th>
-            <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
+            <th pSortableColumn="name">Nombre <p-sortIcon ="name" /></th>
             <th>Imagen</th>
-            <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
+            <th pSortableColumn="price">Precio <p-sortIcon ="price" /></th>
             <th>Municipio</th>
             <th>Nivel</th>
             <th>Fecha</th>
-            <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
+            <th pSortableColumn="status">Estado <p-sortIcon ="status" /></th>
             <th style="min-width: 8rem">Acciones</th>
         </tr>
     </ng-template>
@@ -101,54 +101,67 @@
     <ng-template pTemplate="content">
         <div class="flex gap-4 justify-content-between">
             <div class="container flex flex-col gap-4">
-                <div class="flex flex-col field">
+                <div class="flex flex-col">
                     <label for="name" class="required">Nombre</label>
-                    <input pInputText id="name" type="text" [(ngModel)]="package.name" [minLength]="3" [maxLength]="60" [pattern]="patterns.NAME" required />
-                    <small *ngIf="package.name && !package.name.match(patterns.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+                    <input pInputText type="text" id="name" [(ngModel)]="package.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
+                    <small *ngIf="!package.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
                 </div>
 
-                <div class="flex flex-col field">
-                    <label for="idActivity" class="required">Actividades</label>
-                    <p-dropdown id="idActivity" [options]="activities" [(ngModel)]="package.idActivity" optionLabel="name" optionValue="id" placeholder="Seleccione una actividad" required></p-dropdown>
-                    <small class="p-error" *ngIf="submitted && !package.idActivity"> La actividad es obligatoria. </small>
+                <div class="flex flex-col">
+                    <label for="idActivity" class="required">Actividad</label>
+                    <p-dropdown id="idActivity" [(ngModel)]="package.idActivity" [options]="activities" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una actividad" [appendTo]="'body'" required></p-dropdown>
+                    <small *ngIf="!package.idActivity.toString().match(pattern.ID)" class="text-red-500">Debe seleccionar una actividad</small>
                 </div>
 
-                <div class="flex flex-col field">
+                <div class="flex flex-col">
                     <label for="idMunicipality" class="required">Municipio</label>
-                    <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="package.idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required></p-dropdown>
-                    <small class="p-error" *ngIf="submitted && !package.idMunicipality"> El municipio es obligatorio. </small>
+                    <p-dropdown
+                        id="idMunicipality"
+                        [(ngModel)]="package.idMunicipality"
+                        [options]="municipalities"
+                        [showClear]="true"
+                        optionLabel="name"
+                        optionValue="id"
+                        placeholder="Seleccione un municipio"
+                        [appendTo]="'body'"
+                        required
+                    ></p-dropdown>
+                    <small *ngIf="!package.idMunicipality.toString().match(pattern.ID)" class="text-red-500">Debe seleccionar un municipio</small>
                 </div>
 
-                <div class="flex flex-col field">
-                    <label for="idService">Servicios</label>
+                <div class="flex flex-col">
                     <p-dropdown id="idService" [options]="services" optionLabel="name" optionValue="id" placeholder="Seleccione un servicio" (onChange)="addServiceToSelection($event)"></p-dropdown>
+                    <small *ngIf="package.detailPackagesServices.length === 0" class="text-red-500">Debe seleccionar un servicio</small>
                 </div>
 
-                <div class="flex flex-col field">
+                <div class="flex flex-col">
                     <label for="level" class="required">Nivel</label>
-                    <p-dropdown id="level" [options]="levels" [(ngModel)]="package.level" optionLabel="name" optionValue="value" placeholder="Seleccione un nivel" [showClear]="true" required></p-dropdown>
+                    <p-dropdown id="level" [options]="levels" [(ngModel)]="package.level" optionLabel="name" optionValue="value" placeholder="Seleccione un nivel" [showClear]="true" [appendTo]="'body'" required></p-dropdown>
+                    <small *ngIf="!package.level.toString().match(pattern.LEVEL)" class="text-red-500">Debe seleccionar un nivel</small>
                 </div>
 
-                <div class="flex flex-col field">
+                <div class="flex flex-col">
                     <label for="description" class="required">Descripción</label>
                     <textarea pTextarea id="description" [(ngModel)]="package.description" placeholder="Descripción" [autoResize]="true" rows="3" cols="30" [minLength]="3" [maxLength]="255" required></textarea>
+                    <small *ngIf="!package.description" class="text-red-500">Debe agregar una descripción</small>
                 </div>
 
-                <div class="flex flex-col field">
+                <div class="flex flex-col">
                     <label for="image" class="required">Imagen</label>
                     <app-upload-image (uploadImage)="uploadImage($event)" />
+                    <small *ngIf="!package.image" class="text-red-500">Debe agregar una imagen</small>
                 </div>
 
-                <div class="flex flex-col field">
+                <div class="flex flex-col">
                     <label for="price" class="required">Precio</label>
-                    <p-inputNumber id="price" [(ngModel)]="package.price" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
-                    <small class="p-error" *ngIf="submitted && !package.price"> El precio es obligatorio. </small>
+                    <p-inputNumber id="price" [(ngModel)]="package.price" mode="currency" currency="COP" locale="es-CO" [min]="1" [max]="9999999999999" required></p-inputNumber>
+                    <small *ngIf="!package.price" class="text-red-500">El precio debe ser correcto.</small>
                 </div>
 
-                <div class="flex flex-col field">
+                <div class="flex flex-col">
                     <label for="reserve" class="required">Reserva</label>
-                    <p-inputNumber id="reserve" [(ngModel)]="package.reserve" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
-                    <small class="p-error" *ngIf="submitted && !package.reserve"> El precio de reserva es obligatorio. </small>
+                    <p-inputNumber id="reserve" [(ngModel)]="package.reserve" mode="currency" currency="COP" locale="es-CO" [min]="1" [max]="9999999999999" required></p-inputNumber>
+                    <small *ngIf="!package.reserve" class="text-red-500">El precio debe ser correcto.</small>
                 </div>
             </div>
 

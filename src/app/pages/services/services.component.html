@@ -26,19 +26,19 @@
         <tr>
             <th pSortableColumn="id" style="min-width: 12rem">
                 Identificación
-                <p-sortIcon field="id" />
+                <p-sortIcon ="id" />
             </th>
             <th pSortableColumn="name" style="min-width: 16rem">
                 Nombre
-                <p-sortIcon field="name" />
+                <p-sortIcon ="name" />
             </th>
             <th pSortableColumn="price" style="min-width: 12rem">
                 Precio
-                <p-sortIcon field="price" />
+                <p-sortIcon ="price" />
             </th>
             <th pSortableColumn="status" style="min-width: 12rem">
                 Estado
-                <p-sortIcon field="status" />
+                <p-sortIcon ="status" />
             </th>
             <th style="min-width: 12rem"></th>
         </tr>
@@ -60,30 +60,31 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="serviceDialog" [style]="{ width: '450px' }" header="Detalles del Servicio" [modal]="true" class="p-fluid">
+<p-dialog [(visible)]="serviceDialog" [style]="{ width: '450px' }" header="Servicio" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="flex flex-col field">
+        <div class="flex flex-col">
             <label for="category" class="required">Categoría</label>
-            <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" [appendTo]="'body'"></p-dropdown>
+            <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" [appendTo]="'body'" required></p-dropdown>
+            <small *ngIf="!service.idCategoryServices.toString().match(pattern.ID)" class="text-red-500">La categoria es obligatoria</small>
         </div>
 
-        <div class="flex flex-col field">
+        <div class="flex flex-col">
             <label for="name" class="required">Nombre</label>
-            <input pInputText id="name" type="text" [(ngModel)]="service.name" [minLength]="3" [maxLength]="60" [pattern]="patterns.NAME" required />
-            <small *ngIf="service.name && !service.name.match(patterns.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+            <input pInputText type="text" id="name" [(ngModel)]="service.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
+            <small *ngIf="!service.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
         </div>
 
-        <div class="flex flex-col field">
+        <div class="flex flex-col">
             <label for="price" class="required">Precio</label>
-            <p-inputNumber id="price" [(ngModel)]="service.price" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
-            <small *ngIf="service.price && !service.price.toString().match(patterns.PRICE)" class="text-red-500">El precio solo puede contener números</small>
+            <p-inputNumber id="price" [(ngModel)]="service.price" mode="currency" currency="COP" locale="es-CO" [min]="1" [max]="9999999999999" required></p-inputNumber>
+            <small *ngIf="!service.price" class="text-red-500">El precio debe ser correcto.</small>
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
         <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="closePopup()" [text]="true"></p-button>
-            <p-button label="Guardar" icon="pi pi-check" (click)="saveService()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" [disabled]="validateService()" (click)="saveService()"></p-button>
         </div>
     </ng-template>
 </p-dialog>
