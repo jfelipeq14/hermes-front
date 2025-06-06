@@ -45,7 +45,6 @@ export class FormProgrammingComponent {
     onCreateDate(date: DateModel) {
         if (!date) return;
         this.toSave.emit();
-        window.location.reload();
     }
 
     onClosePopup() {
