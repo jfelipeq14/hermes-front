@@ -1,15 +1,11 @@
 <div class="p-4 mx-auto bg-gray-200 border border-gray-300 rounded-lg max-w-96 min-w-96 min-h-96">
     <div class="mb-4">
-        <img src="{{ 'http://localhost:3000' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.image }}"
-            [alt]="getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.name"
-            class="object-cover w-full h-48 rounded-lg" />
+        <img src="{{ 'http://localhost:3000' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.image }}" [alt]="getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.name" class="object-cover w-full h-48 rounded-lg" />
     </div>
     <div class="px-2">
-        <h3 class="mb-2 text-lg font-bold text-gray-800">{{ getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.name }}
-        </h3>
+        <h3 class="mb-2 text-lg font-bold text-gray-800">{{ getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.name }}</h3>
         <ul class="mb-4 text-sm text-gray-600 text-wrap">
-            <li *ngFor="let service of getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.detailPackagesServices"
-                class="mb-1">- {{ getServiceInfo(service.idService)?.name }}</li>
+            <li *ngFor="let service of getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.detailPackagesServices" class="mb-1">- {{ getServiceInfo(service.idService)?.name }}</li>
         </ul>
         <div class="mb-4 font-semibold text-md">Fecha: {{ getDateInfo(idDate)?.start | date: 'short' }}</div>
         <div class="flex items-center justify-between">
@@ -17,8 +13,7 @@
                 {{ '$' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.price }}
                 <small class="text-sm">por persona</small>
             </div>
-            <p-button [hidden]="disabled" icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary"
-                (onClick)="onClickReservation(idDate)"></p-button>
+            <p-button [hidden]="disabled" icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary" (onClick)="onClickReservation(idDate)"></p-button>
         </div>
     </div>
 </div>

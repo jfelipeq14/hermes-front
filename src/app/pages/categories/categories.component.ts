@@ -88,7 +88,7 @@ export class CategoriesPage implements OnInit {
                         detail: `Categoria actualizada correctamente`,
                         life: 3000
                     });
-                    this.refresh()
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
