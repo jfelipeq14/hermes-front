@@ -87,5 +87,5 @@
 </fieldset>
 <div class="flex gap-2 my-2 justify-content-end">
     <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (onClick)="onClosePopup()"></p-button>
-    <p-button label="Guardar" icon="pi pi-check" (onClick)="onCreateDate(date)"></p-button>
+    <p-button label="Guardar" icon="pi pi-check" [disabled]="validateProgramming()" (onClick)="onCreateDate(date)"></p-button>
 </div>

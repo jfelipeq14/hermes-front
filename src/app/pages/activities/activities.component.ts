@@ -149,6 +149,10 @@ export class ActivitiesPage implements OnInit {
         return status ? 'success' : 'danger';
     }
 
+    validateActivity(): boolean {
+        return this.activity.name ? false : true;
+    }
+
     showPopup() {
         this.activity = new ActivityModel();
         this.submitted = false;

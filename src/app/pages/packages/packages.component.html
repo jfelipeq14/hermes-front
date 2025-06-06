@@ -198,7 +198,7 @@
     <ng-template pTemplate="footer">
         <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" (onClick)="closePopup()" text />
-            <p-button label="Guardar" icon="pi pi-check" (onClick)="savePackage()" autofocus />
+            <p-button label="Guardar" icon="pi pi-check" [disabled]="validatePackage()" (onClick)="savePackage()" autofocus />
         </div>
     </ng-template>
 </p-dialog>

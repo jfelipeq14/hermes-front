@@ -67,7 +67,7 @@
     <ng-template #footer>
         <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
-            <p-button label="Save" icon="pi pi-check" (click)="saveActivity()"></p-button>
+            <p-button label="Save" icon="pi pi-check" [disabled]="validateActivity()" (click)="saveActivity()"></p-button>
         </div>
     </ng-template>
 </p-dialog>

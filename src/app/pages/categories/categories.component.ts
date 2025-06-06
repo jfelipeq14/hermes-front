@@ -143,6 +143,10 @@ export class CategoriesPage implements OnInit {
         });
     }
 
+    validateCategory(): boolean {
+        return this.category.name ? false : true;
+    }
+
     showPopup() {
         this.category = new CategoryModel();
         this.categoryDialog = true;
