@@ -9,13 +9,12 @@ export const loggedGuard: CanActivateFn = () => {
     return authService.currentUser$.pipe(
         take(1),
         map((user) => {
-            // Si no está logueado, permitir acceso al landing
-            if (!user) {
-                return true;
+            if (user) {
+                authService.redirectBasedOnRole();
+                return false;
             }
-            window.location.href = '/home';
 
-            return false;
+            return true;
         })
     );
 };
