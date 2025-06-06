@@ -269,7 +269,6 @@ export class PackagesPage implements OnInit {
                         });
                     }
                 });
-                this.refresh();
             }
         });
     }

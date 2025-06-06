@@ -181,6 +181,7 @@ export class PaymentsPage implements OnInit {
                         detail: `Pago con ID ${p.id} actualizado`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -200,6 +201,7 @@ export class PaymentsPage implements OnInit {
                         detail: `Pago con ID ${p.id} creado`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -211,8 +213,6 @@ export class PaymentsPage implements OnInit {
                 }
             });
         }
-        this.refresh();
-        this.closePopup();
     }
 
     editPayment(payment: PaymentModel) {
@@ -260,8 +260,7 @@ export class PaymentsPage implements OnInit {
                                     });
                                 }
                             });
-                        }
-                        if (pay.status === 'P' && pay.pay === pay.total) {
+                        } else if (pay.status === 'P' && pay.pay === pay.total) {
                             this.reservationService.changeStatus(pay.idReservation, 'P').subscribe({
                                 next: (res) => {
                                     this.messageService.add({
