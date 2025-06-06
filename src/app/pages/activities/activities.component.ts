@@ -72,6 +72,7 @@ export class ActivitiesPage implements OnInit {
                         detail: `Actividad creada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -82,7 +83,6 @@ export class ActivitiesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.activityService.update(this.activity).subscribe({
                 next: () => {
@@ -92,6 +92,7 @@ export class ActivitiesPage implements OnInit {
                         detail: `Actividad atualizada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -102,9 +103,7 @@ export class ActivitiesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editActivity(activity: ActivityModel) {
@@ -161,8 +160,11 @@ export class ActivitiesPage implements OnInit {
     }
 
     refresh() {
-        this.getAllActivities();
-        this.closePopup();
+        this.activities = [];
+        this.activity = new ActivityModel();
+        this.activityDialog = false;
         this.submitted = false;
+
+        this.getAllActivities();
     }
 }

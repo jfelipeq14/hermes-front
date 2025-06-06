@@ -272,7 +272,6 @@ export class UsersPage implements OnInit {
                                 life: 3000
                             });
                         }
-                        this.refresh();
                         this.messageService.add({
                             severity: this.getSeverity(updatedUser.status),
                             summary: 'Éxito',
@@ -292,7 +291,6 @@ export class UsersPage implements OnInit {
                 });
             }
         });
-        this.refresh();
     }
 
     getSeverity(status: boolean): 'success' | 'danger' {
