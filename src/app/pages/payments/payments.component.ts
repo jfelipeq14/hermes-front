@@ -72,7 +72,7 @@ export class PaymentsPage implements OnInit {
         private reservationService: ReservationsService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.loadData();
@@ -91,14 +91,14 @@ export class PaymentsPage implements OnInit {
                             this.reservations = reservations.filter((r) => r.idUser === userData.id);
                             this.disabled = true;
                             // Calcular totalPay para cada reserva
-                            this.reservations.forEach(reservation => {
+                            this.reservations.forEach((reservation) => {
                                 this.paymentService.getByReservation(reservation.id).subscribe({
                                     next: (payments) => {
                                         reservation.totalPay = payments.reduce((total, payment) => total + payment.pay, 0);
                                         // Opcional: guardar los pagos en this.payments si lo necesitas globalmente
                                         this.payments = [...this.payments, ...payments];
                                     },
-                                    error: (e) => {
+                                    error: () => {
                                         reservation.totalPay = 0;
                                     }
                                 });
@@ -114,13 +114,13 @@ export class PaymentsPage implements OnInit {
                         next: (reservations) => {
                             this.reservations = reservations;
                             // Calcular totalPay para cada reserva
-                            this.reservations.forEach(reservation => {
+                            this.reservations.forEach((reservation) => {
                                 this.paymentService.getByReservation(reservation.id).subscribe({
                                     next: (payments) => {
                                         reservation.totalPay = payments.reduce((total, payment) => total + payment.pay, 0);
                                         this.payments = [...this.payments, ...payments];
                                     },
-                                    error: (e) => {
+                                    error: () => {
                                         reservation.totalPay = 0;
                                     }
                                 });
@@ -150,11 +150,9 @@ export class PaymentsPage implements OnInit {
                 next: (payments) => {
                     this.payments = [...this.payments, ...payments];
                     // Calcular la suma de abonos para esta reserva
-                    const totalPaid = this.payments
-                        .filter((p) => p.idReservation === reservationId)
-                        .reduce((total, payment) => total + payment.pay, 0);
+                    const totalPaid = this.payments.filter((p) => p.idReservation === reservationId).reduce((total, payment) => total + payment.pay, 0);
                     // Asignar el valor a la reserva correspondiente
-                    const reservation = this.reservations.find(r => r.id === reservationId);
+                    const reservation = this.reservations.find((r) => r.id === reservationId);
                     if (reservation) {
                         reservation.totalPay = totalPaid;
                     }
@@ -251,7 +249,7 @@ export class PaymentsPage implements OnInit {
                             detail: `${pay.id} cambiado a ${this.getValuePayment(pay.status)}`,
                             life: 3000
                         });
-                        if (pay.status === 'N' || pay.status === "P" && pay.pay >= pay.total / 2) {
+                        if (pay.status === 'N' || (pay.status === 'P' && pay.pay >= pay.total / 2)) {
                             this.reservationService.changeStatus(pay.idReservation, 'C').subscribe({
                                 next: (res) => {
                                     this.messageService.add({
