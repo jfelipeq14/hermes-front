@@ -3,7 +3,7 @@ import { CanActivateFn } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-export const hasRoleGuard = (allowedRoleIds: number[]): CanActivateFn => {
+export const hasRoleGuard = (): CanActivateFn => {
     return () => {
         const authService = inject(AuthService);
 
