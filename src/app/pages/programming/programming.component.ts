@@ -377,7 +377,19 @@ export class ProgrammingPage implements OnInit {
         this.dialogVisible = false;
         this.submitted = false;
 
+        this.profileService.getCurrentUser().subscribe({
+            next: (userData) => {
+                if (userData.idRole === 2) {
+                    this.getAllDatesByResponsible(userData.id);
+                } else {
+                    this.getAllDates();
+                    this.getAllResponsibles();
+                    this.getAllMeetings();
+                }
+            },
+            error: (error) => console.error(error)
+        });
         this.getAllPackages();
-        this.getAllResponsibles();
+        this.getAllReservations();
     }
 }

@@ -207,9 +207,6 @@ export class ReservationsPage implements OnInit {
                         });
                     }
                 });
-            },
-            reject: () => {
-                this.refresh();
             }
         });
     }

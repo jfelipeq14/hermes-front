@@ -84,6 +84,7 @@ export class ServicesPage implements OnInit {
                         detail: `Servicio creado correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -94,7 +95,6 @@ export class ServicesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.serviceService.update(this.service).subscribe({
                 next: () => {
@@ -104,6 +104,7 @@ export class ServicesPage implements OnInit {
                         detail: `Servicio actualizado correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -114,9 +115,7 @@ export class ServicesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editService(service: ServiceModel) {

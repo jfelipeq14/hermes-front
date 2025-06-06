@@ -1,33 +1,26 @@
-<div class="flex flex-wrap gap-4 p-4">
-    <!-- Sales Chart Section -->
-    <div class="flex-1 min-w-[300px]">
-        <div class="card">
-            <h3 class="text-xl font-semibold mb-4">VENTAS 2024</h3>
-            <p-chart type="pie" [data]="salesChartData" [options]="pieOptions"></p-chart>
-            <div class="text-sm text-gray-600 mt-2">Total: {{ sales.total }}</div>
+<div class="flex flex-wrap gap-4">
+    <!-- Top Clients Section -->
+    <div class="w-full card">
+        <h3 class="mb-4 text-xl font-semibold">TOP 3 CLIENTES 2024</h3>
+        <div class="flex items-center justify-around">
+            <div *ngFor="let client of topClients.slice(0, 3)" class="flex flex-col items-center">
+                <div class="w-16 h-16 mb-2 bg-gray-200 rounded-full"></div>
+                <h4 class="font-semibold">{{ client.name }}</h4>
+                <p class="text-sm text-gray-600">Paquetes totales: {{ client.purchases }}</p>
+                <p class="text-sm text-gray-600">Total en dinero: ${{ client.total }}</p>
+            </div>
         </div>
+    </div>
+    <!-- Sales Chart Section -->
+    <div class="flex-1 max-h-full card min-h-fit">
+        <h3 class="mb-4 text-xl font-semibold">VENTAS 2024</h3>
+        <p-chart type="pie" [data]="salesChartData" [options]="pieOptions"></p-chart>
+        <div class="mt-2 text-sm text-gray-600">Total: {{ sales.total }}</div>
     </div>
 
     <!-- Package Sales Chart Section -->
-    <div class="flex-1 min-w-[300px]">
-        <div class="card">
-            <h3 class="text-xl font-semibold mb-4">Venta de paquetes</h3>
-            <p-chart type="bar" [data]="dataPackages" [options]="barOptions"></p-chart>
-        </div>
-    </div>
-
-    <!-- Top Clients Section -->
-    <div class="w-full">
-        <div class="card">
-            <h3 class="text-xl font-semibold mb-4">TOP 3 CLIENTES 2024</h3>
-            <div class="flex justify-around items-center">
-                <div *ngFor="let client of topClients.slice(0, 3)" class="flex flex-col items-center">
-                    <div class="w-16 h-16 rounded-full bg-gray-200 mb-2"></div>
-                    <h4 class="font-semibold">{{ client.name }}</h4>
-                    <p class="text-sm text-gray-600">Paquetes totales: {{ client.purchases }}</p>
-                    <p class="text-sm text-gray-600">Total en dinero: ${{ client.total }}</p>
-                </div>
-            </div>
-        </div>
+    <div class="flex-1 max-h-full card min-h-fit">
+        <h3 class="mb-4 text-xl font-semibold">Venta de paquetes</h3>
+        <p-chart type="bar" [data]="dataPackages" [options]="barOptions"></p-chart>
     </div>
 </div>
