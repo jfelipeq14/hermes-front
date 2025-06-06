@@ -12,7 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { typesDocument } from '../../constants';
 import { DropdownModule } from 'primeng/dropdown';
 import { DatePickerModule } from 'primeng/datepicker';
-import { PATTERNS } from '../../helpers'; // Importar los patrones
+import { PATTERNS } from '../../helpers';
 
 @Component({
     selector: 'app-register',

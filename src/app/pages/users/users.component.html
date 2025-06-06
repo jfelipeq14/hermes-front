@@ -150,7 +150,7 @@
                 <div class="flex flex-col flex-1">
                     <label for="phone" class="required mb-2">Teléfono</label>
                     <input type="text" pInputText id="phone" [(ngModel)]="user.phone" [pattern]="patterns.PHONE" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.phone }" />
-                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.phone.match(patterns.PHONE)">El telefono solo puede contener numeros y minimo debe llevar  7 numeros</small>
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.phone.match(patterns.PHONE)">El telefono solo puede contener numeros y minimo debe llevar 7 numeros</small>
                 </div>
             </div>
 
@@ -175,11 +175,21 @@
                 <div class="flex flex-col flex-1">
                     <label for="email" class="required mb-2">Correo Electrónico</label>
                     <input type="email" pInputText id="email" [(ngModel)]="user.email" [pattern]="patterns.EMAIL" [disabled]="isFormDisabled" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.email }" />
-                    <small class="p-error mt-1 text-red-500"  *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo es obligatorio</small>
+                    <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo es obligatorio</small>
                 </div>
 
                 <div class="flex flex-col flex-1">
-                    <label for="password" class="required mb-2">Contraseña</label>                    <input type="password" pInputText id="password" [(ngModel)]="user.password" [pattern]="patterns.PASSWORD" [disabled]="isFormDisabled" required [ngClass]="{ 'ng-invalid ng-dirty': !isFormDisabled && submitted && !user.password }" />
+                    <label for="password" class="required mb-2">Contraseña</label>
+                    <input
+                        type="password"
+                        pInputText
+                        id="password"
+                        [(ngModel)]="user.password"
+                        [pattern]="patterns.PASSWORD"
+                        [disabled]="isFormDisabled"
+                        required
+                        [ngClass]="{ 'ng-invalid ng-dirty': !isFormDisabled && submitted && !user.password }"
+                    />
                     <small class="p-error mt-1 text-red-500" *ngIf="!isFormDisabled && submitted && !user.password?.match(patterns.PASSWORD)">La contraseña debe contener minimo una mayuscula, un caracter especial y un numero</small>
                 </div>
             </div>

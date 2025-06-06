@@ -66,16 +66,7 @@
     <div class="flex flex-row gap-4">
         <div class="flex flex-col flex-1">
             <label for="dateBirth" class="required mb-2">Fecha de nacimiento</label>
-            <p-datepicker
-                [(ngModel)]="user.dateBirth"
-                inputId="start"
-                dateFormat="yy-mm-dd"
-                [dataType]="'date'"
-                [appendTo]="'body'"
-                [maxDate]="maxDate"
-                required
-                [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.dateBirth }"
-            ></p-datepicker>
+            <p-datepicker [(ngModel)]="user.dateBirth" inputId="start" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [maxDate]="maxDate" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.dateBirth }"></p-datepicker>
             <small class="p-error mt-1 text-red-500" *ngIf="submitted && !user.dateBirth">La fecha de nacimiento es obligatoria y debe ser mayor de 18 años</small>
         </div>
     </div>
