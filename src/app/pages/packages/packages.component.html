@@ -45,7 +45,7 @@
             </td>
             <td>{{ package.name }}</td>
             <td>
-                <img [src]="package.image ? package.image : 'http://localhost:3000'" [alt]="package.name" width="50" class="shadow-lg" />
+                <img [src]="'http://localhost:3000' + package.image" [alt]="package.name" width="50" class="shadow-lg" />
             </td>
             <td>{{ package.price | currency: 'COP' }}</td>
             <td>{{ getMunicipalityName(package.idMunicipality) }}</td>
@@ -198,7 +198,7 @@
     <ng-template pTemplate="footer">
         <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" (onClick)="closePopup()" text />
-            <p-button label="Guardar" icon="pi pi-check" (onClick)="savePackage()" autofocus />
+            <p-button label="Guardar" icon="pi pi-check" [disabled]="validatePackage()" (onClick)="savePackage()" autofocus />
         </div>
     </ng-template>
 </p-dialog>

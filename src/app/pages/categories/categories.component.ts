@@ -79,7 +79,6 @@ export class CategoriesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.categoryService.update(this.category).subscribe({
                 next: () => {
@@ -89,6 +88,7 @@ export class CategoriesPage implements OnInit {
                         detail: `Categoria actualizada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -99,9 +99,7 @@ export class CategoriesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editCategory(category: CategoryModel) {
@@ -138,9 +136,12 @@ export class CategoriesPage implements OnInit {
                         });
                     }
                 });
-                this.refresh();
             }
         });
+    }
+
+    validateCategory(): boolean {
+        return this.category.name ? false : true;
     }
 
     showPopup() {
@@ -155,8 +156,8 @@ export class CategoriesPage implements OnInit {
     }
 
     refresh() {
-        this.category = new CategoryModel();
         this.categories = [];
+        this.category = new CategoryModel();
         this.categoryDialog = false;
         this.submitted = false;
 

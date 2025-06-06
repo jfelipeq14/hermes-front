@@ -121,6 +121,8 @@ export class DashboardPage implements OnInit {
         };
 
         this.barOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     labels: {
@@ -164,9 +166,11 @@ export class DashboardPage implements OnInit {
         };
 
         this.pieOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'right',
+                    position: 'top',
                     labels: {
                         color: '#495057'
                     }

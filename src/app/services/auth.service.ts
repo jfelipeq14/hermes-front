@@ -64,13 +64,19 @@ export class AuthService {
         return this.http.patch<any>(this.url + 'reset-password', resetModel);
     }
 
-    redirectBasedOnRole(roleId: number): void {
-        if (!roleId) {
-            window.location.href = '/landing';
+    redirectBasedOnRole(): void {
+        const user = this.currentUserSubject.getValue();
+        if (!user) return;
 
-            return;
+        if (user.idRole === 1) {
+            window.location.href = '/home/dashboard';
+        } else if (user.idRole === 2) {
+            window.location.href = '/home/programming';
+        } else if (user.idRole === 3) {
+            window.location.href = '/home/reservations';
+        } else {
+            window.location.href = '/landing';
         }
-        window.location.href = '/home';
     }
 
     isValidTokenFormat(token: string | null): boolean {
@@ -105,6 +111,7 @@ export class AuthService {
         const decodedToken = this.getDecodedAccessToken(accessToken);
         if (decodedToken) {
             this.currentUserSubject.next(decodedToken);
+            this.redirectBasedOnRole();
         }
     }
 

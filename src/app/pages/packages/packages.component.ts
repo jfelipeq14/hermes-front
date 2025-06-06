@@ -269,7 +269,6 @@ export class PackagesPage implements OnInit {
                         });
                     }
                 });
-                this.refresh();
             }
         });
     }
@@ -326,6 +325,20 @@ export class PackagesPage implements OnInit {
         if (serviceIndex !== -1) {
             this.package.detailPackagesServices.splice(serviceIndex, 1);
         }
+    }
+
+    validatePackage(): boolean {
+        return this.package.name &&
+            this.package.idActivity > 0 &&
+            this.package.idMunicipality > 0 &&
+            this.package.level >= 0 &&
+            this.package.price > 0 &&
+            this.package.reserve > 0 &&
+            this.package.description &&
+            this.package.image &&
+            this.package.detailPackagesServices.length > 0
+            ? false
+            : true;
     }
 
     showPopup() {

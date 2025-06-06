@@ -8,15 +8,6 @@ export const authGuard: CanActivateFn = () => {
 
     return authService.currentUser$.pipe(
         take(1),
-        map((user) => {
-            if (user) {
-                return true; // Permitir acceso si el usuario está autenticado
-            }
-
-            // Redirigir al landing si no está autenticado
-            window.location.href = '/landing';
-
-            return false;
-        })
+        map((user) => (user ? true : false))
     );
 };

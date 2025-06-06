@@ -34,6 +34,22 @@ export class FormProgrammingComponent {
 
     today: Date = new Date();
 
+    validateProgramming() {
+        return this.date.idPackage > 0 &&
+            this.date.amount > 0 &&
+            this.date.start &&
+            this.date.end &&
+            this.date.startRegistration &&
+            this.date.endRegistration &&
+            this.meeting.idDate > 0 &&
+            this.meeting.zone &&
+            this.meeting.hour &&
+            this.meeting.description &&
+            this.meeting.responsibles.length > 0
+            ? false
+            : true;
+    }
+
     onChangeResponsible(event: any) {
         if (!event.value) return;
 
