@@ -9,4 +9,5 @@ export class ReservationModel {
     price = 0;
     status: 'N' | 'C' | 'P' | 'M' | 'R' | 'E' | 'F' = 'N';
     detailReservationTravelers: ReservationTravelerModel[] = [];
+    totalPay? = 0;
 }

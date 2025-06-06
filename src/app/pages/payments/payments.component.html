@@ -1,18 +1,7 @@
-<p-table
-    #dt
-    [value]="reservations"
-    [rows]="10"
-    [paginator]="true"
-    [globalFilterFields]="['id', 'date', 'price', 'status']"
-    [tableStyle]="{ 'min-width': '75rem' }"
-    [rowHover]="true"
-    dataKey="id"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservaciones"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[5, 10, 20]"
-    [expandedRowKeys]="expandedRows"
-    (onRowExpand)="onRowExpand($event)"
->
+<p-table #dt [value]="reservations" [rows]="10" [paginator]="true"
+    [globalFilterFields]="['id', 'date', 'price', 'status']" [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true"
+    dataKey="id" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservaciones"
+    [rowsPerPageOptions]="[5, 10, 20]" [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)">
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Pagos de Reservaciones</h3>
         <div class="flex justify-content-between align-items-center">
@@ -39,20 +28,23 @@
     <ng-template pTemplate="body" let-reservation let-expanded="expanded">
         <tr>
             <td>
-                <p-button type="button" pRipple [pRowToggler]="reservation" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
+                <p-button type="button" pRipple [pRowToggler]="reservation" [text]="true" [rounded]="true"
+                    [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
             </td>
             <td>{{ reservation.id }}</td>
             <td>{{ reservation.date | date: 'shortDate' }}</td>
             <td>{{ reservation.price | currency: 'COP' }}</td>
             <td>
-                <p-tag [value]="getValueReservation(reservation.status)" [severity]="getSeverityReservation(reservation.status)"></p-tag>
+                <p-tag [value]="getValueReservation(reservation.status)"
+                    [severity]="getSeverityReservation(reservation.status)"></p-tag>
             </td>
             <td>{{ reservation.idUser }}</td>
             <td>
-                {{ reservation.total | currency: 'COP' }}
+                {{ reservation.totalPay || 0 | currency:'COP':'symbol' }}
             </td>
             <td>
-                <p-button icon="pi pi-plus" class="mr-2" [rounded]="true" [outlined]="true" (click)="showPopup(reservation.id)" />
+                <p-button icon="pi pi-plus" class="mr-2" [rounded]="true" [outlined]="true"
+                    (click)="showPopup(reservation.id)" />
             </td>
         </tr>
     </ng-template>
@@ -65,49 +57,55 @@
 
                     <p-table [value]="getPaymentsByReservation(reservation.id)" styleClass="p-datatable-sm">
                         <ng-template pTemplate="header">
-                            <tr>
-                                <th>ID Pago</th>
-                                <th>Fecha</th>
-                                <th>Monto</th>
-                                <th>Voucher</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-payment>
-                            <tr>
-                                <td>{{ payment.id }}</td>
-                                <td>{{ payment.date | date: 'short' }}</td>
-                                <td>{{ payment.total | currency: 'COP' }}</td>
-                                <td>{{ payment.voucher || 'N/A' }}</td>
-                                <td>
-                                    <p-dropdown [options]="statuses" [(ngModel)]="payment.status" optionLabel="name" optionValue="value" (onChange)="changeStatusPayment(payment)" styleClass="p-dropdown-sm" [appendTo]="'body'" [disabled]="disabled">
-                                        <ng-template pTemplate="selectedItem">
-                                            <p-tag [value]="getValuePayment(payment.status)" [severity]="getServerityPayment(payment.status)"></p-tag>
-                                        </ng-template>
-                                        <ng-template let-status pTemplate="item">
-                                            <p-tag [value]="getValuePayment(status.value)" [severity]="getServerityPayment(status.value)"></p-tag>
-                                        </ng-template>
-                                    </p-dropdown>
-                                </td>
-                                <td>
-                                    <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" (click)="toPayment(payment)" />
-                                </td>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="emptymessage">
-                            <tr>
-                                <td colspan="6" class="text-center">No hay pagos registrados para esta reservación</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
+        <tr>
+            <th>ID Pago</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Voucher</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-payment>
+        <tr>
+            <td>{{ payment.id }}</td>
+            <td>{{ payment.date | date: 'short' }}</td>
+            <td>{{ payment.pay | currency: 'COP' }}</td>
+            <td>{{ payment.voucher || 'N/A' }}</td>
+            <td>
+                <p-dropdown [options]="statuses" [(ngModel)]="payment.status" optionLabel="name" optionValue="value"
+                    (onChange)="changeStatusPayment(payment)" styleClass="p-dropdown-sm" [appendTo]="'body'"
+                    [disabled]="disabled">
+                    <ng-template pTemplate="selectedItem">
+                        <p-tag [value]="getValuePayment(payment.status)"
+                            [severity]="getServerityPayment(payment.status)"></p-tag>
+                    </ng-template>
+                    <ng-template let-status pTemplate="item">
+                        <p-tag [value]="getValuePayment(status.value)"
+                            [severity]="getServerityPayment(status.value)"></p-tag>
+                    </ng-template>
+                </p-dropdown>
+            </td>
+            <td>
+                <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true"
+                    (click)="toPayment(payment)" />
             </td>
         </tr>
     </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="6" class="text-center">No hay pagos registrados para esta reservación</td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>
+</td>
+</tr>
+</ng-template>
 </p-table>
 
-<p-dialog [(visible)]="paymentDialog" [style]="{ width: '500px', height: '500px' }" header="Pago" [modal]="true" class="p-fluid">
+<p-dialog [(visible)]="paymentDialog" [style]="{ width: '500px', height: '500px' }" header="Pago" [modal]="true"
+    class="p-fluid">
     <ng-template pTemplate="header">
         <h5 class="m-0">Detalles de Pago</h5>
     </ng-template>
@@ -116,7 +114,8 @@
     </ng-template>
     <ng-template pTemplate="footer">
         <div class="flex gap-2 my-2 justify-content-end">
-            <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
+            <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text"
+                (click)="closePopup()"></p-button>
             <p-button label="Save" icon="pi pi-check" (click)="savePayment()"></p-button>
         </div>
     </ng-template>
