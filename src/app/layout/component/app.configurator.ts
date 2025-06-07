@@ -1,5 +1,6 @@
+/* eslint-disable @angular-eslint/component-class-suffix */
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, computed, inject, PLATFORM_ID, signal, OnInit } from '@angular/core';
+import { Component, computed, inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { $t, updatePreset, updateSurfacePalette } from '@primeng/themes';
