@@ -40,8 +40,7 @@ import { AppConfigurator } from '../../layout/component/app.configurator';
         RestorePasswordComponent,
         ResetPasswordComponent,
         FormReservationComponent,
-        PackageCardComponent,
-        AppConfigurator
+        PackageCardComponent
     ],
     providers: [ProgrammingService, PackageService, ServiceService, MunicipalityService, MessageService]
 })
