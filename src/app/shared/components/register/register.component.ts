@@ -164,7 +164,7 @@ export class RegisterComponent {
     onClosePopup() {
         this.registerDialog = false;
         this.submitted = false;
-        this.user = new UserModel(); // Limpiar el formulario
+        this.user = new UserModel();
         this.closePopup.emit();
     }
 }
