@@ -1,8 +1,9 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
 import { Component } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
+import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -11,7 +12,7 @@ import { AuthService } from '../../services';
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, ButtonModule, MenuModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, ButtonModule, MenuModule, AppConfigurator],
     providers: [AuthService],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
@@ -36,6 +37,8 @@ import { AuthService } from '../../services';
                 </button>
             </div>
 
+            <app-configurator />
+
             <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
                 <i class="pi pi-ellipsis-v"></i>
             </button>
@@ -55,8 +58,7 @@ import { AuthService } from '../../services';
 export class AppTopbar {
     constructor(
         public layoutService: LayoutService,
-        private authService: AuthService,
-        private router: Router
+        private authService: AuthService
     ) {}
 
     toggleDarkMode() {

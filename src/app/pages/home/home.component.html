@@ -1,70 +1,57 @@
 <!-- Landing page con TailwindCSS y PrimeNG Sakai -->
 <div class="min-h-screen">
-
-<!-- Navbar -->
-<div class="navbar-gradient fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
-    <div class="text-white font-bold text-xl">
-        Parche Travels
+    <!-- Header con botones de login -->
+    <div class="fixed top-0 right-0 z-50 flex items-center gap-2 p-4">
+        <app-configurator />
+        <p-button icon="pi pi-user" label="Registrarse" severity="secondary" (click)="showPopupRegister()"></p-button>
+        <p-button icon="pi pi-user" label="Iniciar sesión" (click)="showPopupLogin()"></p-button>
     </div>
-    
-    <!-- Botones de login -->
-    <div class="flex items-center gap-3">
-        <button class="navbar-button" (click)="showPopupRegister()">
-            <i class="pi pi-user"></i>
-            Registrarse
-        </button>
-        <button class="navbar-button primary" (click)="showPopupLogin()">
-            <i class="pi pi-sign-in"></i>
-            Iniciar sesión
-        </button>
-    </div>
-</div>
 
     <!-- Slider con las imagenes-->
-    <div class="hero-slider relative overflow-hidden">
+    <div class="relative overflow-hidden hero-slider">
         <div class="slider-container">
-            <div class="slider-track flex">
-                <div class="slide slide-1 flex-shrink-0 w-full h-screen relative">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
-                    <div class="absolute inset-0 flex items-center justify-center z-20">
+            <div class="flex slider-track">
+                <div class="relative flex-shrink-0 w-full h-screen slide slide-1">
+                    <div class="absolute inset-0 z-10 bg-black bg-opacity-40"></div>
+                    <div class="absolute inset-0 z-20 flex items-center justify-center">
                         <div class="text-center text-white">
-                            <h1 class="text-6xl md:text-8xl font-bold mb-4">Bienvenido a Parche Travels</h1>
+                            <h1 class="mb-4 text-6xl font-bold md:text-8xl">Bienvenido a Hermes</h1>
                             <p class="text-xl md:text-2xl">Tu puerta a aventuras extraordinarias</p>
                         </div>
                     </div>
                 </div>
-                <div class="slide slide-2 flex-shrink-0 w-full h-screen relative">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
-                    <div class="absolute inset-0 flex items-center justify-center z-20">
+                <div class="relative flex-shrink-0 w-full h-screen slide slide-2">
+                    <div class="absolute inset-0 z-10 bg-black bg-opacity-40"></div>
+                    <div class="absolute inset-0 z-20 flex items-center justify-center">
                         <div class="text-center text-white">
-                            <h1 class="text-6xl md:text-8xl font-bold mb-4">Bienvenido a Parche Travels</h1>
+                            <h1 class="mb-4 text-6xl font-bold md:text-8xl">Bienvenido a Hermes</h1>
                             <p class="text-xl md:text-2xl">Descubre el mundo con nosotros</p>
                         </div>
                     </div>
                 </div>
-                <div class="slide slide-3 flex-shrink-0 w-full h-screen relative">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
-                    <div class="absolute inset-0 flex items-center justify-center z-20">
+                <div class="relative flex-shrink-0 w-full h-screen slide slide-3">
+                    <div class="absolute inset-0 z-10 bg-black bg-opacity-40"></div>
+                    <div class="absolute inset-0 z-20 flex items-center justify-center">
                         <div class="text-center text-white">
-                            <h1 class="text-6xl md:text-8xl font-bold mb-4">Bienvenido a Parche Travels</h1>
+                            <h1 class="mb-4 text-6xl font-bold md:text-8xl">Bienvenido a Hermes</h1>
                             <p class="text-xl md:text-2xl">Vive experiencias únicas</p>
                         </div>
                     </div>
                 </div>
-                <div class="slide slide-4 flex-shrink-0 w-full h-screen relative">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
-                    <div class="absolute inset-0 flex items-center justify-center z-20">
+                <div class="relative flex-shrink-0 w-full h-screen slide slide-4">
+                    <div class="absolute inset-0 z-10 bg-black bg-opacity-40"></div>
+                    <div class="absolute inset-0 z-20 flex items-center justify-center">
                         <div class="text-center text-white">
-                            <h1 class="text-6xl md:text-8xl font-bold mb-4">Bienvenido a Parche Travels</h1>
+                            <h1 class="mb-4 text-6xl font-bold md:text-8xl">Bienvenido a Hermes</h1>
                             <p class="text-xl md:text-2xl">Aventuras que transforman vidas</p>
                         </div>
                     </div>
                 </div>
-                <div class="slide slide-5 flex-shrink-0 w-full h-screen relative">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
-                    <div class="absolute inset-0 flex items-center justify-center z-20">
+                <div class="relative flex-shrink-0 w-full h-screen slide slide-5">
+                    <div class="absolute inset-0 z-10 bg-black bg-opacity-40"></div>
+                    <div class="absolute inset-0 z-20 flex items-center justify-center">
                         <div class="text-center text-white">
-                            <h1 class="text-6xl md:text-8xl font-bold mb-4">Bienvenido a Parche Travels</h1>
+                            <h1 class="mb-4 text-6xl font-bold md:text-8xl">Bienvenido a Hermes</h1>
                             <p class="text-xl md:text-2xl">Tu próxima aventura te espera</p>
                         </div>
                     </div>
@@ -73,41 +60,41 @@
         </div>
     </div>
 
-    <!-- Decoracion de un circulo -->
-    <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 2s"></div>
-        <div class="absolute -bottom-8 left-1/2 w-64 h-64 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 4s"></div>
+    <!-- Sección con background geométrico azul -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50">
+        <div class="absolute top-0 left-0 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 2s"></div>
+        <div class="absolute w-64 h-64 rounded-full -bottom-8 left-1/2 bg-cyan-200 mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 4s"></div>
 
-        <div class="container mx-auto relative z-10">
+        <div class="container relative z-10 mx-auto">
             <!-- Seccion para mencionar los paquetes -->
-            <section class="p-8 m-4 my-12 text-center rounded-2xl bg-white/80 backdrop-blur-sm shadow-xl border border-white/20">
+            <section class="p-8 m-4 my-12 text-center border shadow-xl rounded-2xl bg-white/80 backdrop-blur-sm border-white/20">
                 <h1 class="mb-6 text-5xl font-bold text-gray-800">Conoce los paquetes que ofrecemos</h1>
                 <p class="mb-0 text-xl text-gray-600">Descubre destinos increíbles a precios accesibles</p>
             </section>
 
             <!-- Seccion donde se ven los paquetes -->
-            <div class="mb-12 px-4">
+            <div class="px-4 mb-12">
                 <p-carousel [value]="dates" [numVisible]="3" [numScroll]="3" [showNavigators]="true" [showIndicators]="true" [circular]="true" [autoplayInterval]="4000">
                     <ng-template let-date #item>
                         <div class="p-3">
-                            <app-package-card [idDate]="date.id" [disabled]="false" (clickReservation)="clickReservation(date.id)" class="transform hover:scale-105 transition-transform duration-300" />
+                            <app-package-card [idDate]="date.id" [disabled]="false" (clickReservation)="clickReservation(date.id)" class="transition-transform duration-300 transform hover:scale-105" />
                         </div>
                     </ng-template>
                 </p-carousel>
             </div>
 
-            <div class="my-8 mx-4 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-l-8 border-amber-400 shadow-lg">
-                <p class="font-bold text-center text-gray-800 text-lg">
+            <div class="p-6 mx-4 my-8 border-l-8 shadow-lg bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-amber-400">
+                <p class="text-lg font-bold text-center text-gray-800">
                     Antes de realizar una reserva debes saber que el comprobante se sube en la aplicación, pero previamente debes registrarte.
-                    <a href="#" class="font-medium text-amber-600 hover:text-amber-800 hover:underline ml-2 transition-colors duration-300">Términos y condiciones</a>
+                    <a href="#" class="ml-2 font-medium transition-colors duration-300 text-amber-600 hover:text-amber-800 hover:underline">Términos y condiciones</a>
                 </p>
             </div>
         </div>
     </div>
 
     <!-- Sección FAQ con background de ondas verdes -->
-    <div class="bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 relative overflow-hidden py-16">
+    <div class="relative py-16 overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50">
         <!-- Ondas decorativas -->
         <div class="absolute inset-0 opacity-30">
             <svg class="absolute bottom-0 left-0 w-full h-32" viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -124,16 +111,16 @@
             </svg>
         </div>
 
-        <div class="container mx-auto relative z-10">
+        <div class="container relative z-10 mx-auto">
             <!-- Seccion de preguntas frecuentes -->
-            <div class="p-8 m-4 my-8 text-center rounded-2xl bg-white/90 backdrop-blur-sm shadow-2xl border border-white/30">
+            <div class="p-8 m-4 my-8 text-center border shadow-2xl rounded-2xl bg-white/90 backdrop-blur-sm border-white/30">
                 <h2 class="mb-12 text-4xl font-bold text-center text-gray-800">Preguntas frecuentes</h2>
 
                 <div class="flex flex-wrap -mx-3">
-                    <div *ngFor="let feature of features; let i = index" class="p-3 w-full md:w-1/2 lg:w-1/4">
-                        <div class="h-full p-6 text-center bg-gradient-to-br from-white to-cyan-50 border-round shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-cyan-100">
-                            <div class="mb-4 p-4 rounded-full bg-cyan-500 bg-opacity-15 inline-block">
-                                <i [class]="feature.icon + ' text-4xl text-cyan-600'"></i>
+                    <div *ngFor="let feature of features; let i = index" class="w-full p-3 md:w-1/2 lg:w-1/4">
+                        <div class="h-full p-6 text-center transition-all duration-500 transform border shadow-lg bg-gradient-to-br from-white to-emerald-50 border-round hover:shadow-2xl hover:-translate-y-3 border-emerald-100">
+                            <div class="inline-block p-4 mb-4 rounded-full bg-emerald-500 bg-opacity-15">
+                                <i [class]="feature.icon + ' text-4xl text-emerald-600'"></i>
                             </div>
                             <h3 class="mb-4 text-xl font-semibold text-gray-800">
                                 {{ feature.title }}
@@ -148,42 +135,47 @@
         </div>
     </div>
 
-    <!--contacto  -->
-    <div class="bg-gradient-to-br from-blue-50 via-violet-50 to-indigo-50 relative overflow-hidden py-16">
+    <!-- Sección de contacto con background púrpura -->
+    <div class="relative py-16 overflow-hidden bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50">
+        <!-- Elementos decorativos geométricos -->
+        <div class="absolute w-20 h-20 rotate-45 bg-purple-200 rounded-lg top-10 left-10 opacity-20"></div>
+        <div class="absolute w-16 h-16 rounded-full top-32 right-20 bg-violet-200 opacity-20"></div>
+        <div class="absolute w-24 h-24 bg-indigo-200 rounded-lg bottom-20 left-1/4 rotate-12 opacity-20"></div>
+        <div class="absolute w-32 h-32 bg-purple-300 rounded-full bottom-10 right-10 opacity-10"></div>
 
-        <div class="container mx-auto relative z-10">
+        <div class="container relative z-10 mx-auto">
             <!-- Seccion de contacto -->
-            <div class="p-0 mb-8 mx-4 overflow-hidden shadow-2xl rounded-2xl bg-white/90 backdrop-blur-sm border border-white/30">
-                <div class="p-8 text-center bg-gradient-to-r from-blue-600 to-indigo-400">
-                    <h2 class="font-bold text-white text-4xl">Contacto e Información</h2>
+            <div class="p-0 mx-4 mb-8 overflow-hidden border shadow-2xl rounded-2xl bg-white/90 backdrop-blur-sm border-white/30">
+                <div class="p-8 text-center bg-gradient-to-r from-purple-600 to-violet-700">
+                    <h2 class="text-4xl font-bold text-white">Contacto e Información</h2>
                 </div>
 
                 <div class="flex flex-wrap p-8">
                     <!-- Informacion de contacto -->
                     <div class="flex-1 min-w-0 pr-6">
-                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Información de contacto:</h3>
-                        <ul class="space-y-4 list-none text-gray-700">
-                            <li class="flex items-center p-4 rounded-xl hover:bg-blue-50 transition-all duration-300 border border-blue-100 hover:border-blue-200">
-                                <div class="mr-4 p-3 rounded-full bg-blue-100">
-                                    <i class="pi pi-building text-blue-600 text-xl"></i>
+                        <h3 class="mb-6 text-2xl font-semibold text-gray-800">Información de contacto:</h3>
+                        <ul class="space-y-4 text-gray-700 list-none">
+                            <li class="flex items-center p-4 transition-all duration-300 border border-purple-100 rounded-xl hover:bg-purple-50 hover:border-purple-200">
+                                <div class="p-3 mr-4 bg-purple-100 rounded-full">
+                                    <i class="text-xl text-purple-600 pi pi-building"></i>
                                 </div>
                                 <span class="text-lg">Agencia de viajes Parche Travels</span>
                             </li>
-                            <li class="flex items-center p-4 rounded-xl hover:bg-blue-50 transition-all duration-300 border border-blue-100 hover:border-blue-200">
-                                <div class="mr-4 p-3 rounded-full bg-blue-100">
-                                    <i class="pi pi-id-card text-blue-600 text-xl"></i>
+                            <li class="flex items-center p-4 transition-all duration-300 border border-purple-100 rounded-xl hover:bg-purple-50 hover:border-purple-200">
+                                <div class="p-3 mr-4 bg-purple-100 rounded-full">
+                                    <i class="text-xl text-purple-600 pi pi-id-card"></i>
                                 </div>
                                 <span class="text-lg">Registro Nacional de Turismo: RNT 00000</span>
                             </li>
-                            <li class="flex items-center p-4 rounded-xl hover:bg-blue-50 transition-all duration-300 border border-blue-100 hover:border-blue-200">
-                                <div class="mr-4 p-3 rounded-full bg-blue-100">
-                                    <i class="pi pi-phone text-blue-600 text-xl"></i>
+                            <li class="flex items-center p-4 transition-all duration-300 border border-purple-100 rounded-xl hover:bg-purple-50 hover:border-purple-200">
+                                <div class="p-3 mr-4 bg-purple-100 rounded-full">
+                                    <i class="text-xl text-purple-600 pi pi-phone"></i>
                                 </div>
                                 <span class="text-lg">Celular: +57 3223654844</span>
                             </li>
-                            <li class="flex items-center p-4 rounded-xl hover:bg-blue-50 transition-all duration-300 border border-blue-100 hover:border-blue-200">
-                                <div class="mr-4 p-3 rounded-full bg-blue-100">
-                                    <i class="pi pi-envelope text-blue-600 text-xl"></i>
+                            <li class="flex items-center p-4 transition-all duration-300 border border-purple-100 rounded-xl hover:bg-purple-50 hover:border-purple-200">
+                                <div class="p-3 mr-4 bg-purple-100 rounded-full">
+                                    <i class="text-xl text-purple-600 pi pi-envelope"></i>
                                 </div>
                                 <span class="text-lg">Correo: {{ 'parchetravelsmedellin@gmail.com' }}</span>
                             </li>
@@ -191,16 +183,16 @@
 
                         <!-- Iconos de redes sociales -->
                         <div class="flex gap-4 my-8">
-                            <a href="#" class="p-4 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <a href="#" class="p-4 text-purple-600 transition-all duration-300 transform bg-purple-100 rounded-full shadow-lg hover:bg-purple-600 hover:text-white hover:scale-110">
                                 <i class="text-2xl pi pi-facebook"></i>
                             </a>
-                            <a href="#" class="p-4 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <a href="#" class="p-4 text-purple-600 transition-all duration-300 transform bg-purple-100 rounded-full shadow-lg hover:bg-purple-600 hover:text-white hover:scale-110">
                                 <i class="text-2xl pi pi-instagram"></i>
                             </a>
-                            <a href="#" class="p-4 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <a href="#" class="p-4 text-purple-600 transition-all duration-300 transform bg-purple-100 rounded-full shadow-lg hover:bg-purple-600 hover:text-white hover:scale-110">
                                 <i class="text-2xl pi pi-twitter"></i>
                             </a>
-                            <a href="#" class="p-4 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <a href="#" class="p-4 text-purple-600 transition-all duration-300 transform bg-purple-100 rounded-full shadow-lg hover:bg-purple-600 hover:text-white hover:scale-110">
                                 <i class="text-2xl pi pi-youtube"></i>
                             </a>
                         </div>
@@ -209,15 +201,15 @@
                     <!-- PQRS -->
                     <div class="flex-1 min-w-0 pl-6">
                         <h3 class="mb-6 text-2xl font-semibold text-gray-800">PQRS</h3>
-                        <div class="p-6 bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl border-l-4 border-blue-500 shadow-lg">
-                            <p class="text-gray-700 line-height-6 text-lg mb-4">
+                        <div class="p-6 border-l-4 border-purple-500 shadow-lg bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl">
+                            <p class="mb-4 text-lg text-gray-700 line-height-6">
                                 Si tienes alguna petición, queja o reclamo comunícate a nuestro línea +57 3223654844 o envía un correo a:
                                 {{ 'parchetravelspqrs@gmail.com' }}
                             </p>
 
                             <details class="mt-4">
-                                <summary class="font-bold text-blue-600 cursor-pointer text-lg hover:text-blue-800 transition-colors duration-300">¿Cómo presentar una PQRS?</summary>
-                                <p class="p-4 mt-2 bg-white rounded-lg shadow-sm border border-purple-100">Puedes presentar tu PQRS a través de nuestro correo electrónico o línea telefónica. Responderemos en un plazo máximo de 15 días hábiles.</p>
+                                <summary class="text-lg font-bold text-purple-600 transition-colors duration-300 cursor-pointer hover:text-purple-800">¿Cómo presentar una PQRS?</summary>
+                                <p class="p-4 mt-2 bg-white border border-purple-100 rounded-lg shadow-sm">Puedes presentar tu PQRS a través de nuestro correo electrónico o línea telefónica. Responderemos en un plazo máximo de 15 días hábiles.</p>
                             </details>
                         </div>
                     </div>
@@ -227,16 +219,16 @@
     </div>
 
     <!-- Información legal con background gris elegante -->
-    <div class="bg-gradient-to-r from-gray-100 via-slate-100 to-gray-200 relative overflow-hidden">
+    <div class="relative overflow-hidden bg-gradient-to-r from-gray-100 via-slate-100 to-gray-200">
         <!-- Patrón sutil de puntos -->
         <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle, #64748b 1px, transparent 1px); background-size: 20px 20px"></div>
 
-        <div class="container mx-auto relative z-10">
+        <div class="container relative z-10 mx-auto">
             <!-- Informacion legal -->
-            <div class="py-12 px-8 text-center text-gray-700 bg-white/80 backdrop-blur-sm mx-4 rounded-t-2xl shadow-xl border-t-4 border-gray-400">
-                <p class="mb-6 text-base leading-relaxed max-w-4xl mx-auto">Parche Travels Rechaza la explotación, la pornografía, el turismo sexual y demás formas de abuso sexual con menores. Ley 1336 de 2009 y ley 679 de 2001</p>
-                <p class="mb-6 text-base leading-relaxed max-w-4xl mx-auto">Parche Travels cumple la Ley 17 de 1981 y Resolución 1367 de 2000 contra la comercialización ilícita de especies de fauna y flora silvestre</p>
-                <p class="mt-8 text-sm font-semibold text-gray-600 border-t border-gray-300 pt-6">2025 Parche Travels. Todos los derechos reservados.</p>
+            <div class="px-8 py-12 mx-4 text-center text-gray-700 border-t-4 border-gray-400 shadow-xl bg-white/80 backdrop-blur-sm rounded-t-2xl">
+                <p class="max-w-4xl mx-auto mb-6 text-base leading-relaxed">Parche Travels Rechaza la explotación, la pornografía, el turismo sexual y demás formas de abuso sexual con menores. Ley 1336 de 2009 y ley 679 de 2001</p>
+                <p class="max-w-4xl mx-auto mb-6 text-base leading-relaxed">Parche Travels cumple la Ley 17 de 1981 y Resolución 1367 de 2000 contra la comercialización ilícita de especies de fauna y flora silvestre</p>
+                <p class="pt-6 mt-8 text-sm font-semibold text-gray-600 border-t border-gray-300">2025 Parche Travels. Todos los derechos reservados.</p>
             </div>
         </div>
     </div>

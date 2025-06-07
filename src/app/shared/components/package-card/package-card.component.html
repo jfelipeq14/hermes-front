@@ -9,11 +9,11 @@
         </ul>
         <div class="mb-4 font-semibold text-md">Fecha: {{ getDateInfo(idDate)?.start | date: 'short' }}</div>
         <div class="flex items-center justify-between">
-            <div class="text-xl font-bold text-primary text-wrap">
+            <div class="text-xl font-bold text-wrap">
                 {{ '$' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.price }}
                 <small class="text-sm">por persona</small>
             </div>
-            <p-button [hidden]="disabled" icon="pi pi-ticket" label="Reservar" class="p-button-sm p-button-primary" (onClick)="onClickReservation(idDate)"></p-button>
+            <p-button [hidden]="disabled" severity="primary" icon="pi pi-ticket" label="Reservar" (onClick)="onClickReservation(idDate)"></p-button>
         </div>
     </div>
 </div>
