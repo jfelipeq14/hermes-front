@@ -159,8 +159,9 @@ export class LayoutService {
     }
 
     onConfigUpdate() {
-        this._config = this.layoutConfig(); // Usa la configuración actualizada
-        this.configUpdate.next(this._config); // Notifica a los observadores
+        this._config = this.layoutConfig();
+        updatePreset(this._config.preset);
+        this.configUpdate.next(this._config);
     }
 
     onMenuStateChange(event: MenuChangeEvent) {

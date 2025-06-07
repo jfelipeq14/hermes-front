@@ -19,6 +19,7 @@ import { ActivateModel, DateModel, MunicipalityModel, PackageModel, ResetModel, 
 import { FormReservationComponent, LoginComponent, PackageCardComponent, RegisterComponent, ResetPasswordComponent, RestorePasswordComponent } from '../../shared/components';
 
 import { MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
+import { AppConfigurator } from '../../layout/component/app.configurator';
 
 @Component({
     selector: 'app-home',
@@ -39,7 +40,8 @@ import { MunicipalityService, PackageService, ProgrammingService, ServiceService
         RestorePasswordComponent,
         ResetPasswordComponent,
         FormReservationComponent,
-        PackageCardComponent
+        PackageCardComponent,
+        AppConfigurator
     ],
     providers: [ProgrammingService, PackageService, ServiceService, MunicipalityService, MessageService]
 })
