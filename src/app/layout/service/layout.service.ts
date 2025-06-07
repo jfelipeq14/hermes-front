@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, effect, signal, computed } from '@angular/core';
+import { updatePreset } from '@primeng/themes';
 import { Subject } from 'rxjs';
 
 export interface layoutConfig {
-    preset?: string;
-    primary?: string;
-    surface?: string | undefined | null;
-    darkTheme?: boolean;
-    menuMode?: string;
+    preset: string;
+    primary: string;
+    surface: string | undefined | null;
+    darkTheme: boolean;
+    menuMode: string;
 }
 
 interface LayoutState {
@@ -29,8 +30,8 @@ interface MenuChangeEvent {
 export class LayoutService {
     _config: layoutConfig = {
         preset: 'Aura',
-        primary: 'sky',
-        surface: 'ocean',
+        primary: 'indigo',
+        surface: 'gray',
         darkTheme: false,
         menuMode: 'static'
     };
@@ -158,8 +159,8 @@ export class LayoutService {
     }
 
     onConfigUpdate() {
-        this._config = this.layoutConfig();
-        this.configUpdate.next(this._config);
+        this._config = this.layoutConfig(); // Usa la configuración actualizada
+        this.configUpdate.next(this._config); // Notifica a los observadores
     }
 
     onMenuStateChange(event: MenuChangeEvent) {
