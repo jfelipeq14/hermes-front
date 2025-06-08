@@ -10,15 +10,15 @@
     .privileges-grid {
         display: grid;
         gap: 0;
-        border: 1px solid #dee2e6;
+        border: 1px solid var(--primary-color);
         border-radius: 6px;
         overflow: hidden;
 
         .grid-header {
             display: grid;
             grid-template-columns: 200px 1fr;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
+            background-color: var(--primary-color);
+            border-bottom: 1px solid var(--primary-color);
 
             .module-cell {
                 padding: 1rem;
@@ -43,7 +43,7 @@
                 display: grid;
                 grid-template-columns: 200px 1fr;
                 border-bottom: 1px solid #dee2e6;
-                
+
                 &:last-child {
                     border-bottom: none;
                 }

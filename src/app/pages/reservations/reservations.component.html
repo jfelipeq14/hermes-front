@@ -16,7 +16,7 @@
     <ng-template #caption>
         <h3 class="p-0 m-0 text-center">Reservaciones</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button class="flex-1" label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />

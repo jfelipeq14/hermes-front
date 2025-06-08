@@ -1,17 +1,17 @@
-<div class="p-4 mx-auto bg-gray-200 border border-gray-300 rounded outlined -lg max-w-96 min-w-96 min-h-96">
+<div class="m-0 mx-auto border card border-primary max-w-96 min-w-96 min-h-96">
     <div class="mb-4">
         <img src="{{ 'http://localhost:3000' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.image }}" [alt]="getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.name" class="object-cover w-full h-48 rounded outlined -lg" />
     </div>
     <div class="px-2">
-        <h3 class="mb-2 text-lg font-bold text-gray-800">{{ getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.name }}</h3>
-        <ul class="mb-4 text-sm text-gray-600 text-wrap">
+        <h3 class="mb-2 text-lg font-bold text-primary-600">{{ getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.name }}</h3>
+        <ul class="mb-4 text-sm text-surface-500 text-wrap">
             <li *ngFor="let service of getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.detailPackagesServices" class="mb-1">- {{ getServiceInfo(service.idService)?.name }}</li>
         </ul>
-        <div class="mb-4 font-semibold text-md">Fecha: {{ getDateInfo(idDate)?.start | date: 'short' }}</div>
+        <div class="mb-4 font-semibold text-black text-md">Fecha: {{ getDateInfo(idDate)?.start | date: 'short' }}</div>
         <div class="flex items-center justify-between">
-            <div class="text-xl font-bold text-wrap">
+            <div class="text-xl font-bold text-wrap text-surface-800">
                 {{ '$' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.price }}
-                <small class="text-sm">por persona</small>
+                <p class="text-sm text-muted-color">Por persona</p>
             </div>
             <p-button [hidden]="disabled" severity="primary" icon="pi pi-ticket" label="Reservar" (onClick)="onClickReservation(idDate)"></p-button>
         </div>
