@@ -87,7 +87,7 @@
 
         <!-- Botones de acción -->
         <div class="flex gap-2 my-2 justify-content-end">
-            <button *ngIf="!editMode" pButton pRipple label="Editar Perfil" icon="pi pi-pencil" class="p-button-primary" (click)="enableEditMode()"></button>
+            <button *ngIf="!editMode" pButton pRipple label="Editar Perfil" icon="pi pi-pencil" class="mr-2" severity="info" class="p-button-primary" (click)="enableEditMode()"></button>
 
             <div *ngIf="editMode" class="flex gap-2">
                 <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="cancelEdit()"></button>

@@ -53,8 +53,8 @@
                 <p-tag [value]="service.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(service.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editService(service)" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusService(service)" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editService(service)" />
+                <p-button [icon]="service.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="service.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusService(service)" />
             </td>
         </tr>
     </ng-template>

@@ -39,14 +39,25 @@
                 <p-tag [value]="role.status ? 'Activo' : 'Inactivo'" [severity]="role.status ? 'success' : 'danger'"> </p-tag>
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" [disabled]="role.id === 1" (click)="editRole(role)" [pTooltip]="role.id === 1 ? 'No se puede editar el rol Administrador' : ''" tooltipPosition="top">
+                <p-button
+                    icon="pi pi-pencil"
+                    class="mr-2"
+                    severity="info"
+                    class="mr-2"
+                    rounded
+                    outlined
+                    [disabled]="role.id === 1"
+                    (click)="editRole(role)"
+                    [pTooltip]="role.id === 1 ? 'No se puede editar el rol Administrador' : ''"
+                    tooltipPosition="top"
+                >
                 </p-button>
                 <p-button
                     [icon]="role.status ? 'pi pi-ban' : 'pi pi-check'"
-                    [rounded]="true"
-                    [outlined]="true"
                     [severity]="role.status ? 'danger' : 'success'"
                     [disabled]="role.id === 1"
+                    rounded
+                    outlined
                     (click)="changeRoleStatus(role); $event.stopPropagation()"
                     [pTooltip]="role.id === 1 ? 'No se puede modificar el estado del rol Administrador' : role.status ? 'Desactivar' : 'Activar'"
                     tooltipPosition="top"

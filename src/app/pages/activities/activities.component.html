@@ -46,8 +46,8 @@
                 <p-tag [value]="activity.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(activity.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editActivity(activity)" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusActivity(activity)" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editActivity(activity)" />
+                <p-button [icon]="activity.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="activity.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusActivity(activity)" />
             </td>
         </tr>
     </ng-template>
@@ -67,7 +67,7 @@
     <ng-template #footer>
         <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
-            <p-button label="Save" icon="pi pi-check" [disabled]="validateActivity()" (click)="saveActivity()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" [disabled]="validateActivity()" (click)="saveActivity()"></p-button>
         </div>
     </ng-template>
 </p-dialog>

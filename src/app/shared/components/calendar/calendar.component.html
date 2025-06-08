@@ -4,7 +4,7 @@
             label="{{ arg.event.title }}"
             id="{{ arg.event.id }}"
             [model]="buttons"
-            [severity]="arg.event.extendedProps.status ? 'primary' : 'danger'"
+            [severity]="arg.event.extendedProps.status ? 'success' : 'danger'"
             (onClick)="onClickProgramming($event, arg.event)"
             (click)="clickPackage(arg.event)"
             [appendTo]="'body'"

@@ -27,13 +27,13 @@
     <ng-template pTemplate="header">
         <tr>
             <th style="width: 3rem"></th>
-            <th pSortableColumn="name">Nombre <p-sortIcon ="name" /></th>
+            <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
             <th>Imagen</th>
-            <th pSortableColumn="price">Precio <p-sortIcon ="price" /></th>
+            <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
             <th>Municipio</th>
             <th>Nivel</th>
             <th>Fecha</th>
-            <th pSortableColumn="status">Estado <p-sortIcon ="status" /></th>
+            <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
             <th style="min-width: 8rem">Acciones</th>
         </tr>
     </ng-template>
@@ -41,7 +41,7 @@
     <ng-template pTemplate="body" let-package let-expanded="expanded">
         <tr>
             <td>
-                <p-button type="button" pRipple [pRowToggler]="package" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                <p-button type="button" pRipple [pRowToggler]="package" [text]="true" rounded outlined [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
             <td>{{ package.name }}</td>
             <td>
@@ -55,8 +55,8 @@
                 <p-tag [value]="package.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(package.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editPackage(package)" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusPackage(package)" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editPackage(package)" />
+                <p-button [icon]="package.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="package.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusPackage(package)" />
             </td>
         </tr>
     </ng-template>
@@ -182,7 +182,7 @@
                             {{ service.price | currency: 'COP' : 'symbol' : '1.0-0' }}
                         </td>
                         <td>
-                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="removeServiceFromSelection(service.idService)"></p-button>
+                            <p-button icon="pi pi-trash" severity="danger" rounded outlined [text]="true" (onClick)="removeServiceFromSelection(service.idService)"></p-button>
                         </td>
                     </tr>
                 </ng-template>

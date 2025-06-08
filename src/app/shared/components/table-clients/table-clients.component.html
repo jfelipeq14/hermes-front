@@ -48,8 +48,8 @@
                 <p-tag [value]="traveler.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(traveler.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined />
+                <p-button [icon]="traveler.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="traveler.status ? 'danger' : 'success'" rounded outlined />
             </td>
         </tr>
     </ng-template>

@@ -72,7 +72,7 @@
             (onChange)="onChangeResponsible($event)"
         >
             <ng-template #selectedItems let-selected>
-                <div *ngFor="let responsible of selected" class="inline-flex items-center px-2 py-1 mr-2 bg-primary text-primary-contrast rounded-border">
+                <div *ngFor="let responsible of selected" class="inline-flex items-center px-2 py-1 mr-2 bg-primary text-primary-contrast rounded outlined -border">
                     <div>{{ responsible.fullName }}</div>
                 </div>
             </ng-template>

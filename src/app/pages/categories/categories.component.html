@@ -48,8 +48,8 @@
                 <p-tag [value]="category.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(category.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editCategory(category)" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusCategory(category)" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editCategory(category)" />
+                <p-button [icon]="category.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="category.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusCategory(category)" />
             </td>
         </tr>
     </ng-template>

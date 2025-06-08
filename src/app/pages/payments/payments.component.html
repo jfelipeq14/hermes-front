@@ -38,7 +38,7 @@
     <ng-template pTemplate="body" let-reservation let-expanded="expanded">
         <tr>
             <td>
-                <p-button type="button" pRipple [pRowToggler]="reservation" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
+                <p-button type="button" pRipple [pRowToggler]="reservation" [text]="true" rounded outlined [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></p-button>
             </td>
             <td>{{ reservation.id }}</td>
             <td>{{ reservation.date | date: 'shortDate' }}</td>
@@ -51,7 +51,7 @@
                 {{ reservation.totalPay || 0 | currency: 'COP' : 'symbol' }}
             </td>
             <td>
-                <p-button icon="pi pi-plus" class="mr-2" [rounded]="true" [outlined]="true" (click)="showPopup(reservation.id)" />
+                <p-button icon="pi pi-plus" class="mr-2" rounded outlined (click)="showPopup(reservation.id)" />
             </td>
         </tr>
     </ng-template>
@@ -90,7 +90,7 @@
                                     </p-dropdown>
                                 </td>
                                 <td>
-                                    <p-button icon="pi pi-eye" severity="info" [rounded]="true" [outlined]="true" (click)="toPayment(payment)" />
+                                    <p-button icon="pi pi-eye" severity="secondary" rounded outlined (click)="toPayment(payment)" />
                                 </td>
                             </tr>
                         </ng-template>
