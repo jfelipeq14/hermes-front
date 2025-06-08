@@ -3,18 +3,13 @@
 <div class="min-h-screen">
     <!-- navbar -->
     <div class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-2 shadow-lg bg-primary">
-        <div class="text-xl font-bold text-primary-contrast">Parche Travels</div>
+        <div class="text-xl font-bold text-surface">Parche Travels</div>
 
         <!-- Botones de login -->
         <div class="flex items-center gap-3">
-            <p-button severity="secondary" (click)="showPopupRegister()">
-                <i class="pi pi-user"></i>
-                Registrarse
-            </p-button>
-            <p-button (click)="showPopupLogin()">
-                <i class="pi pi-sign-in"></i>
-                Iniciar sesión
-            </p-button>
+            <p-button severity="info" icon="pi pi-user" label="Registrarse" rounded (click)="showPopupRegister()" />
+
+            <p-button severity="secondary" label="Iniciar sesión" icon="pi pi-sign-in" rounded (click)="showPopupLogin()" />
         </div>
     </div>
     <!-- Slider con las imagenes-->
@@ -70,49 +65,43 @@
         </div>
     </div>
 
-    <!-- Decoracion de un circulito -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-indigo-50 to-cyan-50">
-        <div class="container relative z-10 mx-auto">
-            <!-- Seccion para mencionar los paquetes -->
-            <div class="container p-5 my-5">
-                <h1 class="mb-6 text-5xl font-bold text-center text-primary">Conoce los paquetes que ofrecemos</h1>
-                <p class="mb-0 text-xl text-center text-surface-600">Descubre destinos increíbles a precios accesibles</p>
+    <div class="container p-5 mx-auto overflow-hidden">
+        <h1 class="mb-6 text-5xl font-bold text-center text-primary">Conoce los paquetes que ofrecemos</h1>
+        <p class="mb-0 text-xl text-center text-surface-600">Descubre destinos increíbles a precios accesibles</p>
 
-                <!-- Seccion donde se ven los paquetes -->
-                <div class="container my-14">
-                    <p-carousel [value]="dates" [numVisible]="3" [numScroll]="3" [showNavigators]="true" [showIndicators]="true" [circular]="true" [autoplayInterval]="2000">
-                        <ng-template let-date #item>
-                            <div class="p-3">
-                                <app-package-card [idDate]="date.id" [disabled]="false" (clickReservation)="clickReservation(date.id)" class="transition-transform duration-300 transform hover:scale-105" />
-                            </div>
-                        </ng-template>
-                    </p-carousel>
-                </div>
-
-                <p class="text-lg font-bold text-center text-surface-800">
-                    Antes de realizar una reserva debes saber que el comprobante se sube en la aplicación, pero previamente debes registrarte.
-                    <br />
-                    <a href="#" class="ml-2 font-medium transition-colors duration-300 text-primary-600 hover:text-primary-800 hover:underline">Términos y condiciones</a>
-                </p>
-            </div>
+        <!-- Seccion donde se ven los paquetes -->
+        <div class="container my-14">
+            <p-carousel [value]="dates" [numVisible]="3" [numScroll]="3" [showNavigators]="true" [showIndicators]="true" [circular]="true" [autoplayInterval]="2000">
+                <ng-template let-date #item>
+                    <div class="p-3">
+                        <app-package-card [idDate]="date.id" [disabled]="false" (clickReservation)="clickReservation(date.id)" class="transition-transform duration-300 transform hover:scale-105" />
+                    </div>
+                </ng-template>
+            </p-carousel>
         </div>
+
+        <p class="text-lg font-bold text-center text-primary-950">
+            Antes de realizar una reserva debes saber que el comprobante se sube en la aplicación, pero previamente debes registrarte.
+            <br />
+            <a href="#" class="ml-2 font-medium transition-colors duration-300 text-primary-600 hover:text-primary-800 hover:underline">Términos y condiciones</a>
+        </p>
     </div>
 
     <div class="container p-16 mx-auto overflow-hidden text-center">
         <!-- Seccion de preguntas frecuentes -->
         <div class="p-5">
-            <h2 class="mb-12 text-4xl font-bold text-center text-surface-800">Preguntas frecuentes</h2>
+            <h2 class="mb-12 text-4xl font-bold text-center text-primary-800">Preguntas frecuentes</h2>
 
             <div class="flex flex-wrap">
                 <div *ngFor="let feature of features; let i = index" class="w-full p-3 md:w-1/2 lg:w-1/4">
-                    <div class="h-full p-6 text-center transition-all duration-500 transform border rounded-lg shadow-lg border-primary-100 bg-gradient-to-br from-white to-surface-200 hover:shadow-2xl hover:-translate-y-3">
-                        <div class="inline-block p-4 mb-4 rounded-full bg-primary bg-opacity-15">
-                            <i [class]="feature.icon + ' text-4xl text-primary'"></i>
+                    <div class="h-full p-6 text-center transition-all duration-500 transform border rounded-lg shadow-lg border-primary-100 card hover:shadow-2xl hover:-translate-y-3">
+                        <div class="inline-block p-4 mb-4 rounded-full bg-primary">
+                            <i [class]="feature.icon + ' text-4xl text-surface-700'"></i>
                         </div>
-                        <h3 class="mb-4 text-xl font-semibold text-surface-800">
+                        <h3 class="mb-4 text-xl font-semibold">
                             {{ feature.title }}
                         </h3>
-                        <p class="m-0 text-surface-600 line-height-6">
+                        <p class="m-0 text-surface-500 line-height-6">
                             {{ feature.description }}
                         </p>
                     </div>
@@ -122,32 +111,32 @@
     </div>
 
     <div class="container p-16 mx-auto overflow-hidden">
-        <h2 class="text-4xl font-bold text-center text-surface">Contacto e Información</h2>
+        <h2 class="text-4xl font-bold text-center text-primary-800">Contacto e Información</h2>
 
         <div class="flex flex-wrap p-8">
             <!-- Informacion de contacto -->
             <div class="flex-1 min-w-0 pr-6">
                 <h3 class="mb-6 text-2xl font-semibold text-surface-800">Información de contacto:</h3>
                 <ul class="space-y-4 list-none text-surface-700">
-                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-50 hover:border-primary-200">
+                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-500 hover:border-primary-200">
                         <div class="p-3 mr-4 rounded-full bg-primary-100">
                             <i class="text-xl text-primary-600 pi pi-building"></i>
                         </div>
                         <span class="text-lg">Agencia de viajes Parche Travels</span>
                     </li>
-                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-50 hover:border-primary-200">
+                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-500 hover:border-primary-200">
                         <div class="p-3 mr-4 rounded-full bg-primary-100">
                             <i class="text-xl text-primary-600 pi pi-id-card"></i>
                         </div>
                         <span class="text-lg">Registro Nacional de Turismo: RNT 00000</span>
                     </li>
-                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-50 hover:border-primary-200">
+                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-500 hover:border-primary-200">
                         <div class="p-3 mr-4 rounded-full bg-primary-100">
                             <i class="text-xl text-primary-600 pi pi-phone"></i>
                         </div>
                         <span class="text-lg">Celular: +57 3223654844</span>
                     </li>
-                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-50 hover:border-primary-200">
+                    <li class="flex items-center p-4 transition-all duration-300 border border-primary-100 rounded-xl hover:bg-primary-500 hover:border-primary-200">
                         <div class="p-3 mr-4 rounded-full bg-primary-100">
                             <i class="text-xl text-primary-600 pi pi-envelope"></i>
                         </div>
@@ -175,7 +164,7 @@
             <!-- PQRS -->
             <div class="flex-1 min-w-0 pl-6">
                 <h3 class="mb-6 text-2xl font-semibold text-surface-800">PQRS</h3>
-                <div class="p-6 border-l-4 shadow-lg border-primary-500 bg-gradient-to-br from-violet-50 to-primary-50 rounded-xl">
+                <div class="p-6 border-l-4 shadow-lg border-primary-500 bg-gradient-to-br from-primary-50 to-primary-50 rounded-xl">
                     <p class="mb-4 text-lg text-surface-700 line-height-6">
                         Si tienes alguna petición, queja o reclamo comunícate a nuestro línea +57 3223654844 o envía un correo a:
                         {{ 'parchetravelspqrs@gmail.com' }}
@@ -183,7 +172,7 @@
 
                     <details class="mt-4">
                         <summary class="text-lg font-bold transition-colors duration-300 cursor-pointer text-primary-600 hover:text-primary-800">¿Cómo presentar una PQRS?</summary>
-                        <p class="p-4 mt-2 bg-white border rounded-lg shadow-sm border-primary-100">Puedes presentar tu PQRS a través de nuestro correo electrónico o línea telefónica. Responderemos en un plazo máximo de 15 días hábiles.</p>
+                        <p>Puedes presentar tu PQRS a través de nuestro correo electrónico o línea telefónica. Responderemos en un plazo máximo de 15 días hábiles.</p>
                     </details>
                 </div>
             </div>
@@ -193,7 +182,7 @@
     <div class="container p-16 mx-auto overflow-hidden text-center">
         <p>Parche Travels Rechaza la explotación, la pornografía, el turismo sexual y demás formas de abuso sexual con menores. Ley 1336 de 2009 y ley 679 de 2001</p>
         <p>Parche Travels cumple la Ley 17 de 1981 y Resolución 1367 de 2000 contra la comercialización ilícita de especies de fauna y flora silvestre</p>
-        <p class="pt-6 mt-8 text-sm font-semibold border-t text-surface-600 border-surface-300">2025 Parche Travels. Todos los derechos reservados.</p>
+        <p class="pt-6 mt-8 text-sm font-semibold border-t text-surface-600 border-surface-300">Hermes</p>
     </div>
 </div>
 
