@@ -12,6 +12,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TextareaModule } from 'primeng/textarea';
 import { DateModel, MeetingModel, PackageModel, UserModel } from '../../../models';
 import { ZONE } from '../../constants';
+import { PATTERNS } from '../../helpers';
 
 @Component({
     selector: 'app-form-programming',
@@ -33,6 +34,8 @@ export class FormProgrammingComponent {
     @Output() toCancel = new EventEmitter<void>();
 
     today: Date = new Date();
+
+    pattern = PATTERNS;
 
     validateProgramming() {
         return this.date.idPackage > 0 &&

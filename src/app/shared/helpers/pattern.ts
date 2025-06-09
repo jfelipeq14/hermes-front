@@ -12,5 +12,6 @@ export const PATTERNS = {
     RESERVATION_STATUS: '^(N|C|P|M|R|E|F)$',
     PAYMENT_STATUS: '^(R|P|N|A|)$',
     IMAGE: /\.(jpg|jpeg|png)$/i,
-    ID: '^[1-9]{1,999}$'
+    ID: '^[1-9]{1,999}$',
+    AMOUNT: '^[1-9]{1,80}$'
 };
