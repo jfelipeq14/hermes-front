@@ -1,11 +1,11 @@
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1 my-2">
-        <label for="package" class="">Paquete</label>
+        <label for="package" class="required">Paquete</label>
         <p-dropdown id="package" [(ngModel)]="date.idPackage" [options]="packages" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione un paquete" [appendTo]="'body'" required></p-dropdown>
         <small *ngIf="!date.idPackage.toString().match(pattern.ID)" class="text-red-600">El paquete es obligatorio.</small>
     </div>
     <div class="flex flex-col flex-1 my-2">
-        <label for="amount" class="">Cantidad</label>
+        <label for="amount" class="required">Cantidad</label>
         <input pInputText type="number" id="amount" [(ngModel)]="date.amount" placeholder="Cantidad de viajeros" [min]="1" [max]="80" required />
         <small *ngIf="!date.amount.toString().match(pattern.AMOUNT)" class="text-red-600">La cantidad es entre 1 y 80</small>
     </div>
@@ -13,12 +13,12 @@
 
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1 my-2">
-        <label for="start" class="">Fecha inicio</label>
+        <label for="start" class="required">Fecha inicio</label>
         <p-datepicker [(ngModel)]="date.start" [showIcon]="true" inputId="start" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today" required></p-datepicker>
         <small *ngIf="!date.start" class="text-red-600">La fecha de inicio es obligatoria.</small>
     </div>
     <div class="flex flex-col flex-1 my-2">
-        <label for="end" class="">Fecha fin</label>
+        <label for="end" class="required">Fecha fin</label>
         <p-datepicker [(ngModel)]="date.end" [showIcon]="true" inputId="end" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today" required></p-datepicker>
         <small *ngIf="!date.end" class="text-red-600">La fecha de fin es obligatoria.</small>
     </div>
@@ -26,12 +26,12 @@
 
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1 my-2">
-        <label for="startRegistration" class="">Inicio registro</label>
+        <label for="startRegistration" class="required">Inicio registro</label>
         <p-datepicker [(ngModel)]="date.startRegistration" [showIcon]="true" inputId="startRegistration" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today" required></p-datepicker>
         <small *ngIf="!date.startRegistration" class="text-red-600">La fecha de inicio de registro es obligatoria. </small>
     </div>
     <div class="flex flex-col flex-1 my-2">
-        <label for="endRegistration" class="">Fin registro</label>
+        <label for="endRegistration" class="required">Fin registro</label>
         <p-datepicker [(ngModel)]="date.endRegistration" [showIcon]="true" inputId="endRegistration" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [minDate]="today" required></p-datepicker>
         <small *ngIf="!date.endRegistration" class="text-red-600">La fecha de fin de registro es obligatoria. </small>
     </div>
@@ -40,14 +40,14 @@
 <fieldset class="flex flex-col">
     <div class="flex gap-2">
         <div class="flex flex-col flex-1 my-2">
-            <label for="meetingZone" class="">Zona</label>
+            <label for="meetingZone" class="required">Zona</label>
             <p-dropdown id="meetingZone" [(ngModel)]="meeting.zone" [options]="zones" [showClear]="true" optionLabel="name" optionValue="value" placeholder="Seleccione una zona" [appendTo]="'body'" required></p-dropdown>
             <small *ngIf="!meeting.zone.match(pattern.ZONE)" class="text-red-600">La zona de encuentro es obligatoria. </small>
         </div>
         <div class="flex flex-col flex-1 my-2">
-            <label for="hour" class="">Hora</label>
-            <p-datepicker [(ngModel)]="meeting.hour" [showIcon]="true" [showClear]="true" inputId="hour" [timeOnly]="true" hourFormat="24" placeholder="Seleccione una hora" [appendTo]="'body'" required></p-datepicker>
-            <small *ngIf="!meeting.hour.match(pattern.HOUR)" class="text-red-600">La hora es obligatoria. </small>
+            <label for="hour" class="required">Hora</label>
+            <p-datepicker inputId="hour" [showIcon]="true" [(ngModel)]="meeting.hour" [timeOnly]="true" />
+            <small *ngIf="!meeting.hour" class="text-red-600">La hora es obligatoria.</small>
         </div>
     </div>
     <div class="flex flex-col my-2">

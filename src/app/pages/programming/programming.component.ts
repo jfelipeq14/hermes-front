@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -20,9 +20,9 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 
-import { MeetingService, PackageService, ProfileService, ProgrammingService, ReservationsService, ResponsibleService } from '../../services';
+import { AuthService, MeetingService, PackageService, ProfileService, ProgrammingService, ReservationsService, ResponsibleService } from '../../services';
 import { DateModel, MeetingModel, PackageModel, ReservationModel, ReservationTravelerModel, ResponsibleModel, UserModel } from '../../models';
-import { ZONE } from '../../shared/constants';
+import { ROLE_IDS, ZONE } from '../../shared/constants';
 import { formatTime, getSeverity } from '../../shared/helpers';
 import { CalendarComponent, FormProgrammingComponent, FormReservationComponent, TableClientsComponent } from '../../shared/components';
 
@@ -54,6 +54,8 @@ import { CalendarComponent, FormProgrammingComponent, FormReservationComponent, 
     providers: [ProfileService, ProgrammingService, PackageService, ResponsibleService, MeetingService, ReservationsService, MessageService, ConfirmationService]
 })
 export class ProgrammingPage implements OnInit {
+    authService = inject(AuthService);
+
     date: DateModel = new DateModel();
     dates: DateModel[] = [];
     meeting: MeetingModel = new MeetingModel();
@@ -339,15 +341,26 @@ export class ProgrammingPage implements OnInit {
 
     clickDate(date: DateModel) {
         if (!date) return;
-        this.date = date;
-        this.dialogType = 'programming';
-        this.dialogVisible = true;
+
+        if (this.authService.hasRole([ROLE_IDS.ADMIN])) {
+            this.date = date;
+            this.dialogType = 'programming';
+            this.dialogVisible = true;
+        } else {
+            return;
+        }
     }
 
     clickProgramming(id: number) {
-        this.idDate = id;
-        this.dialogType = 'reservation';
-        this.dialogVisible = true;
+        if (!id) return;
+
+        if (this.authService.hasRole([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])) {
+            this.idDate = id;
+            this.dialogType = 'reservation';
+            this.dialogVisible = true;
+        } else {
+            return;
+        }
     }
 
     toClients(id: number) {

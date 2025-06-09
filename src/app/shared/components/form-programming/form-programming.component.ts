@@ -44,7 +44,6 @@ export class FormProgrammingComponent {
             this.date.end &&
             this.date.startRegistration &&
             this.date.endRegistration &&
-            this.meeting.idDate > 0 &&
             this.meeting.zone &&
             this.meeting.hour &&
             this.meeting.description &&
@@ -54,11 +53,15 @@ export class FormProgrammingComponent {
     }
 
     onChangeResponsible(event: any) {
-        if (!event.value) return;
+        if (!event.itemValue) return;
 
-        this.meeting.responsibles = event.value.map((id: number) => ({
-            idUser: id
-        }));
+        const foundResponsible = this.meeting.responsibles.find((responsible) => responsible.idUser === event.itemValue.id);
+
+        if (foundResponsible) {
+            this.meeting.responsibles = this.meeting.responsibles.filter((responsible) => responsible.idUser !== foundResponsible.idUser);
+        } else {
+            this.meeting.responsibles.push({ idUser: event.itemValue.id });
+        }
     }
 
     onCreateDate(date: DateModel) {
