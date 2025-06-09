@@ -7,13 +7,13 @@
             <label for="email" class="required">Correo</label>
             <input pInputText id="email" type="email" [(ngModel)]="user.email" placeholder="Correo electrónico" [pattern]="patterns.EMAIL" (keypress)="onKeyPress($event)" required />
 
-            <small class="text-red-500" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo electrónico es obligatorio</small>
+            <small class="text-red-600" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo electrónico es obligatorio</small>
         </div>
 
         <div class="flex flex-col gap-2">
             <label for="password" class="required">Contraseña</label>
             <input pInputText type="password" id="password" [(ngModel)]="user.password" [pattern]="patterns.PASSWORD" placeholder="Contraseña" (keypress)="onKeyPress($event)" required />
-            <small class="text-red-500" *ngIf="submitted && !user.password.match(patterns.PASSWORD)">La contraseña es obligatoria</small>
+            <small class="text-red-600" *ngIf="submitted && !user.password.match(patterns.PASSWORD)">La contraseña es obligatoria</small>
         </div>
     </div>
 

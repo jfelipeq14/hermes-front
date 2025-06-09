@@ -58,10 +58,10 @@
 <p-dialog [(visible)]="categoryDialog" [style]="{ width: '450px' }" header="Categoría" [modal]="true" class="p-fluid">
     <ng-template #content>
         <div class="container flex flex-col gap-4">
-            <div class="flex flex-col field">
+            <div class="flex flex-col my-2">
                 <label for="name" class="required">Nombre</label>
                 <input pInputText type="text" id="name" [(ngModel)]="category.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
-                <small *ngIf="!category.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+                <small *ngIf="!category.name?.match(pattern.NAME)" class="text-red-600">El nombre solo puede contener letras y espacios.</small>
             </div>
         </div>
     </ng-template>

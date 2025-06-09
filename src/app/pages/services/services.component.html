@@ -62,22 +62,22 @@
 
 <p-dialog [(visible)]="serviceDialog" [style]="{ width: '450px' }" header="Servicio" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="flex flex-col">
+        <div class="flex flex-col my-2">
             <label for="category" class="required">Categoría</label>
             <p-dropdown id="category" [(ngModel)]="service.idCategoryServices" [options]="categories" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una categoría" [appendTo]="'body'" required></p-dropdown>
-            <small *ngIf="!service.idCategoryServices.toString().match(pattern.ID)" class="text-red-500">La categoria es obligatoria</small>
+            <small *ngIf="!service.idCategoryServices.toString().match(pattern.ID)" class="text-red-600">La categoria es obligatoria</small>
         </div>
 
-        <div class="flex flex-col">
+        <div class="flex flex-col my-2">
             <label for="name" class="required">Nombre</label>
             <input pInputText type="text" id="name" [(ngModel)]="service.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
-            <small *ngIf="!service.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+            <small *ngIf="!service.name?.match(pattern.NAME)" class="text-red-600">El nombre solo puede contener letras y espacios.</small>
         </div>
 
-        <div class="flex flex-col">
+        <div class="flex flex-col my-2">
             <label for="price" class="required">Precio</label>
             <p-inputNumber id="price" [(ngModel)]="service.price" mode="currency" currency="COP" locale="es-CO" [min]="1" [max]="9999999999999" required></p-inputNumber>
-            <small *ngIf="!service.price" class="text-red-500">El precio debe ser correcto.</small>
+            <small *ngIf="!service.price" class="text-red-600">El precio debe ser correcto.</small>
         </div>
     </ng-template>
 

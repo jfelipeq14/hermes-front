@@ -56,10 +56,10 @@
 <p-dialog [(visible)]="activityDialog" [style]="{ width: '450px' }" header="Actividad" [modal]="true" class="p-fluid">
     <ng-template #content>
         <div class="container flex flex-col gap-4">
-            <div class="flex flex-col">
+            <div class="flex flex-col my-2">
                 <label for="name" class="required">Nombre</label>
                 <input pInputText type="text" id="name" [(ngModel)]="activity.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
-                <small *ngIf="!activity.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+                <small *ngIf="!activity.name?.match(pattern.NAME)" class="text-red-600">El nombre solo puede contener letras y espacios.</small>
             </div>
         </div>
     </ng-template>
