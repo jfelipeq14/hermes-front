@@ -7,9 +7,9 @@
         <ul class="mb-4 text-sm text-surface-500 text-wrap">
             <li *ngFor="let service of getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.detailPackagesServices" class="mb-1">- {{ getServiceInfo(service.idService)?.name }}</li>
         </ul>
-        <div class="mb-4 font-semibold text-black text-md">Fecha: {{ getDateInfo(idDate)?.start | date: 'short' }}</div>
+        <div class="mb-4 font-semibold text-surface-700 text-md">Fecha: {{ getDateInfo(idDate)?.start | date: 'short' }}</div>
         <div class="flex items-center justify-between">
-            <div class="text-xl font-bold text-wrap text-surface-800">
+            <div class="text-xl font-bold text-wrap text-surface-400">
                 {{ '$' + getPackageInfo(getDateInfo(idDate)?.idPackage || 0)?.price }}
                 <p class="text-sm text-muted-color">Por persona</p>
             </div>
