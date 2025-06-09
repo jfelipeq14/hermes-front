@@ -291,8 +291,6 @@ export class ProgrammingPage implements OnInit {
         };
         this.meetingService.getByIdDate(date.id).subscribe({
             next: (meeting) => {
-                if (!meeting) this.meeting = new MeetingModel();
-
                 this.meeting = {
                     ...meeting,
                     hour: formatTime(meeting.hour)
@@ -353,6 +351,9 @@ export class ProgrammingPage implements OnInit {
 
     clickProgramming(id: number) {
         if (!id) return;
+
+        const foundProgramming = this.dates.find((date) => date.id === id);
+        if (!foundProgramming || foundProgramming.status === false) return;
 
         if (this.authService.hasRole([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])) {
             this.idDate = id;
