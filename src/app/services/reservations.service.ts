@@ -40,8 +40,4 @@ export class ReservationsService {
     changeStatus(id: number, status: string): Observable<ReservationModel> {
         return this.http.patch<ReservationModel>(this.urlReservation + `${id}/change-status`, { status });
     }
-
-    getTravelersByReservation(reservationId: number): Observable<ReservationTravelerModel[]> {
-        return this.http.get<ReservationTravelerModel[]>(`${this.urlTraveler}by-reservation/${reservationId}`);
-    }
 }

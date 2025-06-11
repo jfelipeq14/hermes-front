@@ -13,5 +13,5 @@ export const PATTERNS = {
     PAYMENT_STATUS: '^(R|P|N|A|)$',
     IMAGE: /\.(jpg|jpeg|png)$/i,
     ID: '^[1-9]{1,999}$',
-    AMOUNT: '^[1-9]{1,80}$'
+    AMOUNT: '^(?:[1-9]|[1-7][0-9]|80)$'
 };
