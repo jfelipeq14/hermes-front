@@ -21,6 +21,7 @@ import { AuthService } from '../../services';
             </button>
             <a class="layout-topbar-logo" routerLink="/">
                 <img src="/hermes.png" width="30" alt="Hermes" />
+                Hermes
             </a>
         </div>
 
