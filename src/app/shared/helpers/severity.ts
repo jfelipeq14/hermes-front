@@ -19,7 +19,7 @@ export const getSeverityPayment = (status: string): string => {
 export const getValuePayment = (status: string): string => {
     if (status === 'R') return 'Revisar';
     if (status === 'P') return 'Pagado';
-    if (status === 'N') return 'Abandonado';
+    if (status === 'N') return 'Abonado';
     if (status === 'A') return 'Anulado';
 
     return 'Revisar';
