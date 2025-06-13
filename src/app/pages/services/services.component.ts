@@ -36,7 +36,7 @@ export class ServicesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
-    patterns = PATTERNS;
+    pattern = PATTERNS;
 
     constructor(
         private serviceService: ServiceService,
@@ -77,13 +77,14 @@ export class ServicesPage implements OnInit {
 
         if (!this.service.id) {
             this.serviceService.create(this.service).subscribe({
-                next: (s) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${s.name} creado`,
+                        detail: `Servicio creado correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -94,16 +95,16 @@ export class ServicesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.serviceService.update(this.service).subscribe({
-                next: (s) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${s.name} actualizado`,
+                        detail: `Servicio actualizado correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -114,9 +115,7 @@ export class ServicesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editService(service: ServiceModel) {
@@ -139,7 +138,7 @@ export class ServicesPage implements OnInit {
                         this.messageService.add({
                             severity: this.getSeverity(s.status),
                             summary: 'Éxito',
-                            detail: `${s.name} ${s.status ? 'activado' : 'desactivado'}`,
+                            detail: `Servicio ${s.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
                         this.refresh();
@@ -155,6 +154,10 @@ export class ServicesPage implements OnInit {
                 });
             }
         });
+    }
+
+    validateService(): boolean {
+        return this.service.idCategoryServices > 0 && this.service.name && this.service.price > 0 ? false : true;
     }
 
     showPopup() {

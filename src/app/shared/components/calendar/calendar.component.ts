@@ -77,6 +77,7 @@ export class CalendarComponent implements OnInit {
 
     calendarOptions = signal<CalendarOptions>({
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
+        locale: 'es',
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',

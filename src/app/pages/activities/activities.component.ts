@@ -33,7 +33,7 @@ export class ActivitiesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
-    patterns = PATTERNS;
+    pattern = PATTERNS;
     //#endregion
 
     //#region constructor
@@ -65,13 +65,14 @@ export class ActivitiesPage implements OnInit {
         this.submitted = true;
         if (!this.activity.id) {
             this.activityService.create(this.activity).subscribe({
-                next: (a) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${a.name} creado`,
+                        detail: `Actividad creada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -82,16 +83,16 @@ export class ActivitiesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.activityService.update(this.activity).subscribe({
-                next: (a) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${a.name} atualizado`,
+                        detail: `Actividad atualizada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -102,9 +103,7 @@ export class ActivitiesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editActivity(activity: ActivityModel) {
@@ -127,7 +126,7 @@ export class ActivitiesPage implements OnInit {
                         this.messageService.add({
                             severity: this.getSeverity(a.status),
                             summary: 'Éxito',
-                            detail: `${a.name} ${a.status ? 'activado' : 'desactivado'}`,
+                            detail: `Actividad ${a.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
                         this.refresh();
@@ -149,6 +148,10 @@ export class ActivitiesPage implements OnInit {
         return status ? 'success' : 'danger';
     }
 
+    validateActivity(): boolean {
+        return this.activity.name ? false : true;
+    }
+
     showPopup() {
         this.activity = new ActivityModel();
         this.submitted = false;
@@ -161,8 +164,11 @@ export class ActivitiesPage implements OnInit {
     }
 
     refresh() {
-        this.getAllActivities();
-        this.closePopup();
+        this.activities = [];
+        this.activity = new ActivityModel();
+        this.activityDialog = false;
         this.submitted = false;
+
+        this.getAllActivities();
     }
 }

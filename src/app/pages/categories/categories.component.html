@@ -14,7 +14,7 @@
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Categorías</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button class="flex-1" label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
@@ -48,8 +48,8 @@
                 <p-tag [value]="category.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(category.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editCategory(category)" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusCategory(category)" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editCategory(category)" />
+                <p-button [icon]="category.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="category.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusCategory(category)" />
             </td>
         </tr>
     </ng-template>
@@ -58,10 +58,10 @@
 <p-dialog [(visible)]="categoryDialog" [style]="{ width: '450px' }" header="Categoría" [modal]="true" class="p-fluid">
     <ng-template #content>
         <div class="container flex flex-col gap-4">
-            <div class="flex flex-col field">
+            <div class="flex flex-col my-2">
                 <label for="name" class="required">Nombre</label>
                 <input pInputText type="text" id="name" [(ngModel)]="category.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
-                <small *ngIf="!category.name?.match(pattern.NAME)" class="text-red-500">El nombre solo puede contener letras y espacios.</small>
+                <small *ngIf="!category.name?.match(pattern.NAME)" class="text-red-600">El nombre solo puede contener letras y espacios.</small>
             </div>
         </div>
     </ng-template>
@@ -69,7 +69,7 @@
     <ng-template pTemplate="footer">
         <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
-            <p-button label="Guardar" icon="pi pi-check" (click)="saveCategory()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" [disabled]="validateCategory()" (click)="saveCategory()"></p-button>
         </div>
     </ng-template>
 </p-dialog>

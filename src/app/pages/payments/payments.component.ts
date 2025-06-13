@@ -62,6 +62,7 @@ export class PaymentsPage implements OnInit {
     getValuePayment = getValuePayment;
     getValueReservation = getValueReservation;
     expandedRows: Record<string, boolean> = {};
+    totalPay = 0;
 
     disabled = false;
 
@@ -89,6 +90,19 @@ export class PaymentsPage implements OnInit {
                         next: (reservations) => {
                             this.reservations = reservations.filter((r) => r.idUser === userData.id);
                             this.disabled = true;
+                            // Calcular totalPay para cada reserva
+                            this.reservations.forEach((reservation) => {
+                                this.paymentService.getByReservation(reservation.id).subscribe({
+                                    next: (payments) => {
+                                        reservation.totalPay = payments.reduce((total, payment) => total + payment.pay, 0);
+                                        // Opcional: guardar los pagos en this.payments si lo necesitas globalmente
+                                        this.payments = [...this.payments, ...payments];
+                                    },
+                                    error: () => {
+                                        reservation.totalPay = 0;
+                                    }
+                                });
+                            });
                         },
                         error: (e) => {
                             this.disabled = false;
@@ -99,6 +113,18 @@ export class PaymentsPage implements OnInit {
                     this.paymentService.getAllReservationWhitPayments().subscribe({
                         next: (reservations) => {
                             this.reservations = reservations;
+                            // Calcular totalPay para cada reserva
+                            this.reservations.forEach((reservation) => {
+                                this.paymentService.getByReservation(reservation.id).subscribe({
+                                    next: (payments) => {
+                                        reservation.totalPay = payments.reduce((total, payment) => total + payment.pay, 0);
+                                        this.payments = [...this.payments, ...payments];
+                                    },
+                                    error: () => {
+                                        reservation.totalPay = 0;
+                                    }
+                                });
+                            });
                         },
                         error: (e) => {
                             console.error(e);
@@ -123,6 +149,13 @@ export class PaymentsPage implements OnInit {
             this.paymentService.getByReservation(reservationId).subscribe({
                 next: (payments) => {
                     this.payments = [...this.payments, ...payments];
+                    // Calcular la suma de abonos para esta reserva
+                    const totalPaid = this.payments.filter((p) => p.idReservation === reservationId).reduce((total, payment) => total + payment.pay, 0);
+                    // Asignar el valor a la reserva correspondiente
+                    const reservation = this.reservations.find((r) => r.id === reservationId);
+                    if (reservation) {
+                        reservation.totalPay = totalPaid;
+                    }
                 },
                 error: () => {
                     this.messageService.add({
@@ -148,6 +181,7 @@ export class PaymentsPage implements OnInit {
                         detail: `Pago con ID ${p.id} actualizado`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -167,6 +201,7 @@ export class PaymentsPage implements OnInit {
                         detail: `Pago con ID ${p.id} creado`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -178,8 +213,6 @@ export class PaymentsPage implements OnInit {
                 }
             });
         }
-        this.refresh();
-        this.closePopup();
     }
 
     editPayment(payment: PaymentModel) {
@@ -216,7 +249,7 @@ export class PaymentsPage implements OnInit {
                             detail: `${pay.id} cambiado a ${this.getValuePayment(pay.status)}`,
                             life: 3000
                         });
-                        if (pay.status === 'N' && pay.pay >= pay.total / 2) {
+                        if (pay.status === 'N' || (pay.status === 'P' && pay.pay >= pay.total / 2)) {
                             this.reservationService.changeStatus(pay.idReservation, 'C').subscribe({
                                 next: (res) => {
                                     this.messageService.add({
@@ -227,8 +260,7 @@ export class PaymentsPage implements OnInit {
                                     });
                                 }
                             });
-                        }
-                        if (pay.status === 'P' && pay.pay === pay.total) {
+                        } else if (pay.status === 'P' && pay.pay === pay.total) {
                             this.reservationService.changeStatus(pay.idReservation, 'P').subscribe({
                                 next: (res) => {
                                     this.messageService.add({
@@ -261,8 +293,8 @@ export class PaymentsPage implements OnInit {
     showPopup(idReservation: number) {
         this.payment = new PaymentModel();
         this.payment.idReservation = idReservation;
-        this.payment.total = 140000;
-        this.payment.pay = 70000;
+        this.payment.total = this.reservations.find((r) => r.id === idReservation)?.price || 0;
+        this.payment.pay = this.payment.total / 2; // Pago inicial del 50%
         this.submitted = false;
         this.paymentDialog = true;
     }

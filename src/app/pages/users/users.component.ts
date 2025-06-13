@@ -194,7 +194,7 @@ export class UsersPage implements OnInit {
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Éxito',
-                                detail: 'Usuario creado y activado correctamente',
+                                detail: 'Usuario ha sido creado y activado correctamente',
                                 life: 3000
                             });
                             this.refresh();
@@ -213,7 +213,7 @@ export class UsersPage implements OnInit {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Error al crear el usuario: ' + (e.error.message || 'Error desconocido'),
+                        detail: e.error.message === 'User already exists' ? 'El correo electrónico ya existe, ingrese otro correo por favor' : 'Error al crear el usuario: ' + (e.error.message || 'Error desconocido'),
                         life: 3000
                     });
                 }
@@ -272,11 +272,10 @@ export class UsersPage implements OnInit {
                                 life: 3000
                             });
                         }
-                        this.refresh();
                         this.messageService.add({
-                            severity: this.getSeverity(updatedUser.status),
+                            severity: 'success',
                             summary: 'Éxito',
-                            detail: `${updatedUser.name} ${updatedUser.status ? 'activado' : 'desactivado'}`,
+                            detail: `${updatedUser.name} ${updatedUser.status ? 'ha sido activado' : 'ha sido desactivado'}`,
                             life: 3000
                         });
                         this.refresh();
@@ -292,7 +291,6 @@ export class UsersPage implements OnInit {
                 });
             }
         });
-        this.refresh();
     }
 
     getSeverity(status: boolean): 'success' | 'danger' {

@@ -20,7 +20,7 @@
                     {{ getInfoUser(traveler.idTraveler).phone }}
                 </td>
                 <td>
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="onDeleteTraveler(traveler)" />
+                    <p-button icon="pi pi-trash" severity="danger" rounded outlined [text]="true" (onClick)="onDeleteTraveler(traveler)" />
                 </td>
             </tr>
         </ng-template>

@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, effect, signal, computed } from '@angular/core';
+import { updatePreset } from '@primeng/themes';
 import { Subject } from 'rxjs';
 
 export interface layoutConfig {
-    preset?: string;
-    primary?: string;
-    surface?: string | undefined | null;
-    darkTheme?: boolean;
-    menuMode?: string;
+    preset: string;
+    primary: string;
+    surface: string | undefined | null;
+    darkTheme: boolean;
+    menuMode: string;
 }
 
 interface LayoutState {
@@ -30,8 +31,8 @@ export class LayoutService {
     _config: layoutConfig = {
         preset: 'Aura',
         primary: 'sky',
-        surface: 'ocean',
-        darkTheme: false,
+        surface: 'gray',
+        darkTheme: true,
         menuMode: 'static'
     };
 
@@ -159,6 +160,7 @@ export class LayoutService {
 
     onConfigUpdate() {
         this._config = this.layoutConfig();
+        updatePreset(this._config.preset);
         this.configUpdate.next(this._config);
     }
 

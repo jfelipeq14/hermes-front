@@ -45,7 +45,7 @@
     <ng-template pTemplate="body" let-client let-expanded="expanded">
         <tr>
             <td>
-                <p-button type="button" pRipple [pRowToggler]="client" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                <p-button type="button" pRipple [pRowToggler]="client" [text]="true" rounded outlined [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
             <td>{{ client.document }}</td>
             <td>{{ client.name }} {{ client.surName }}</td>
@@ -54,8 +54,8 @@
                 <p-tag [value]="client.status ? 'Activo' : 'Inactivo'" [severity]="client.status ? 'success' : 'danger'" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined />
+                <p-button [icon]="client.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="client.status ? 'danger' : 'success'" rounded outlined />
             </td>
         </tr>
     </ng-template>
