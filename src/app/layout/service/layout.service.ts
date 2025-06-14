@@ -32,7 +32,7 @@ export class LayoutService {
         preset: 'Aura',
         primary: 'sky',
         surface: 'gray',
-        darkTheme: true,
+        darkTheme: false,
         menuMode: 'static'
     };
 

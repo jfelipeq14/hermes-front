@@ -166,7 +166,7 @@ export class FormReservationComponent implements OnInit {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
-                            detail: 'Tu cuenta fue activada. Inicia sesión.',
+                            detail: 'Tu cuenta fue creada. Inicia sesión.',
                             life: 3000
                         });
                         this.activeStepIndex = 1;
