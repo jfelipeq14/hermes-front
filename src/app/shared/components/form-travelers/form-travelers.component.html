@@ -1,7 +1,7 @@
 <div class="flex flex-row">
     <div class="flex-1">
         <app-form-clients [reservation]="reservation" [travel]="travel" [travelers]="travelers" [clients]="clients" [client]="traveler" [submitted]="submitted" (searchClient)="onSearchClient($event)" (createClient)="onCreateClient($event)" />
-        <p-button label="Agregar viajero" icon="pi pi-user" severity="secondary" [text]="true" (onClick)="onAddTraveler()" />
+        <p-button label="Agregar viajero" icon="pi pi-user" severity="secondary" [text]="true" (onClick)="traveler.id ? onAddTraveler() : onCreateClient(traveler)" />
     </div>
     <p-table [value]="travelers" class="flex-1">
         <ng-template pTemplate="header">
