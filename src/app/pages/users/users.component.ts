@@ -170,8 +170,7 @@ export class UsersPage implements OnInit {
         date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajustar desfase de zona horaria
         this.user.dateBirth = date;
         this.userDialog = true;
-
-        // this.isFormDisabled = true;
+        this.isFormDisabled = true;
     }
 
     changeStatusUser(user: UserModel) {

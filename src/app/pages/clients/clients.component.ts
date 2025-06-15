@@ -156,6 +156,7 @@ export class ClientsPage implements OnInit {
         date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
         this.client.dateBirth = date;
         this.popupVisible = true;
+        this.isFormDisabled = true;
     }
 
     changeStatusClient(client: UserModel) {
@@ -208,6 +209,7 @@ export class ClientsPage implements OnInit {
         this.expandedRows = {};
         this.activateModel = new ActivateModel();
         this.popupVisible = false;
+        this.isFormDisabled = false;
 
         this.getAllClients();
         this.getAllPackages();
