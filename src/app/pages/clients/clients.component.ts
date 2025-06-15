@@ -43,6 +43,9 @@ export class ClientsPage implements OnInit {
     expandedRows: Record<string, boolean> = {};
     activateModel: ActivateModel = new ActivateModel();
     popupVisible = false;
+    isFormDisabled = false;
+    submitted = false;
+    loading = false;
     getSeverity = getSeverity;
 
     ngOnInit(): void {

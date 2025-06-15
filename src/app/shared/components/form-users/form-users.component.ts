@@ -31,7 +31,7 @@ export class FormUsersComponent implements OnInit {
     }
 
     @Input() user: UserModel = new UserModel();
-    @Input() isFormDisabled = true;
+    @Input() isFormDisabled = false;
     @Output() closePopup = new EventEmitter<void>();
     @Output() createUser = new EventEmitter<UserModel>();
 

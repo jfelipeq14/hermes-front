@@ -28,6 +28,7 @@ export class UsersPage implements OnInit {
     user: UserModel = new UserModel();
     userDialog = false;
     submitted = false;
+    isFormDisabled = false;
     loading = false;
 
     roles: RoleModel[] = [];
@@ -227,7 +228,7 @@ export class UsersPage implements OnInit {
     closePopup() {
         this.userDialog = false;
         this.submitted = false;
-        // this.isFormDisabled = false;
+        this.isFormDisabled = false;
         this.user = new UserModel();
     }
 
