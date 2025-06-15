@@ -1,5 +1,4 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
@@ -12,8 +11,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ActivateModel, MunicipalityModel, RoleModel, UserModel } from '../../models';
-import { AuthService, MunicipalityService, RolesService, UserService } from '../../services';
+import { ActivateModel, RoleModel, UserModel } from '../../models';
+import { AuthService, RolesService, UserService } from '../../services';
 import { FormUsersComponent } from '../../shared/components';
 
 @Component({
@@ -21,7 +20,7 @@ import { FormUsersComponent } from '../../shared/components';
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.scss'],
     imports: [CommonModule, TableModule, TagModule, ButtonModule, InputIconModule, IconFieldModule, ToastModule, ConfirmDialogModule, DialogModule, FormUsersComponent],
-    providers: [UserService, MunicipalityService, RolesService, MessageService, ConfirmationService, AuthService]
+    providers: [UserService, RolesService, MessageService, ConfirmationService, AuthService]
 })
 export class UsersPage implements OnInit {
     users: UserModel[] = [];
