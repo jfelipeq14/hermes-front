@@ -10,19 +10,24 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ActivateModel, MunicipalityModel, RoleModel, UserModel } from '../../../models';
 import { bloodTypes, epslist, sexlist, typesDocument } from '../../constants';
 import { PATTERNS } from '../../helpers';
-import { MunicipalityService } from '../../../services';
+import { MunicipalityService, RolesService } from '../../../services';
 
 @Component({
     selector: 'app-form-users',
     templateUrl: './form-users.component.html',
     styleUrl: './form-users.component.scss',
-    imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, InputTextModule, InputIconModule, DatePickerModule]
+    imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, InputTextModule, InputIconModule, DatePickerModule],
+    providers: [MunicipalityService, RolesService]
 })
 export class FormUsersComponent implements OnInit {
-    constructor(private municipalityService: MunicipalityService) {}
+    constructor(
+        private municipalityService: MunicipalityService,
+        private rolesService: RolesService
+    ) {}
 
     ngOnInit(): void {
         this.getAllMunicipalities();
+        this.getAllRoles();
     }
 
     @Input() user: UserModel = new UserModel();
@@ -46,6 +51,15 @@ export class FormUsersComponent implements OnInit {
         this.municipalityService.getAll().subscribe({
             next: (municipalities) => {
                 this.municipalities = municipalities;
+            },
+            error: (e) => console.error(e)
+        });
+    }
+
+    getAllRoles() {
+        this.rolesService.getAll().subscribe({
+            next: (roles) => {
+                this.roles = roles;
             },
             error: (e) => console.error(e)
         });
