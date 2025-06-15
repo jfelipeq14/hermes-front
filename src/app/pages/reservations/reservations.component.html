@@ -3,18 +3,18 @@
     [value]="reservations"
     [rows]="10"
     [paginator]="true"
-    [globalFilterFields]="['id', 'date', 'price', 'status']"
+    [globalFilterFields]="['client', 'package', 'date', 'price', 'status']"
     [tableStyle]="{ 'min-width': '75rem' }"
     [rowHover]="true"
     dataKey="id"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservaciones"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} reservas"
     [showCurrentPageReport]="true"
     [rowsPerPageOptions]="[5, 10, 20]"
     [expandedRowKeys]="expandedRows"
     (onRowExpand)="onRowExpand($event)"
 >
     <ng-template #caption>
-        <h3 class="p-0 m-0 text-center">Reservaciones</h3>
+        <h3 class="p-0 m-0 text-center">Reservas</h3>
         <div class="flex justify-content-between align-items-center">
             <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" />
             <p-iconfield>
@@ -27,7 +27,7 @@
         <tr>
             <th style="width: 5rem"></th>
             <th pSortableColumn="id">Cliente <p-sortIcon field="client" /></th>
-            <th pSortableColumn="id">Paquete <p-sortIcon field="client" /></th>
+            <th pSortableColumn="id">Paquete <p-sortIcon field="package" /></th>
             <th pSortableColumn="date">Fecha <p-sortIcon field="date" /></th>
             <th pSortableColumn="price">Precio <p-sortIcon field="price" /></th>
             <th pSortableColumn="status">Estado <p-sortIcon field="status" /></th>
