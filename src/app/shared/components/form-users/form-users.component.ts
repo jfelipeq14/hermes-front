@@ -31,6 +31,7 @@ export class FormUsersComponent implements OnInit {
     }
 
     @Input() user: UserModel = new UserModel();
+    @Input() isFormDisabled = true;
     @Output() closePopup = new EventEmitter<void>();
     @Output() createUser = new EventEmitter<UserModel>();
 
@@ -45,7 +46,6 @@ export class FormUsersComponent implements OnInit {
 
     maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
     activateModel: ActivateModel = new ActivateModel();
-    isFormDisabled = false;
 
     getAllMunicipalities() {
         this.municipalityService.getAll().subscribe({

@@ -15,10 +15,13 @@
 >
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Clientes</h3>
-        <p-iconfield>
-            <p-inputicon styleClass="pi pi-search" />
-            <input pInputText type="text" placeholder="Buscar..." (input)="onGlobalFilter(dt, $event)" />
-        </p-iconfield>
+        <div class="flex justify-content-between align-items-center">
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" />
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
+            </p-iconfield>
+        </div>
     </ng-template>
 
     <ng-template pTemplate="header">
@@ -56,8 +59,8 @@
                 <p-tag [value]="client.status ? 'Activo' : 'Inactivo'" [severity]="client.status ? 'success' : 'danger'" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined />
-                <p-button [icon]="client.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="client.status ? 'danger' : 'success'" rounded outlined />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editClient(client)" />
+                <p-button [icon]="client.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="client.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusClient(client)" />
             </td>
         </tr>
     </ng-template>
@@ -99,3 +102,10 @@
         </tr>
     </ng-template>
 </p-table>
+
+<p-dialog [(visible)]="popupVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit" [style]="{ width: '80vw', maxWidth: '800px' }" (onHide)="closePopup()">
+    <app-form-users [user]="client" [isFormDisabled]="true" (closePopup)="closePopup()" (createUser)="createClient($event)" />
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
