@@ -24,27 +24,27 @@
 
     <ng-template pTemplate="header">
         <tr>
-            <th pSortableColumn="document" style="min-width: 14rem">
+            <th pSortableColumn="document">
                 Documento
                 <p-sortIcon field="document" />
             </th>
-            <th pSortableColumn="name" style="min-width: 16rem">
+            <th pSortableColumn="name">
                 Nombre Completo
                 <p-sortIcon field="name" />
             </th>
-            <th pSortableColumn="email" style="min-width: 18rem">
+            <th pSortableColumn="email">
                 Email
                 <p-sortIcon field="email" />
             </th>
-            <th pSortableColumn="idRole" style="min-width: 14rem">
+            <th pSortableColumn="idRole">
                 Rol
                 <p-sortIcon field="idRole" />
             </th>
-            <th pSortableColumn="status" style="min-width: 12rem">
+            <th pSortableColumn="status">
                 Estado
                 <p-sortIcon field="status" />
             </th>
-            <th pSortableColumn="actions" style="min-width: 12rem">
+            <th pSortableColumn="actions">
                 Acciones
                 <p-sortIcon field="actions" />
             </th>
@@ -68,140 +68,8 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="userDialog" [style]="{ width: '900px' }" header="Usuario" [modal]="true" class="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="flex flex-col gap-4 p-4">
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-col flex-1">
-                    <label for="idRole" class="mb-2 required">Rol</label>
-                    <p-dropdown
-                        id="idRole"
-                        [options]="roles"
-                        [(ngModel)]="user.idRole"
-                        [showClear]="true"
-                        name="idRole"
-                        optionLabel="name"
-                        optionValue="id"
-                        placeholder="Seleccione un rol"
-                        required
-                        [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.idRole }"
-                    ></p-dropdown>
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.idRole">Debe seleccionar un rol</small>
-                </div>
-            </div>
-
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-col flex-1">
-                    <label for="typeDocument" class="mb-2 required">Tipo de Documento</label>
-                    <p-dropdown
-                        id="typeDocument"
-                        [options]="typesDocument"
-                        [(ngModel)]="user.typeDocument"
-                        name="typeDocument"
-                        optionLabel="name"
-                        optionValue="value"
-                        placeholder="Seleccione un tipo de documento"
-                        [pattern]="patterns.DOCUMENT_TYPE"
-                        required
-                        [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.typeDocument }"
-                    ></p-dropdown>
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.typeDocument.match(patterns.DOCUMENT_TYPE)">Debe seleccionar el tipo documento</small>
-                </div>
-
-                <div class="flex flex-col flex-1">
-                    <label for="document" class="mb-2 required">Número de Documento</label>
-                    <input pInputText type="text" id="document" [(ngModel)]="user.document" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.document }" />
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.document">Debe ingresar minimo 5 caracteres entre letras y numeros</small>
-                </div>
-            </div>
-
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-col flex-1">
-                    <label for="name" class="mb-2 required">Nombres</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="user.name" [pattern]="patterns.NAME" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.name }" />
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.name.match(patterns.NAME)">El nombre solo puede contener letras y debe llevar como minimo 3 caracteres</small>
-                </div>
-
-                <div class="flex flex-col flex-1">
-                    <label for="surName" class="mb-2 required">Apellidos</label>
-                    <input type="text" pInputText id="surName" [(ngModel)]="user.surName" [pattern]="patterns.NAME" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.surName }" />
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.surName.match(patterns.NAME)">El apellido solo puede contener letras y debe contener minimo 3 caracteres</small>
-                </div>
-            </div>
-
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-col flex-1">
-                    <label for="idMunicipality" class="mb-2 required">Municipio</label>
-                    <p-dropdown
-                        id="idMunicipality"
-                        [options]="municipalities"
-                        [(ngModel)]="user.idMunicipality"
-                        name="idMunicipality"
-                        optionLabel="name"
-                        optionValue="id"
-                        placeholder="Seleccione un municipio"
-                        [showClear]="true"
-                        required
-                        [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.idMunicipality }"
-                    ></p-dropdown>
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.idMunicipality">Debe seleccionar un municipio</small>
-                </div>
-
-                <div class="flex flex-col flex-1">
-                    <label for="phone" class="mb-2 required">Teléfono</label>
-                    <input type="text" pInputText id="phone" [(ngModel)]="user.phone" [pattern]="patterns.PHONE" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.phone }" />
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.phone.match(patterns.PHONE)">El telefono solo puede contener numeros y minimo debe llevar 7 numeros</small>
-                </div>
-            </div>
-
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-col flex-1">
-                    <label for="dateBirth" class="mb-2 required">Fecha de nacimiento</label>
-                    <p-datepicker
-                        [(ngModel)]="user.dateBirth"
-                        inputId="start"
-                        dateFormat="yy-mm-dd"
-                        [dataType]="'date'"
-                        [appendTo]="'body'"
-                        [maxDate]="maxDate"
-                        required
-                        [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.dateBirth }"
-                    ></p-datepicker>
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.dateBirth">La fecha de nacimiento es obligatoria y debe ser mayor de 18 años</small>
-                </div>
-            </div>
-
-            <div class="flex flex-row gap-4">
-                <div class="flex flex-col flex-1">
-                    <label for="email" class="mb-2 required">Correo Electrónico</label>
-                    <input type="email" pInputText id="email" [(ngModel)]="user.email" [pattern]="patterns.EMAIL" [disabled]="isFormDisabled" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !user.email }" />
-                    <small class="mt-1 text-red-600 p-error" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo es obligatorio</small>
-                </div>
-
-                <div class="flex flex-col flex-1">
-                    <label for="password" class="mb-2 required">Contraseña</label>
-                    <input
-                        type="password"
-                        pInputText
-                        id="password"
-                        [(ngModel)]="user.password"
-                        [pattern]="patterns.PASSWORD"
-                        [disabled]="isFormDisabled"
-                        required
-                        [ngClass]="{ 'ng-invalid ng-dirty': !isFormDisabled && submitted && !user.password }"
-                    />
-                    <small class="mt-1 text-red-600 p-error" *ngIf="!isFormDisabled && submitted && !user.password?.match(patterns.PASSWORD)">La contraseña debe contener minimo una mayuscula, un caracter especial y un numero</small>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-        <div class="flex gap-2 my-2 justify-content-end">
-            <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="closePopup()" [text]="true"></p-button>
-            <p-button label="Guardar" icon="pi pi-check" (click)="createUser()"></p-button>
-        </div>
-    </ng-template>
+<p-dialog [(visible)]="userDialog" [modal]="true" [closable]="true" class="min-h-fit min-w-fit" [style]="{ width: '80vw', maxWidth: '800px' }" (onHide)="closePopup()">
+    <app-form-users [user]="user" [isFormDisabled]="isFormDisabled" (closePopup)="closePopup()" (createUser)="createUser($event)" />
 </p-dialog>
 
 <p-toast></p-toast>

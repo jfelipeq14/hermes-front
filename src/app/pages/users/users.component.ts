@@ -1,5 +1,4 @@
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,32 +6,32 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
 import { Table, TableModule } from 'primeng/table';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
-import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ActivateModel, MunicipalityModel, RoleModel, UserModel } from '../../models';
-import { AuthService, MunicipalityService, RolesService, UserService } from '../../services';
-import { bloodTypes, epslist, sexlist, typesDocument } from '../../shared/constants';
-import { PATTERNS } from '../../shared/helpers';
-import { DatePickerModule } from 'primeng/datepicker';
+import { ActivateModel, RoleModel, UserModel } from '../../models';
+import { AuthService, RolesService, UserService } from '../../services';
+import { FormUsersComponent } from '../../shared/components';
 
 @Component({
     selector: 'app-users',
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.scss'],
-    imports: [CommonModule, TableModule, TagModule, ButtonModule, ToastModule, ConfirmDialogModule, DialogModule, FormsModule, InputTextModule, InputIconModule, IconFieldModule, DropdownModule, DatePickerModule],
-    providers: [UserService, MunicipalityService, RolesService, MessageService, ConfirmationService, AuthService]
+    imports: [CommonModule, TableModule, TagModule, ButtonModule, InputIconModule, IconFieldModule, ToastModule, ConfirmDialogModule, DialogModule, FormUsersComponent],
+    providers: [UserService, RolesService, MessageService, ConfirmationService, AuthService]
 })
 export class UsersPage implements OnInit {
     users: UserModel[] = [];
     user: UserModel = new UserModel();
     userDialog = false;
     submitted = false;
+    isFormDisabled = false;
     loading = false;
+
+    roles: RoleModel[] = [];
+    activateModel: ActivateModel = new ActivateModel();
 
     isFieldInvalid(field: any, pattern?: string): boolean {
         if (!this.submitted) return false;
@@ -42,23 +41,8 @@ export class UsersPage implements OnInit {
         return !field;
     }
 
-    // Dropdown options
-    municipalities: MunicipalityModel[] = [];
-    typesDocument = typesDocument;
-    sexOptions = sexlist;
-    bloodTypes = bloodTypes;
-    epsList = epslist;
-    roles: RoleModel[] = [];
-
-    patterns = PATTERNS;
-
-    maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
-    activateModel: ActivateModel = new ActivateModel();
-    isFormDisabled = false;
-
     constructor(
         private userService: UserService,
-        private municipalityService: MunicipalityService,
         private rolesService: RolesService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
@@ -68,7 +52,6 @@ export class UsersPage implements OnInit {
     ngOnInit(): void {
         this.getAllUsers();
         this.getAllRoles();
-        this.getAllMunicipalities();
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -88,22 +71,6 @@ export class UsersPage implements OnInit {
                     severity: 'error',
                     summary: 'Error',
                     detail: e.error.message || 'No se pudieron cargar los usuarios',
-                    life: 3000
-                });
-            }
-        });
-    }
-
-    getAllMunicipalities() {
-        this.municipalityService.getAll().subscribe({
-            next: (municipalities) => {
-                this.municipalities = municipalities;
-            },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message || 'No se pudieron cargar los municipios',
                     life: 3000
                 });
             }
@@ -131,56 +98,10 @@ export class UsersPage implements OnInit {
         return role ? role.name : 'No asignado';
     }
 
-    validateForm(): boolean {
-        this.submitted = true;
+    createUser(user: UserModel) {
+        // if (!this.validateForm()) return;
 
-        if (!this.user.idRole || !this.user.typeDocument || !this.user.document || !this.user.name || !this.user.surName || !this.user.idMunicipality || !this.user.phone || !this.user.dateBirth || !this.user.email) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error de validación',
-                detail: 'Por favor complete todos los campos obligatorios',
-                life: 3000
-            });
-            return false;
-        }
-
-        if (!this.user.email.match(this.patterns.EMAIL)) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error de validación',
-                detail: 'El correo electrónico no es válido',
-                life: 3000
-            });
-            return false;
-        }
-
-        if (!this.user.phone.match(this.patterns.PHONE)) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error de validación',
-                detail: 'El número de teléfono no es válido',
-                life: 3000
-            });
-            return false;
-        }
-
-        if (!this.isFormDisabled && !this.user.password?.match(this.patterns.PASSWORD)) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error de validación',
-                detail: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número',
-                life: 3000
-            });
-            return false;
-        }
-
-        return true;
-    }
-
-    createUser() {
-        if (!this.validateForm()) return;
-
-        if (!this.user.id) {
+        if (!user.id) {
             this.authService.register(this.user).subscribe({
                 next: (response) => {
                     if (!response) return;
@@ -219,7 +140,7 @@ export class UsersPage implements OnInit {
                 }
             });
         } else {
-            this.userService.update(this.user).subscribe({
+            this.userService.update(user).subscribe({
                 next: (response) => {
                     if (!response) return;
                     this.messageService.add({
@@ -248,7 +169,6 @@ export class UsersPage implements OnInit {
         date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajustar desfase de zona horaria
         this.user.dateBirth = date;
         this.userDialog = true;
-
         this.isFormDisabled = true;
     }
 

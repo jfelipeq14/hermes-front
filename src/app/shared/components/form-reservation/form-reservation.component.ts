@@ -137,39 +137,64 @@ export class FormReservationComponent implements OnInit {
     handleTravel(travel: boolean) {
         this.travel = travel;
         if (travel) {
-            this.reservation.detailReservationTravelers.push({
-                idTraveler: this.client.id
-            });
+            // Si el cliente ya tiene id, agregarlo como viajero automáticamente
+            if (this.client && this.client.id > 0) {
+                // Solo agregar si no está ya en la lista
+                if (!this.reservation.detailReservationTravelers.some((t) => t.idTraveler === this.client.id)) {
+                    this.reservation.detailReservationTravelers.push({
+                        idTraveler: this.client.id
+                    });
+                }
+                // No limpiar los datos del cliente aquí, solo cuando se cree uno nuevo
+            }
         } else {
             this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((traveler) => traveler.idTraveler !== this.client.id);
         }
     }
 
-    createClient(client: UserModel) {
+    createClient(client: UserModel, isTraveler: boolean = false) {
         if (!client) return;
 
-        this.client.idRole = 3;
+        client.idRole = 3;
 
-        this.authService.register(this.client).subscribe({
+        this.authService.register(client).subscribe({
             next: (response) => {
                 if (!response) return;
 
                 this.activateModel.email = response.email;
                 this.activateModel.activationUserToken = response.activationToken;
 
-                this.client = response;
-                this.reservation.idUser = response.id;
+                if (isTraveler) {
+                    this.traveler = response;
+                    this.addTraveler();
+                } else {
+                    this.client = response;
+                    this.reservation.idUser = response.id;
+                }
 
                 this.authService.activateAccount(this.activateModel).subscribe({
-                    next: (response) => {
-                        if (!response) return;
+                    next: () => {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
-                            detail: 'Tu cuenta fue activada. Inicia sesión.',
+                            detail: 'Usuario creado y activado.',
                             life: 3000
                         });
-                        this.activeStepIndex = 1;
+                        // Si es viajero, agregarlo a la reserva y limpiar formulario
+                        if (isTraveler) {
+                            // Asegura limpieza del formulario
+                            this.traveler = new UserModel();
+                        } else {
+                            this.activeStepIndex = 1;
+                            if (this.travel) {
+                                this.reservation.detailReservationTravelers.push({ idTraveler: this.client.id });
+                                if (!this.clients.some((c) => c.id === this.client.id)) {
+                                    this.clients.push(this.client);
+                                }
+                            }
+                            this.client = new UserModel();
+                            this.isFormDisabled = false;
+                        }
                     },
                     error: (e) => console.error(e)
                 });
@@ -220,11 +245,19 @@ export class FormReservationComponent implements OnInit {
     }
 
     addTraveler() {
-        if (!this.traveler.document) return;
-        this.travel = true;
-        this.reservation.detailReservationTravelers.push({
-            idTraveler: this.traveler.id
-        });
+        if (!this.traveler || !this.traveler.id || !this.traveler.document) return;
+        // Solo agregar si no está ya en la lista de viajeros
+        if (!this.reservation.detailReservationTravelers.some((t) => t.idTraveler === this.traveler.id)) {
+            this.reservation.detailReservationTravelers.push({
+                idTraveler: this.traveler.id
+            });
+            // Agregar el viajero a la lista de clients si no está
+            if (!this.clients.some((c) => c.id === this.traveler.id)) {
+                this.clients.push({ ...this.traveler });
+            }
+        }
+        // Limpiar el formulario de viajero
+        this.traveler = new UserModel();
     }
 
     deleteTraveler(traveler: ReservationTravelerModel) {
