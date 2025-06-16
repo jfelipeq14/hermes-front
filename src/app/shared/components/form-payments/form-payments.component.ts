@@ -24,11 +24,16 @@ export class FormPaymentsComponent {
     @Input() payment: PaymentModel = new PaymentModel();
     @Input() submitted = false;
 
+    @Output() cancel = new EventEmitter<void>();
     @Output() save = new EventEmitter<PaymentModel>();
 
     uploadImage(filePath: string) {
         this.payment.voucher = filePath;
         console.log('Imagen subida:', this.payment.voucher);
+    }
+
+    onCancel() {
+        this.cancel.emit();
     }
 
     onSave() {

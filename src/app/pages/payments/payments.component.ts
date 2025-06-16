@@ -169,11 +169,11 @@ export class PaymentsPage implements OnInit {
         }
     }
 
-    savePayment() {
-        this.submitted = true;
+    savePayment(payment: PaymentModel) {
+        // this.submitted = true;
 
-        if (this.payment.id) {
-            this.paymentService.update(this.payment).subscribe({
+        if (payment.id) {
+            this.paymentService.update(payment).subscribe({
                 next: (p) => {
                     this.messageService.add({
                         severity: 'success',
@@ -193,7 +193,7 @@ export class PaymentsPage implements OnInit {
                 }
             });
         } else {
-            this.paymentService.create(this.payment).subscribe({
+            this.paymentService.create(payment).subscribe({
                 next: (p) => {
                     this.messageService.add({
                         severity: 'success',

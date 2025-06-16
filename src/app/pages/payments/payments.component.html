@@ -106,19 +106,8 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="paymentDialog" [style]="{ width: '500px', height: '500px' }" header="Pago" [modal]="true" class="p-fluid">
-    <ng-template pTemplate="header">
-        <h5 class="m-0">Detalles de Pago</h5>
-    </ng-template>
-    <ng-template pTemplate="content">
-        <app-form-payments [payment]="payment" />
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <div class="flex gap-2 my-2 justify-content-end">
-            <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
-            <p-button label="Save" icon="pi pi-check" (click)="savePayment()"></p-button>
-        </div>
-    </ng-template>
+<p-dialog [(visible)]="paymentDialog" [style]="{ width: '500px', height: '500px' }" header="Pago" [modal]="true">
+    <app-form-payments [payment]="payment" (cancel)="closePopup()" (save)="savePayment($event)" />
 </p-dialog>
 
 <p-toast></p-toast>

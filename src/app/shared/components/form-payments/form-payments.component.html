@@ -16,4 +16,9 @@
     <div class="flex flex-col">
         <app-upload-image (uploadImage)="uploadImage($event)" />
     </div>
+
+    <div class="flex gap-2 my-2 justify-content-end">
+        <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="onCancel()"></p-button>
+        <p-button label="Save" icon="pi pi-check" (click)="onSave()"></p-button>
+    </div>
 </div>
