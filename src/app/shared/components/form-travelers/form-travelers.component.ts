@@ -22,6 +22,7 @@ export class FormTravelersComponent {
     @Input() travelers: ReservationTravelerModel[] = [];
     @Input() clients: UserModel[] = [];
     @Input() submitted = false;
+    @Input() isFormDisabled = false;
 
     @Output() searchClient = new EventEmitter<any>();
     @Output() createClient = new EventEmitter<any>();

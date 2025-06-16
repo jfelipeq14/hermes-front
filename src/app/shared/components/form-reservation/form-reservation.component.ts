@@ -258,6 +258,7 @@ export class FormReservationComponent implements OnInit {
         }
         // Limpiar el formulario de viajero
         this.traveler = new UserModel();
+        this.isFormDisabled = false; // Permitir nuevas búsquedas o adiciones
     }
 
     deleteTraveler(traveler: ReservationTravelerModel) {
@@ -304,6 +305,8 @@ export class FormReservationComponent implements OnInit {
             } else if (this.client.id > 0) {
                 this.reservation.idUser = this.client.id;
             }
+
+            this.isFormDisabled = false; // Bloquear campos si se encuentra un cliente
 
             this.reservation.idDate = this.idDate;
 
