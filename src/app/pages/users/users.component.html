@@ -68,7 +68,7 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="userDialog" [modal]="true" [closable]="true" class="min-h-fit min-w-fit" [style]="{ width: '80vw', maxWidth: '800px' }" (onHide)="closePopup()">
+<p-dialog [(visible)]="userDialog" [modal]="true"  class="min-h-fit min-w-fit" [style]="{ width: '80vw', maxWidth: '800px' }" (onHide)="closePopup()">
     <app-form-users [user]="user" [isFormDisabled]="isFormDisabled" (closePopup)="closePopup()" (createUser)="createUser($event)" />
 </p-dialog>
 

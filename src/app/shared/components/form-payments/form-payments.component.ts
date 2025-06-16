@@ -32,6 +32,8 @@ export class FormPaymentsComponent {
     }
 
     onSave() {
+        this.payment.pay = Math.round(this.payment.pay);
+        this.payment.total = Math.round(this.payment.total);
         this.save.emit(this.payment);
     }
 }

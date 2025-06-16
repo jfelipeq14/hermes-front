@@ -187,7 +187,7 @@
 </div>
 
 <!-- Modals -->
-<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">
+<p-dialog [(visible)]="dialogVisible" [modal]="true"  class="min-h-fit min-w-fit">
     <ng-container *ngIf="dialogType === 'login'">
         <app-login [loginDialog]="dialogVisible" [submitted]="submitted" [user]="user" (showPopupRestore)="showPopupRestore()"></app-login>
     </ng-container>

@@ -15,8 +15,8 @@
 >
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Clientes</h3>
-        <div class="flex justify-content-between align-items-center">
-            <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" />
+        <div class="flex justify-end">
+            <!-- <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" /> -->
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
@@ -43,7 +43,7 @@
                 Estado
                 <p-sortIcon field="status" />
             </th>
-            <th></th>
+            <!-- <th></th> -->
         </tr>
     </ng-template>
 
@@ -58,10 +58,10 @@
             <td>
                 <p-tag [value]="client.status ? 'Activo' : 'Inactivo'" [severity]="client.status ? 'success' : 'danger'" />
             </td>
-            <td>
+            <!-- <td>
                 <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editClient(client)" />
                 <p-button [icon]="client.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="client.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusClient(client)" />
-            </td>
+            </td> -->
         </tr>
     </ng-template>
 
@@ -103,7 +103,7 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="popupVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit" [style]="{ width: '80vw', maxWidth: '800px' }" (onHide)="closePopup()">
+<p-dialog [(visible)]="popupVisible" [modal]="true"  class="min-h-fit min-w-fit" [style]="{ width: '80vw', maxWidth: '800px' }" (onHide)="closePopup()">
     <app-form-users [user]="client" [isFormDisabled]="isFormDisabled" (closePopup)="closePopup()" (createUser)="createClient($event)" />
 </p-dialog>
 
