@@ -107,7 +107,7 @@
 </p-table>
 
 <p-dialog [(visible)]="paymentDialog" [style]="{ width: '500px', height: '500px' }" header="Pago" [modal]="true">
-    <app-form-payments [payment]="payment" (cancel)="closePopup()" (save)="savePayment($event)" />
+    <app-form-payments [payment]="payment" (cancel)="closePopup()" (save)="savePayment(payment)" />
 </p-dialog>
 
 <p-toast></p-toast>
