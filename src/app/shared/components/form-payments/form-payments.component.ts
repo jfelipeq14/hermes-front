@@ -23,8 +23,9 @@ import { UploadImageComponent } from '../upload-image/upload-image.component';
 export class FormPaymentsComponent {
     @Input() payment: PaymentModel = new PaymentModel();
     @Input() submitted = false;
+    @Input() visible = true;
 
-    @Output() cancel = new EventEmitter<void>();
+    @Output() toCancel = new EventEmitter<void>();
     @Output() save = new EventEmitter<PaymentModel>();
 
     uploadImage(filePath: string) {
@@ -33,7 +34,7 @@ export class FormPaymentsComponent {
     }
 
     onCancel() {
-        this.cancel.emit();
+        this.toCancel.emit();
     }
 
     onSave() {

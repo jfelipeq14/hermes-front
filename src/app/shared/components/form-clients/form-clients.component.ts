@@ -14,6 +14,7 @@ import { bloodTypes, epslist, sexlist, typesDocument } from '../../constants';
 import { MunicipalityModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MunicipalityService } from '../../../services';
 import { DatePickerModule } from 'primeng/datepicker';
+import { PATTERNS } from '../../helpers';
 
 @Component({
     selector: 'app-form-clients',
@@ -45,6 +46,7 @@ export class FormClientsComponent implements OnInit {
     bloodTypes = bloodTypes;
     epslist = epslist;
     municipalities: MunicipalityModel[] = [];
+    pattern = PATTERNS
 
     age = 0;
     maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
