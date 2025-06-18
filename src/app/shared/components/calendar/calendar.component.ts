@@ -86,9 +86,6 @@ export class CalendarComponent implements OnInit {
         initialView: 'dayGridMonth',
         timeZone: 'UTC',
         selectable: true,
-        validRange: {
-            start: new Date().toISOString().split('T')[0] // Restrict to today onwards
-        },
         dateClick: (info) => this.onClickDate(info),
         events: this.dates.map((date) => ({
             id: date.id.toString(),

@@ -193,6 +193,7 @@ export class FormReservationComponent implements OnInit {
                                 }
                             }
                             this.client = new UserModel();
+                            this.traveler = new UserModel();
                             this.isFormDisabled = false;
                         }
                     },

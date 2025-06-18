@@ -26,7 +26,7 @@ export class FormPaymentsComponent {
     @Input() visible = true;
 
     @Output() toCancel = new EventEmitter<void>();
-    @Output() save = new EventEmitter<PaymentModel>();
+    @Output() toSave = new EventEmitter<PaymentModel>();
 
     uploadImage(filePath: string) {
         this.payment.voucher = filePath;
@@ -40,6 +40,6 @@ export class FormPaymentsComponent {
     onSave() {
         this.payment.pay = Math.round(this.payment.pay);
         this.payment.total = Math.round(this.payment.total);
-        this.save.emit(this.payment);
+        this.toSave.emit(this.payment);
     }
 }
