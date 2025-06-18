@@ -23,6 +23,7 @@ import { UploadImageComponent } from '../upload-image/upload-image.component';
 export class FormPaymentsComponent {
     @Input() payment: PaymentModel = new PaymentModel();
     @Input() submitted = false;
+    @Input() visible = true;
 
     @Output() toCancel = new EventEmitter<void>();
     @Output() toSave = new EventEmitter<PaymentModel>();

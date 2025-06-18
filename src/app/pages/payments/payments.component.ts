@@ -53,7 +53,6 @@ export class PaymentsPage implements OnInit {
     payments: PaymentModel[] = [];
     reservations: ReservationModel[] = [];
     payment: PaymentModel = new PaymentModel();
-    paymentDialog = false;
     submitted = false;
     dateToday: Date = new Date();
     statuses = paymentStatus;
@@ -65,6 +64,8 @@ export class PaymentsPage implements OnInit {
     totalPay = 0;
 
     disabled = false;
+    dialogVisible = false;
+    dialogType: 'image' | 'payment' = 'image';
 
     constructor(
         private profileService: ProfileService,
@@ -94,12 +95,14 @@ export class PaymentsPage implements OnInit {
                             this.reservations.forEach((reservation) => {
                                 this.paymentService.getByReservation(reservation.id).subscribe({
                                     next: (payments) => {
-                                        reservation.totalPay = payments.reduce((total, payment) => total + payment.pay, 0);
+                                        reservation.totalPay = payments.reduce((total, payment) => total + Number(payment.pay), 0);
+                                        reservation.isFullyPaid = reservation.totalPay >= reservation.price; // Marca si está pagada
                                         // Opcional: guardar los pagos en this.payments si lo necesitas globalmente
                                         this.payments = [...this.payments, ...payments];
                                     },
                                     error: () => {
                                         reservation.totalPay = 0;
+                                        reservation.isFullyPaid = false;
                                     }
                                 });
                             });
@@ -117,11 +120,13 @@ export class PaymentsPage implements OnInit {
                             this.reservations.forEach((reservation) => {
                                 this.paymentService.getByReservation(reservation.id).subscribe({
                                     next: (payments) => {
-                                        reservation.totalPay = payments.reduce((total, payment) => total + payment.pay, 0);
+                                        reservation.totalPay = payments.reduce((total, payment) => total + Number(payment.pay), 0);
+                                        reservation.isFullyPaid = reservation.totalPay >= reservation.price;
                                         this.payments = [...this.payments, ...payments];
                                     },
                                     error: () => {
                                         reservation.totalPay = 0;
+                                        reservation.isFullyPaid = false;
                                     }
                                 });
                             });
@@ -150,7 +155,7 @@ export class PaymentsPage implements OnInit {
                 next: (payments) => {
                     this.payments = [...this.payments, ...payments];
                     // Calcular la suma de abonos para esta reserva
-                    const totalPaid = this.payments.filter((p) => p.idReservation === reservationId).reduce((total, payment) => total + payment.pay, 0);
+                    const totalPaid = this.payments.filter((p) => p.idReservation === reservationId).reduce((total, payment) => total + Number(payment.pay), 0);
                     // Asignar el valor a la reserva correspondiente
                     const reservation = this.reservations.find((r) => r.id === reservationId);
                     if (reservation) {
@@ -217,7 +222,8 @@ export class PaymentsPage implements OnInit {
 
     editPayment(payment: PaymentModel) {
         this.payment = { ...payment };
-        this.paymentDialog = true;
+        this.dialogType = 'payment';
+        this.dialogVisible = true;
     }
 
     changeStatusPayment(payment: PaymentModel) {
@@ -286,8 +292,19 @@ export class PaymentsPage implements OnInit {
         });
     }
 
-    toPayment(payment: PaymentModel) {
-        console.log(payment);
+    showImage(payment: PaymentModel) {
+        if (!payment.voucher) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay imagen disponible para este pago',
+                life: 3000
+            });
+            return;
+        }
+        this.payment = { ...payment };
+        this.dialogType = 'image';
+        this.dialogVisible = true;
     }
 
     showPopup(idReservation: number) {
@@ -296,11 +313,12 @@ export class PaymentsPage implements OnInit {
         this.payment.total = this.reservations.find((r) => r.id === idReservation)?.price || 0;
         this.payment.pay = this.payment.total / 2; // Pago inicial del 50%
         this.submitted = false;
-        this.paymentDialog = true;
+        this.dialogType = 'payment';
+        this.dialogVisible = true;
     }
 
     closePopup() {
-        this.paymentDialog = false;
+        this.dialogVisible = false;
         this.submitted = false;
     }
 
@@ -308,7 +326,7 @@ export class PaymentsPage implements OnInit {
         this.payments = [];
         this.reservations = [];
         this.payment = new PaymentModel();
-        this.paymentDialog = false;
+        this.dialogVisible = false;
         this.submitted = false;
         this.dateToday = new Date();
         this.statuses = paymentStatus;

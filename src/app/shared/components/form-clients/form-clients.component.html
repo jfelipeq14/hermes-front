@@ -12,28 +12,27 @@
             required
             [disabled]="isFormDisabled"
         ></p-dropdown>
-        <small class="p-error" *ngIf="submitted && !client.typeDocument">El tipo de documento es obligatorio.</small>
+        <small *ngIf="pattern.DOCUMENT_TYPE ? !client.typeDocument?.match(pattern.DOCUMENT_TYPE) : !client.typeDocument" class="text-red-600">Debes seleccionar un tipo de documento.</small>
     </div>
 
     <div class="flex flex-col flex-1">
         <label for="document" class="required">Número de Documento</label>
-        <input pInputText type="text" id="document" [(ngModel)]="client.document" (keypress)="onKeyPress($event, client.document)" required />
-
-        <small class="p-error" *ngIf="submitted && !client.document">El documento es obligatorio.</small>
+        <input pInputText type="text" id="document" [(ngModel)]="client.document" (keypress)="onKeyPress($event, client.document)" required [pattern]="pattern.DOCUMENT_NUMBER" [disabled]="isFormDisabled" />
+        <small *ngIf="pattern.DOCUMENT_NUMBER ? client.document && !client.document.match(pattern.DOCUMENT_NUMBER) : !client.document" class="text-red-600">El número de documento no es válido.</small>
     </div>
 </fieldset>
 
 <fieldset class="flex flex-row gap-4">
     <div class="flex flex-col flex-1">
         <label for="name" class="required">Nombres</label>
-        <input type="text" pInputText id="name" [(ngModel)]="client.name" required [disabled]="isFormDisabled" />
-        <small class="p-error" *ngIf="submitted && !client.name">El nombre es obligatorio.</small>
+        <input type="text" pInputText id="name" [(ngModel)]="client.name" required [pattern]="pattern.NAME" [disabled]="isFormDisabled" />
+        <small *ngIf="pattern.NAME ? client.name && !client.name.match(pattern.NAME) : !client.name" class="text-red-600">El nombre no es válido.</small>
     </div>
 
     <div class="flex flex-col flex-1">
         <label for="surName" class="required">Apellidos</label>
-        <input type="text" pInputText id="surName" [(ngModel)]="client.surName" required [disabled]="isFormDisabled" />
-        <small class="p-error" *ngIf="submitted && !client.surName">El apellido es obligatorio.</small>
+        <input type="text" pInputText id="surName" [(ngModel)]="client.surName" required [pattern]="pattern.NAME" [disabled]="isFormDisabled" />
+        <small *ngIf="pattern.NAME ? client.surName && !client.surName.match(pattern.NAME) : !client.surName" class="text-red-600">El apellido no es válido.</small>
     </div>
 </fieldset>
 
@@ -52,32 +51,30 @@
             required
             [disabled]="isFormDisabled"
         ></p-dropdown>
-        <small class="p-error" *ngIf="submitted && !client.idMunicipality">El municipio es obligatorio.</small>
     </div>
 
     <div class="flex flex-col flex-1">
         <label for="phone" class="required">Teléfono</label>
-        <input type="text" pInputText id="phone" [(ngModel)]="client.phone" required [disabled]="isFormDisabled" />
-        <small class="p-error" *ngIf="submitted && !client.phone">El teléfono es obligatorio.</small>
+        <input type="text" pInputText id="phone" [(ngModel)]="client.phone" required [pattern]="pattern.PHONE" [disabled]="isFormDisabled" />
+        <small *ngIf="pattern.PHONE ? client.phone && !client.phone.match(pattern.PHONE) : !client.phone" class="text-red-600">El teléfono no es válido.</small>
     </div>
 </fieldset>
 
 <div class="flex flex-col">
     <label for="dateBirth" class="required">Fecha de nacimiento</label>
     <p-datepicker [(ngModel)]="client.dateBirth" inputId="start" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [maxDate]="maxDate" required [disabled]="isFormDisabled"></p-datepicker>
-    <small class="p-error" *ngIf="submitted && !client.dateBirth">La fecha de nacimiento es obligatoria.</small>
 </div>
 
 <div class="flex flex-col">
     <label for="email" class="required">Correo Electrónico</label>
-    <input type="email" pInputText id="email" [(ngModel)]="client.email" required [disabled]="isFormDisabled" />
-    <small class="p-error" *ngIf="submitted && !client.email">El correo es obligatorio.</small>
+    <input type="email" pInputText id="email" [(ngModel)]="client.email" required [pattern]="pattern.EMAIL" [disabled]="isFormDisabled" />
+    <small *ngIf="pattern.EMAIL ? client.email && !client.email.match(pattern.EMAIL) : !client.email" class="text-red-600">El correo electrónico no es válido.</small>
 </div>
 
 <div class="flex flex-col">
     <label for="password" class="required">Contraseña</label>
-    <input type="password" pInputText id="password" [(ngModel)]="client.password" required [disabled]="isFormDisabled" />
-    <small class="p-error" *ngIf="submitted && !client.password">La contraseña es obligatoria.</small>
+    <input type="password" pInputText id="password" [(ngModel)]="client.password" required [pattern]="pattern.PASSWORD" [disabled]="isFormDisabled" />
+    <small *ngIf="pattern.PASSWORD ? client.password && !client.password.match(pattern.PASSWORD) : !client.password" class="text-red-600">La contraseña no cumple con los requisitos.</small>
 </div>
 
 <div class="flex flex-row gap-4">

@@ -31,7 +31,7 @@
             <th pSortableColumn="status">Estado <p-sortIcon field="status"></p-sortIcon></th>
             <th>Cliente</th>
             <th>Pagos Realizados</th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </ng-template>
 
@@ -51,7 +51,7 @@
                 {{ reservation.totalPay || 0 | currency: 'COP' : 'symbol' }}
             </td>
             <td>
-                <p-button icon="pi pi-plus" class="mr-2" rounded outlined (click)="showPopup(reservation.id)" />
+                <p-button [disabled]="reservation.isFullyPaid" icon="pi pi-plus" class="mr-2" rounded outlined (click)="showPopup(reservation.id)" />
             </td>
         </tr>
     </ng-template>
@@ -90,7 +90,7 @@
                                     </p-dropdown>
                                 </td>
                                 <td>
-                                    <p-button icon="pi pi-eye" severity="secondary" rounded outlined (click)="toPayment(payment)" />
+                                    <p-button icon="pi pi-eye" severity="secondary" rounded outlined (click)="showImage(payment)" />
                                 </td>
                             </tr>
                         </ng-template>
@@ -106,8 +106,13 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="paymentDialog" [style]="{ width: '500px', height: '500px' }" header="Pago" [modal]="true">
-    <app-form-payments [payment]="payment" (cancel)="closePopup()" (save)="savePayment(payment)" />
+<p-dialog [(visible)]="dialogVisible" [style]="{ width: '500px', height: '500px' }" [header]="dialogType === 'payment'?'Pago':'Comprobante'" [modal]="true">
+    <ng-container *ngIf="dialogType === 'image'">
+        <img [src]="'http://localhost:3000' + payment.voucher" [alt]="payment.id" width="300" class="mx-auto shadow-lg" />
+    </ng-container>
+    <ng-container *ngIf="dialogType === 'payment'">
+        <app-form-payments [payment]="payment" (cancel)="closePopup()" (save)="savePayment(payment)" />
+    </ng-container>
 </p-dialog>
 
 <p-toast></p-toast>

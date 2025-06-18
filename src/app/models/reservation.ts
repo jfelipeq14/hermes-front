@@ -10,4 +10,5 @@ export class ReservationModel {
     status: 'N' | 'C' | 'P' | 'M' | 'R' | 'E' | 'F' = 'N';
     detailReservationTravelers: ReservationTravelerModel[] = [];
     totalPay? = 0;
+    isFullyPaid? = false;
 }
