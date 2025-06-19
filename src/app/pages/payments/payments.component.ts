@@ -53,7 +53,6 @@ export class PaymentsPage implements OnInit {
     payments: PaymentModel[] = [];
     reservations: ReservationModel[] = [];
     payment: PaymentModel = new PaymentModel();
-    submitted = false;
     dateToday: Date = new Date();
     statuses = paymentStatus;
     getServerityPayment = getSeverityPayment;
@@ -175,8 +174,6 @@ export class PaymentsPage implements OnInit {
     }
 
     savePayment(payment: PaymentModel) {
-        this.submitted = true;
-        // Validación básica
         if (!payment.idReservation || !payment.pay || payment.pay <= 0) {
             this.messageService.add({
                 severity: 'warn',
@@ -341,14 +338,12 @@ export class PaymentsPage implements OnInit {
         this.payment.idReservation = idReservation;
         this.payment.total = this.reservations.find((r) => r.id === idReservation)?.price || 0;
         this.payment.pay = this.payment.total / 2; // Pago inicial del 50%
-        this.submitted = false;
         this.dialogType = 'payment';
         this.dialogVisible = true;
     }
 
     closePopup() {
         this.dialogVisible = false;
-        this.submitted = false;
     }
 
     refresh() {
@@ -356,7 +351,6 @@ export class PaymentsPage implements OnInit {
         this.reservations = [];
         this.payment = new PaymentModel();
         this.dialogVisible = false;
-        this.submitted = false;
         this.dateToday = new Date();
         this.statuses = paymentStatus;
         this.getServerityPayment = getSeverityPayment;
