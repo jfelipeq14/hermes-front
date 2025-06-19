@@ -46,7 +46,7 @@ export class FormClientsComponent implements OnInit {
     bloodTypes = bloodTypes;
     epslist = epslist;
     municipalities: MunicipalityModel[] = [];
-    pattern = PATTERNS
+    pattern = PATTERNS;
 
     age = 0;
     maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));

@@ -106,7 +106,7 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="dialogVisible" [style]="{ width: '500px', height: '500px' }" [header]="dialogType === 'payment'?'Pago':'Comprobante'" [modal]="true">
+<p-dialog [(visible)]="dialogVisible" [style]="{ width: '500px', height: '500px' }" [header]="dialogType === 'payment' ? 'Pago' : 'Comprobante'" [modal]="true">
     <ng-container *ngIf="dialogType === 'image'">
         <img [src]="'http://localhost:3000' + payment.voucher" [alt]="payment.id" width="300" class="mx-auto shadow-lg" />
     </ng-container>
