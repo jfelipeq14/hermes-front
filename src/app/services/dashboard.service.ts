@@ -11,14 +11,14 @@ export class DashboardService {
     private url = environment.SERVER_URL + 'dashboard';
 
     getSales(): Observable<any> {
-        return this.http.get<any>(`${this.url}/sales`);
+        return this.http.get<any>(this.url + '/sales');
     }
 
     getPackages(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.url}/package-sales`);
+        return this.http.get<any[]>(this.url + '/package-sales');
     }
 
     getClients(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.url}/top-clients`);
+        return this.http.get<any[]>(this.url + '/top-clients');
     }
 }

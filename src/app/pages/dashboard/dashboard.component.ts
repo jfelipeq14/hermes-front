@@ -5,32 +5,24 @@ import { Component, OnInit } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
-import { MessageService } from 'primeng/api';
 import { DashboardService } from '../../services';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
-    imports: [CommonModule, TableModule, ButtonModule, RippleModule, ChartModule],
-    providers: [DashboardService, MessageService]
+    imports: [CommonModule, ButtonModule, RippleModule, ChartModule],
+    providers: [DashboardService]
 })
 export class DashboardPage implements OnInit {
-    topClients: any[] = [];
-    sales: any = { total: '$0', growth: 0 };
-    packages: any[] = [];
-
     dataPackages: any;
     barOptions: any;
     salesChartData: any;
     pieOptions: any;
+    // clietData: any;
 
-    constructor(
-        private dashboardService: DashboardService,
-        private messageService: MessageService
-    ) {}
+    constructor(private dashboardService: DashboardService) {}
 
     ngOnInit(): void {
         this.getSales();
@@ -41,7 +33,7 @@ export class DashboardPage implements OnInit {
     getSales() {
         this.dashboardService.getSales().subscribe({
             next: (data) => {
-                this.sales = data;
+                this.setupMonthlySalesChart(data);
             },
             error: (error) => console.error(error)
         });
@@ -50,7 +42,7 @@ export class DashboardPage implements OnInit {
     getPackages() {
         this.dashboardService.getPackages().subscribe({
             next: (data) => {
-                this.packages = data;
+                this.setupPackagesChart(data);
             },
             error: (error) => console.error(error)
         });
@@ -59,39 +51,16 @@ export class DashboardPage implements OnInit {
     getClients() {
         this.dashboardService.getClients().subscribe({
             next: (data) => {
-                this.topClients = data;
+                console.log('Top clients:', data);
             },
             error: (error) => console.error(error)
         });
     }
 
-    setupPackagesChart() {
-        console.log(this.packages);
-
+    setupPackagesChart(packages: any) {
         this.dataPackages = {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
-            datasets: [
-                {
-                    label: 'Cartagena',
-                    backgroundColor: '#FCD34D',
-                    data: [10, 8, 15, 12, 22]
-                },
-                {
-                    label: 'Baru',
-                    backgroundColor: '#22C55E',
-                    data: [8, 7, 12, 15, 10]
-                },
-                {
-                    label: 'Santa Marta',
-                    backgroundColor: '#EC4899',
-                    data: [12, 10, 18, 14, 8]
-                },
-                {
-                    label: 'Covenas',
-                    backgroundColor: '#8B5CF6',
-                    data: [9, 8, 10, 11, 7]
-                }
-            ]
+            labels: packages.labels,
+            datasets: packages.datasets
         };
 
         this.barOptions = {
@@ -128,16 +97,10 @@ export class DashboardPage implements OnInit {
         };
     }
 
-    setupMonthlySalesChart() {
-        console.log(this.sales);
+    setupMonthlySalesChart(sales: any) {
         this.salesChartData = {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
-            datasets: [
-                {
-                    data: [12500000, 15000000, 9000000, 7500000, 10000000],
-                    backgroundColor: ['#6366F1', '#F59E0B', '#EC4899', '#581C87', '#DC2626']
-                }
-            ]
+            labels: sales.labels,
+            datasets: sales.datasets
         };
 
         this.pieOptions = {
