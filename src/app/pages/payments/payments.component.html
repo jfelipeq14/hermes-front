@@ -111,7 +111,7 @@
         <img [src]="'http://localhost:3000' + payment.voucher" [alt]="payment.id" width="300" class="mx-auto shadow-lg" />
     </ng-container>
     <ng-container *ngIf="dialogType === 'payment'">
-        <app-form-payments [payment]="payment" (cancel)="closePopup()" (save)="savePayment(payment)" />
+        <app-form-payments [payment]="payment" (toCancel)="closePopup()" (toSave)="savePayment(payment)" />
     </ng-container>
 </p-dialog>
 
