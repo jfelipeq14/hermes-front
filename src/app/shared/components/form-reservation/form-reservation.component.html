@@ -43,7 +43,7 @@
 
         <div *ngIf="activeStepIndex === 2" class="step-content">
             <ng-container>
-                <app-form-payments [visible]="false" [payment]="payment" [submitted]="submitted" />
+                <app-form-payments [visible]="false" [payment]="payment" [submitted]="submitted" [isPayFixed]="true" />
             </ng-container>
         </div>
     </p-stepper>

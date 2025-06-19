@@ -51,7 +51,7 @@
                 {{ reservation.totalPay || 0 | currency: 'COP' : 'symbol' }}
             </td>
             <td>
-                <p-button [disabled]="reservation.isFullyPaid" icon="pi pi-plus" class="mr-2" rounded outlined (click)="showPopup(reservation.id)" />
+                <p-button icon="pi pi-plus" class="mr-2" rounded outlined (click)="showPopup(reservation.id)" />
             </td>
         </tr>
     </ng-template>
@@ -111,7 +111,7 @@
         <img [src]="'http://localhost:3000' + payment.voucher" [alt]="payment.id" width="300" class="mx-auto shadow-lg" />
     </ng-container>
     <ng-container *ngIf="dialogType === 'payment'">
-        <app-form-payments [payment]="payment" (toCancel)="closePopup()" (toSave)="savePayment(payment)" />
+        <app-form-payments [payment]="payment" [isPayFixed]="isPayFixed" (toCancel)="closePopup()" (toSave)="savePayment(payment)" />
     </ng-container>
 </p-dialog>
 

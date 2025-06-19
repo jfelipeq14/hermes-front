@@ -148,15 +148,22 @@ export class ReservationsPage implements OnInit {
     }
 
     onRowExpand(event: any) {
-        if (!event) return;
+        if (!event.data.detailReservationTravelers) {
+            return;
+        }
+
+        this.expandedRows = {};
+        this.expandedRows[event.data.id] = true;
     }
 
-    getInfoUser(idUser: number): UserModel {
-        const traveler = this.clients.find((c) => c.id === idUser);
+    getInfoUser(idUser: number) {
+        if (idUser === 0) return;
 
-        if (!traveler) return new UserModel();
+        const user = this.clients.find((c) => c.id === idUser);
 
-        return traveler;
+        if (!user) return;
+
+        return user;
     }
 
     getInfoPackage(idDate: number): PackageModel {

@@ -65,6 +65,7 @@ export class PaymentsPage implements OnInit {
     disabled = false;
     dialogVisible = false;
     dialogType: 'image' | 'payment' = 'image';
+    isPayFixed = false;
 
     constructor(
         private profileService: ProfileService,
@@ -340,10 +341,12 @@ export class PaymentsPage implements OnInit {
         this.payment.pay = this.payment.total / 2; // Pago inicial del 50%
         this.dialogType = 'payment';
         this.dialogVisible = true;
+        this.isPayFixed = true;
     }
 
     closePopup() {
         this.dialogVisible = false;
+        this.isPayFixed = false;
     }
 
     refresh() {

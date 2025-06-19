@@ -249,14 +249,17 @@ export class FormReservationComponent implements OnInit {
         if (!this.traveler || !this.traveler.id || !this.traveler.document) return;
         // Solo agregar si no está ya en la lista de viajeros
         if (!this.reservation.detailReservationTravelers.some((t) => t.idTraveler === this.traveler.id)) {
-            this.reservation.detailReservationTravelers.push({
-                idTraveler: this.traveler.id
-            });
+            this.reservation.detailReservationTravelers.push({ idTraveler: this.traveler.id });
             // Agregar el viajero a la lista de clients si no está
             if (!this.clients.some((c) => c.id === this.traveler.id)) {
                 this.clients.push({ ...this.traveler });
             }
         }
+        // Recalcular el precio total de la reserva
+        const dateInfo = this.getDateInfo(this.reservation.idDate);
+        const packageInfo = this.getPackageInfo(dateInfo && dateInfo.idPackage ? dateInfo.idPackage : 0);
+        const cantidadViajeros = this.reservation.detailReservationTravelers.length;
+        this.reservation.price = (packageInfo?.price || 0) * cantidadViajeros;
         // Limpiar el formulario de viajero
         this.traveler = new UserModel();
         this.isFormDisabled = false; // Permitir nuevas búsquedas o adiciones
@@ -264,8 +267,12 @@ export class FormReservationComponent implements OnInit {
 
     deleteTraveler(traveler: ReservationTravelerModel) {
         if (!traveler) return;
-
         this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((t) => t.idTraveler !== traveler.idTraveler);
+        // Recalcular el precio total de la reserva
+        const dateInfo = this.getDateInfo(this.reservation.idDate);
+        const packageInfo = this.getPackageInfo(dateInfo && dateInfo.idPackage ? dateInfo.idPackage : 0);
+        const cantidadViajeros = this.reservation.detailReservationTravelers.length;
+        this.reservation.price = (packageInfo?.price || 0) * cantidadViajeros;
     }
 
     payReservation() {
@@ -349,6 +356,10 @@ export class FormReservationComponent implements OnInit {
     }
 
     nextStep() {
+        if (this.activeStepIndex === 1) {
+            // Al pasar al paso de pago, aseguramos el 50% del total y deshabilitamos el campo
+            this.payment.pay = this.payment.total / 2;
+        }
         if (this.validateStep(this.activeStepIndex)) {
             this.activeStepIndex++;
             if (this.activeStepIndex >= this.steps.length) {
