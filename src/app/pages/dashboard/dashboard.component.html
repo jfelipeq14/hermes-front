@@ -1,7 +1,6 @@
 <div class="flex flex-col gap-4">
-    <!-- Top Clients Section -->
     <div class="w-full card">
-        <h4 class="text-center">TOP 3 CLIENTES 2024</h4>
+        <h4 class="text-center">TOP 3 CLIENTES</h4>
         <div class="flex items-center justify-around">
             <div *ngFor="let client of topClients.slice(0, 3)" class="flex flex-col items-center">
                 <div class="w-16 h-16 mb-2 bg-gray-200 rounded-full"></div>
@@ -12,14 +11,12 @@
         </div>
     </div>
     <div class="flex flex-row justify-between gap-4">
-        <!-- Sales Chart Section -->
         <div class="flex-1 card" style="height: 400px; width: 400px">
-            <h4 class="text-center">VENTAS 2024</h4>
+            <h4 class="text-center">VENTAS</h4>
             <p-chart type="pie" [data]="salesChartData" [options]="pieOptions"></p-chart>
             <div class="m-2 text-sm text-gray-600">Total: {{ sales.total }}</div>
         </div>
 
-        <!-- Package Sales Chart Section -->
         <div class="flex-1 card" style="height: 400px; width: 400px">
             <h4 class="text-center">Venta de paquetes</h4>
             <p-chart type="bar" [data]="dataPackages" [options]="barOptions"></p-chart>

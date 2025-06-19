@@ -8,17 +8,17 @@ import { environment } from '../../environments/environment';
 export class DashboardService {
     constructor(private http: HttpClient) {}
 
-    private url = environment.SERVER_URL + 'dashboard/';
+    private url = environment.SERVER_URL + 'dashboard';
 
     getSales(): Observable<any> {
-        return this.http.get<any>(this.url);
+        return this.http.get<any>(`${this.url}/sales`);
     }
 
     getPackages(): Observable<any[]> {
-        return this.http.get<any[]>(this.url);
+        return this.http.get<any[]>(`${this.url}/package-sales`);
     }
 
     getClients(): Observable<any[]> {
-        return this.http.get<any[]>(this.url);
+        return this.http.get<any[]>(`${this.url}/top-clients`);
     }
 }

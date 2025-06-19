@@ -4,7 +4,6 @@ export * from './category.service';
 export * from './clients.service';
 export * from './dashboard.service';
 export * from './image.service';
-export * from './mock-data.service';
 export * from './meeting.service';
 export * from './municipality.service';
 export * from './package.service';

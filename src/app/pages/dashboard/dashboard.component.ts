@@ -8,92 +8,66 @@ import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
 import { MessageService } from 'primeng/api';
-import { MockDataService } from '../../services';
+import { DashboardService } from '../../services';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
     imports: [CommonModule, TableModule, ButtonModule, RippleModule, ChartModule],
-    providers: [MessageService]
+    providers: [DashboardService, MessageService]
 })
 export class DashboardPage implements OnInit {
     topClients: any[] = [];
     sales: any = { total: '$0', growth: 0 };
     packages: any[] = [];
 
-    // Chart data and options
     dataPackages: any;
     barOptions: any;
     salesChartData: any;
     pieOptions: any;
 
     constructor(
-        private mockDataService: MockDataService,
+        private dashboardService: DashboardService,
         private messageService: MessageService
     ) {}
 
     ngOnInit(): void {
         this.getSales();
-        this.getClients();
         this.getPackages();
+        this.getClients();
     }
 
     getSales() {
-        this.mockDataService.getMockSales().subscribe({
+        this.dashboardService.getSales().subscribe({
             next: (data) => {
                 this.sales = data;
-
-                // Setup chart data for monthly sales
-                this.setupMonthlySalesChart();
             },
-            error: () => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar datos de ventas',
-                    life: 3000
-                });
-            }
-        });
-    }
-
-    getClients() {
-        this.mockDataService.getMockTopClients().subscribe({
-            next: (data) => {
-                this.topClients = data;
-            },
-            error: () => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar datos de clientes',
-                    life: 3000
-                });
-            }
+            error: (error) => console.error(error)
         });
     }
 
     getPackages() {
-        this.mockDataService.getMockPackages().subscribe({
+        this.dashboardService.getPackages().subscribe({
             next: (data) => {
                 this.packages = data;
-
-                // Setup chart data for packages
-                this.setupPackagesChart();
             },
-            error: () => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar datos de paquetes',
-                    life: 3000
-                });
-            }
+            error: (error) => console.error(error)
+        });
+    }
+
+    getClients() {
+        this.dashboardService.getClients().subscribe({
+            next: (data) => {
+                this.topClients = data;
+            },
+            error: (error) => console.error(error)
         });
     }
 
     setupPackagesChart() {
+        console.log(this.packages);
+
         this.dataPackages = {
             labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
             datasets: [
@@ -155,6 +129,7 @@ export class DashboardPage implements OnInit {
     }
 
     setupMonthlySalesChart() {
+        console.log(this.sales);
         this.salesChartData = {
             labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
             datasets: [
