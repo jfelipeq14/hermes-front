@@ -175,8 +175,17 @@ export class PaymentsPage implements OnInit {
     }
 
     savePayment(payment: PaymentModel) {
-        // this.submitted = true;
-
+        this.submitted = true;
+        // Validación básica
+        if (!payment.idReservation || !payment.pay || payment.pay <= 0) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Debe ingresar un monto válido y seleccionar una reserva',
+                life: 3000
+            });
+            return;
+        }
         if (payment.id) {
             this.paymentService.update(payment).subscribe({
                 next: (p) => {
@@ -255,7 +264,16 @@ export class PaymentsPage implements OnInit {
                             detail: `${pay.id} cambiado a ${this.getValuePayment(pay.status)}`,
                             life: 3000
                         });
-                        if (pay.status === 'N' || (pay.status === 'P' && pay.pay >= pay.total / 2)) {
+                        // Si el pago fue anulado, descuenta su valor del totalPay de la reserva
+                        if (pay.status === 'A') {
+                            const reservation = this.reservations.find((r) => r.id === pay.idReservation);
+                            if (reservation) {
+                                reservation.totalPay = (reservation.totalPay || 0) - Number(pay.pay);
+                                reservation.isFullyPaid = reservation.totalPay >= reservation.price;
+                            }
+                            this.refresh();
+                        } else if (pay.status === 'N') {
+                            // Si el pago fue marcado como abonado, cambia el estado de la reserva a confirmada
                             this.reservationService.changeStatus(pay.idReservation, 'C').subscribe({
                                 next: (res) => {
                                     this.messageService.add({
@@ -264,9 +282,14 @@ export class PaymentsPage implements OnInit {
                                         detail: `${res.id} cambiado a ${this.getValueReservation(res.status)}`,
                                         life: 3000
                                     });
+                                    this.refresh();
+                                },
+                                error: () => {
+                                    this.refresh();
                                 }
                             });
-                        } else if (pay.status === 'P' && pay.pay === pay.total) {
+                        } else if (pay.status === 'P') {
+                            // Si el pago fue marcado como pagado, cambia el estado de la reserva a pagado
                             this.reservationService.changeStatus(pay.idReservation, 'P').subscribe({
                                 next: (res) => {
                                     this.messageService.add({
@@ -275,8 +298,14 @@ export class PaymentsPage implements OnInit {
                                         detail: `${res.id} cambiado a ${this.getValueReservation(res.status)}`,
                                         life: 3000
                                     });
+                                    this.refresh();
+                                },
+                                error: () => {
+                                    this.refresh();
                                 }
                             });
+                        } else {
+                            this.refresh();
                         }
                     },
                     error: (e) => {
