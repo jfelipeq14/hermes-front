@@ -1,14 +1,14 @@
 <div class="flex flex-col gap-4">
     <div class="w-full card">
         <h4 class="text-center">TOP 3 CLIENTES</h4>
-        <!-- <div class="flex items-center justify-around">
-            <div *ngFor="let client of clietData.slice(0, 3)" class="flex flex-col items-center">
+        <div class="flex items-center justify-around">
+            <div *ngFor="let client of clietData" class="flex flex-col items-center">
                 <div class="w-16 h-16 mb-2 bg-gray-200 rounded-full"></div>
                 <h4>{{ client.name }}</h4>
                 <p class="text-sm text-gray-600">Paquetes totales: {{ client.purchases }}</p>
                 <p class="text-sm text-gray-600">Total en dinero: ${{ client.total }}</p>
             </div>
-        </div> -->
+        </div>
     </div>
     <div class="flex flex-row justify-between gap-4">
         <div class="flex-1 card" style="height: 400px; width: 400px">

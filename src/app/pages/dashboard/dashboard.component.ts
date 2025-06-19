@@ -20,7 +20,7 @@ export class DashboardPage implements OnInit {
     barOptions: any;
     salesChartData: any;
     pieOptions: any;
-    // clietData: any;
+    clietData: any;
 
     constructor(private dashboardService: DashboardService) {}
 
@@ -51,7 +51,7 @@ export class DashboardPage implements OnInit {
     getClients() {
         this.dashboardService.getClients().subscribe({
             next: (data) => {
-                console.log('Top clients:', data);
+                this.clietData = data;
             },
             error: (error) => console.error(error)
         });
