@@ -317,7 +317,7 @@ export class FormReservationComponent implements OnInit {
                 this.reservation.price = this.getPackageInfo(this.getDateInfo(this.idDate)?.idPackage || 0)?.price || 0 * this.reservation.detailReservationTravelers.length;
 
                 // formato de int al precio
-                this.reservation.price = Math.round(this.reservation.price);
+                this.reservation.price = Math.round(this.reservation.price * this.reservation.detailReservationTravelers.length);
 
                 if (this.reservation.price <= 0) {
                     this.messageService.add({
@@ -332,7 +332,7 @@ export class FormReservationComponent implements OnInit {
                 this.saveReservation();
 
                 this.payment.idReservation = this.reservation.id;
-                this.payment.total = this.reservation.detailReservationTravelers.length * this.reservation.price;
+                this.payment.total = this.reservation.price;
                 this.payment.pay = this.payment.total / 2;
 
                 return true;
