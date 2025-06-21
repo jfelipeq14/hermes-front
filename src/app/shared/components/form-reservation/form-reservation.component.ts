@@ -106,6 +106,8 @@ export class FormReservationComponent implements OnInit {
     }
 
     searchClient(document: string) {
+        if (!document) return;
+
         const clientFound = this.clients.find((u) => u.document === document);
 
         if (!clientFound) {
@@ -116,6 +118,7 @@ export class FormReservationComponent implements OnInit {
                 life: 3000
             });
             this.client = new UserModel();
+            // this.traveler = new UserModel();
             this.client.document = document;
             this.isFormDisabled = false; // Permitir nuevas búsquedas
             return;
@@ -131,7 +134,18 @@ export class FormReservationComponent implements OnInit {
             this.reservation.idUser = clientFound.id;
         }
 
-        this.isFormDisabled = true; // Bloquear campos si se encuentra un cliente
+        if (this.client.id > 0 || this.traveler.id > 0) {
+            this.isFormDisabled = true;
+        } else {
+            this.isFormDisabled = false;
+        }
+    }
+
+    clearClient() {
+        this.client = new UserModel();
+        this.traveler = new UserModel();
+        this.isFormDisabled = false;
+        this.submitted = false;
     }
 
     handleTravel(travel: boolean) {
