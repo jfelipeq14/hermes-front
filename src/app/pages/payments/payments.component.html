@@ -48,7 +48,7 @@
             </td>
             <td>{{ reservation.idUser }}</td>
             <td>
-                {{ reservation.totalPay || 0 | currency: 'COP' : 'symbol' }}
+                {{ getTotalPayByReservation(reservation) || 0 | currency: 'COP' : 'symbol' }}
             </td>
             <td>
                 <p-button icon="pi pi-plus" class="mr-2" rounded outlined [disabled]="reservation.isFullyPaid" (click)="showPopup(reservation.id)" />

@@ -91,13 +91,11 @@ export class PaymentsPage implements OnInit {
                         next: (reservations) => {
                             this.reservations = reservations.filter((r) => r.idUser === userData.id);
                             this.disabled = true;
-                            // Calcular totalPay para cada reserva
                             this.reservations.forEach((reservation) => {
                                 this.paymentService.getByReservation(reservation.id).subscribe({
                                     next: (payments) => {
                                         reservation.totalPay = payments.reduce((total, payment) => total + Number(payment.pay), 0);
-                                        reservation.isFullyPaid = reservation.totalPay >= reservation.price; // Marca si está pagada
-                                        // Opcional: guardar los pagos en this.payments si lo necesitas globalmente
+                                        reservation.isFullyPaid = reservation.totalPay >= reservation.price;
                                         this.payments = [...this.payments, ...payments];
                                     },
                                     error: () => {
@@ -147,13 +145,13 @@ export class PaymentsPage implements OnInit {
         return this.payments.filter((payment) => payment.idReservation === reservationId);
     }
 
-    getTotalPayByReservation(reservationId: number): number {
-        // Suma el 100% de los pagos no anulados y el 50% de los pagos anulados
+    getTotalPayByReservation(reservation: ReservationModel): number {
         return this.payments
-            .filter((payment) => payment.idReservation === reservationId)
+            .filter((payment) => payment.idReservation === reservation.id)
             .reduce((total, payment) => {
                 if (payment.status === 'A') {
-                    return total + Number(payment.pay) * 0.5;
+                    reservation.isFullyPaid = false;
+                    return total + Number(payment.pay) * 0;
                 } else {
                     return total + Number(payment.pay);
                 }
@@ -328,7 +326,8 @@ export class PaymentsPage implements OnInit {
                         });
                     }
                 });
-            }
+            },
+            reject: () => this.refresh()
         });
     }
 
