@@ -11,13 +11,19 @@
             placeholder="Seleccione un tipo de documento"
             required
             [disabled]="isFormDisabled"
+            class="flex-1"
         ></p-dropdown>
         <small *ngIf="pattern.DOCUMENT_TYPE ? !client.typeDocument?.match(pattern.DOCUMENT_TYPE) : !client.typeDocument" class="text-red-600">Debes seleccionar un tipo de documento.</small>
     </div>
 
     <div class="flex flex-col flex-1">
         <label for="document" class="required">Número de Documento</label>
-        <input pInputText type="text" id="document" [(ngModel)]="client.document" (keypress)="onKeyPress($event, client.document)" required [pattern]="pattern.DOCUMENT_NUMBER" [disabled]="isFormDisabled" />
+        <div class="flex flex-row gap-2">
+            <input pInputText type="text" id="document" [(ngModel)]="client.document" [pattern]="pattern.DOCUMENT_NUMBER" required />
+            <p-button icon="pi pi-search" (click)="onSearchClient(client.document)"></p-button>
+            <p-button icon="pi pi-eraser" (click)="onClearClient()"></p-button>
+        </div>
+
         <small *ngIf="pattern.DOCUMENT_NUMBER ? client.document && !client.document.match(pattern.DOCUMENT_NUMBER) : !client.document" class="text-red-600">El número de documento no es válido.</small>
     </div>
 </fieldset>

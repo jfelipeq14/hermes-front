@@ -40,6 +40,7 @@ export class FormClientsComponent implements OnInit {
     @Output() searchClient = new EventEmitter<any>();
     @Output() createClient = new EventEmitter<any>();
     @Output() handleTravel = new EventEmitter<any>();
+    @Output() clearClient = new EventEmitter<any>();
 
     typesDocument = typesDocument;
     sexlist = sexlist;
@@ -89,9 +90,12 @@ export class FormClientsComponent implements OnInit {
         this.createClient.emit(user);
     }
 
-    onKeyPress(event: any, document: any) {
-        if (event.key !== 'Enter' || !document) return;
-
+    onSearchClient(document: any) {
+        if (!document) return;
         this.searchClient.emit(document);
+    }
+
+    onClearClient() {
+        this.clearClient.emit();
     }
 }

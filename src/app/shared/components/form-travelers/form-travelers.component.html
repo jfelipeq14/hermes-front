@@ -10,6 +10,7 @@
             [isFormDisabled]="isFormDisabled"
             (searchClient)="onSearchClient($event)"
             (createClient)="onCreateClient($event)"
+            (clearClient)="onClearClient()"
         />
         <p-button label="Agregar viajero" icon="pi pi-user" severity="secondary" [text]="true" (onClick)="traveler.id ? onAddTraveler() : onCreateClient(traveler)" />
     </div>

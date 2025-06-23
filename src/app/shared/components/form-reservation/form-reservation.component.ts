@@ -106,6 +106,8 @@ export class FormReservationComponent implements OnInit {
     }
 
     searchClient(document: string) {
+        if (!document) return;
+
         const clientFound = this.clients.find((u) => u.document === document);
 
         if (!clientFound) {
@@ -116,6 +118,7 @@ export class FormReservationComponent implements OnInit {
                 life: 3000
             });
             this.client = new UserModel();
+            // this.traveler = new UserModel();
             this.client.document = document;
             this.isFormDisabled = false; // Permitir nuevas búsquedas
             return;
@@ -131,7 +134,18 @@ export class FormReservationComponent implements OnInit {
             this.reservation.idUser = clientFound.id;
         }
 
-        this.isFormDisabled = true; // Bloquear campos si se encuentra un cliente
+        if (this.client.id > 0 || this.traveler.id > 0) {
+            this.isFormDisabled = true;
+        } else {
+            this.isFormDisabled = false;
+        }
+    }
+
+    clearClient() {
+        this.client = new UserModel();
+        this.traveler = new UserModel();
+        this.isFormDisabled = false;
+        this.submitted = false;
     }
 
     handleTravel(travel: boolean) {
@@ -324,7 +338,7 @@ export class FormReservationComponent implements OnInit {
                 this.reservation.price = this.getPackageInfo(this.getDateInfo(this.idDate)?.idPackage || 0)?.price || 0 * this.reservation.detailReservationTravelers.length;
 
                 // formato de int al precio
-                this.reservation.price = Math.round(this.reservation.price);
+                this.reservation.price = Math.round(this.reservation.price * this.reservation.detailReservationTravelers.length);
 
                 if (this.reservation.price <= 0) {
                     this.messageService.add({
@@ -339,7 +353,7 @@ export class FormReservationComponent implements OnInit {
                 this.saveReservation();
 
                 this.payment.idReservation = this.reservation.id;
-                this.payment.total = this.reservation.detailReservationTravelers.length * this.reservation.price;
+                this.payment.total = this.reservation.price;
                 this.payment.pay = this.payment.total / 2;
 
                 return true;

@@ -28,6 +28,7 @@ export class FormTravelersComponent {
     @Output() createClient = new EventEmitter<any>();
     @Output() addTraveler = new EventEmitter<any>();
     @Output() deleteTraveler = new EventEmitter<any>();
+    @Output() clearClient = new EventEmitter<any>();
 
     getInfoUser(idUser: number): UserModel {
         const traveler = this.clients.find((c) => c.id === idUser);
@@ -51,5 +52,9 @@ export class FormTravelersComponent {
 
     onDeleteTraveler(traveler: ReservationTravelerModel) {
         this.deleteTraveler.emit(traveler);
+    }
+
+    onClearClient() {
+        this.clearClient.emit();
     }
 }
