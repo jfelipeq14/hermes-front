@@ -7,9 +7,10 @@
         <small class="p-error" *ngIf="submitted && !payment.total"> El precio es obligatorio. </small>
     </div>
 
-    <div class="field">
-        <label for="pay">Valor a pagar (50%)</label><br />
-        <input pInputText type="number" id="pay" [(ngModel)]="payment.pay" name="pay" [disabled]="isPayFixed" />
+    <div class="flex flex-col">
+        <label for="pay" class="required">Valor a pagar (50%)</label>
+        <p-inputNumber id="pay" [(ngModel)]="payment.pay" mode="currency" currency="COP" locale="es-CO" [disabled]="isPayFixed"></p-inputNumber>
+        <!-- <input pInputText type="number" id="pay" [(ngModel)]="payment.pay" name="pay" [disabled]="isPayFixed" /> -->
     </div>
 
     <div class="flex flex-col">

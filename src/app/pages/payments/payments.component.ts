@@ -147,6 +147,19 @@ export class PaymentsPage implements OnInit {
         return this.payments.filter((payment) => payment.idReservation === reservationId);
     }
 
+    getTotalPayByReservation(reservationId: number): number {
+        // Suma el 100% de los pagos no anulados y el 50% de los pagos anulados
+        return this.payments
+            .filter((payment) => payment.idReservation === reservationId)
+            .reduce((total, payment) => {
+                if (payment.status === 'A') {
+                    return total + Number(payment.pay) * 0.5;
+                } else {
+                    return total + Number(payment.pay);
+                }
+            }, 0);
+    }
+
     onRowExpand(event: any) {
         const reservationId = event.data.id;
         // Cargar los pagos si aún no están cargados
@@ -233,7 +246,7 @@ export class PaymentsPage implements OnInit {
         this.dialogVisible = true;
     }
 
-    changeStatusPayment(payment: PaymentModel) {
+    changeStatusPayment(payment: any) {
         // validar el rol
         if (this.authService.hasRole([3])) {
             this.messageService.add({
@@ -262,11 +275,11 @@ export class PaymentsPage implements OnInit {
                             detail: `${pay.id} cambiado a ${this.getValuePayment(pay.status)}`,
                             life: 3000
                         });
-                        // Si el pago fue anulado, descuenta su valor del totalPay de la reserva
+                        // Si el pago fue anulado, descuenta el 50% de su valor del totalPay de la reserva
                         if (pay.status === 'A') {
                             const reservation = this.reservations.find((r) => r.id === pay.idReservation);
                             if (reservation) {
-                                reservation.totalPay = (reservation.totalPay || 0) - Number(pay.pay);
+                                reservation.totalPay = (reservation.totalPay || 0) - Number(pay.pay) * 0.5;
                                 reservation.isFullyPaid = reservation.totalPay >= reservation.price;
                             }
                             this.refresh();

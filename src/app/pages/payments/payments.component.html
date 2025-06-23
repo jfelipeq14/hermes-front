@@ -51,7 +51,7 @@
                 {{ reservation.totalPay || 0 | currency: 'COP' : 'symbol' }}
             </td>
             <td>
-                <p-button icon="pi pi-plus" class="mr-2" rounded outlined (click)="showPopup(reservation.id)" />
+                <p-button icon="pi pi-plus" class="mr-2" rounded outlined [disabled]="reservation.isFullyPaid" (click)="showPopup(reservation.id)" />
             </td>
         </tr>
     </ng-template>
