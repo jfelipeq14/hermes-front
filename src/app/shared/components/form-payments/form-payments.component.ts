@@ -24,6 +24,7 @@ export class FormPaymentsComponent {
     @Input() payment: PaymentModel = new PaymentModel();
     @Input() submitted = false;
     @Input() visible = true;
+    @Input() isPayFixed: boolean = false;
 
     @Output() toCancel = new EventEmitter<void>();
     @Output() toSave = new EventEmitter<PaymentModel>();

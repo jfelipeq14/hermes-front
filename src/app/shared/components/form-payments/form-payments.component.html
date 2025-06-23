@@ -8,9 +8,9 @@
     </div>
 
     <div class="flex flex-col">
-        <label for="price" class="required">¿Cuanto vas a pagar? ({{ payment.total / 2 }})</label>
-        <p-inputNumber id="price" [(ngModel)]="payment.pay" mode="currency" currency="COP" locale="es-CO"></p-inputNumber>
-        <small class="p-error" *ngIf="submitted && !payment.pay"> El precio es obligatorio. </small>
+        <label for="pay" class="required">Valor a pagar (50%)</label>
+        <p-inputNumber id="pay" [(ngModel)]="payment.pay" mode="currency" currency="COP" locale="es-CO" [disabled]="isPayFixed"></p-inputNumber>
+        <!-- <input pInputText type="number" id="pay" [(ngModel)]="payment.pay" name="pay" [disabled]="isPayFixed" /> -->
     </div>
 
     <div class="flex flex-col">
