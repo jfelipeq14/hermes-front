@@ -1,22 +1,20 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn } from '@angular/router';
 import { map, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export const loggedGuard: CanActivateFn = () => {
     const authService = inject(AuthService);
-    const router = inject(Router);
 
     return authService.currentUser$.pipe(
         take(1),
         map((user) => {
-            // Si no está logueado, permitir acceso al landing
-            if (!user) {
-                return true;
+            if (user) {
+                authService.redirectBasedOnRole();
+                return false;
             }
-            router.navigate(['/home']);
 
-            return false;
+            return true;
         })
     );
 };

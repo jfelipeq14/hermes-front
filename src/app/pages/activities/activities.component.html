@@ -9,12 +9,12 @@
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} actividades"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
 >
     <ng-template #caption>
-        <h3 class="m-0 p-0 text-center">Actividades</h3>
+        <h3 class="p-0 m-0 text-center">Actividades</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
@@ -23,19 +23,19 @@
     </ng-template>
     <ng-template #header>
         <tr>
-            <th pSortableColumn="id" style="min-width: 12rem">
-                Identificación
+            <th pSortableColumn="id">
+                Id
                 <p-sortIcon field="id" />
             </th>
-            <th pSortableColumn="name" style="min-width: 16rem">
+            <th pSortableColumn="name">
                 Nombre
                 <p-sortIcon field="name" />
             </th>
-            <th pSortableColumn="status" style="min-width: 12rem">
+            <th pSortableColumn="status">
                 Estado
                 <p-sortIcon field="status" />
             </th>
-            <th style="min-width: 12rem"></th>
+            <th></th>
         </tr>
     </ng-template>
     <ng-template #body let-activity>
@@ -46,8 +46,8 @@
                 <p-tag [value]="activity.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(activity.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editActivity(activity)" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusActivity(activity)" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editActivity(activity)" />
+                <p-button [icon]="activity.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="activity.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusActivity(activity)" />
             </td>
         </tr>
     </ng-template>
@@ -55,16 +55,20 @@
 
 <p-dialog [(visible)]="activityDialog" [style]="{ width: '450px' }" header="Actividad" [modal]="true" class="p-fluid">
     <ng-template #content>
-        <div class="field flex flex-col">
-            <label for="name" class="required">Nombre</label>
-            <input pInputText type="text" id="name" [(ngModel)]="activity.name" required />
-            <small class="p-error" *ngIf="submitted && !activity.name">El nombre es obligatorio.</small>
+        <div class="container flex flex-col gap-4">
+            <div class="flex flex-col my-2">
+                <label for="name" class="required">Nombre</label>
+                <input pInputText type="text" id="name" [(ngModel)]="activity.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
+                <small *ngIf="!activity.name?.match(pattern.NAME)" class="text-red-600">El nombre solo puede contener letras y espacios.</small>
+            </div>
         </div>
     </ng-template>
 
     <ng-template #footer>
-        <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
-        <p-button label="Save" icon="pi pi-check" (click)="saveActivity()"></p-button>
+        <div class="flex gap-2 my-2 justify-content-end">
+            <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="closePopup()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" [disabled]="validateActivity()" (click)="saveActivity()"></p-button>
+        </div>
     </ng-template>
 </p-dialog>
 

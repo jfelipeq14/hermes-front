@@ -21,7 +21,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
     if (!authService.isValidTokenFormat(accessToken) || authService.isTokenExpired(accessToken)) {
         console.error('Invalid or expired token');
-        authService.logout();
+        authService.clearSession();
         return throwError(() => new Error('Invalid or expired token'));
     }
 

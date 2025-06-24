@@ -13,20 +13,18 @@ export class ReservationsService {
     private urlReservation = environment.SERVER_URL + 'reservations/';
     private urlTraveler = environment.SERVER_URL + 'travelers/';
 
-    // Obtener todas las reservaciones
     getAll(): Observable<ReservationModel[]> {
         return this.http.get<ReservationModel[]>(this.urlReservation);
     }
-    getAllTravelersByReservation(idReservation: number): Observable<ReservationTravelerModel[]> {
-        return this.http.get<ReservationTravelerModel[]>(this.urlTraveler + `reservation/${idReservation}`);
+
+    getAllByUser(id: number): Observable<ReservationModel[]> {
+        return this.http.get<ReservationModel[]>(`${this.urlReservation}user/${id}`);
     }
 
-    // Obtener una reservación por ID
-    getById(id: number): Observable<ReservationModel> {
-        return this.http.get<ReservationModel>(`${this.urlReservation}${id}`);
+    getTravelers(idDate: number): Observable<ReservationModel[]> {
+        return this.http.get<ReservationModel[]>(`${this.urlReservation}travelers/${idDate}`);
     }
 
-    // Crear una nueva reservación
     create(reservation: ReservationModel): Observable<ReservationModel> {
         return this.http.post<ReservationModel>(this.urlReservation, reservation);
     }
@@ -35,17 +33,11 @@ export class ReservationsService {
         return this.http.post<ReservationTravelerModel[]>(this.urlTraveler, travelers);
     }
 
-    // Actualizar una reservación existente
     update(reservation: ReservationModel): Observable<ReservationModel> {
         return this.http.patch<ReservationModel>(`${this.urlReservation}${reservation.id}`, reservation);
     }
 
     changeStatus(id: number, status: string): Observable<ReservationModel> {
         return this.http.patch<ReservationModel>(this.urlReservation + `${id}/change-status`, { status });
-    }
-
-    // Obtener viajeros por reservación
-    getTravelersByReservation(reservationId: number): Observable<ReservationTravelerModel[]> {
-        return this.http.get<ReservationTravelerModel[]>(`${this.urlTraveler}by-reservation/${reservationId}`);
     }
 }

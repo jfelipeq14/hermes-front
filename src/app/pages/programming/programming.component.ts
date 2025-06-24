@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -20,11 +20,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 
-import { MeetingService, PackageService, ProgrammingService, ReservationsService, ResponsibleService } from '../../services';
+import { AuthService, MeetingService, PackageService, ProfileService, ProgrammingService, ReservationsService, ResponsibleService } from '../../services';
 import { DateModel, MeetingModel, PackageModel, ReservationModel, ReservationTravelerModel, ResponsibleModel, UserModel } from '../../models';
-import { ZONE } from '../../shared/constants';
+import { ROLE_IDS, ZONE } from '../../shared/constants';
 import { formatTime, getSeverity } from '../../shared/helpers';
-import { CalendarComponent, FormProgrammingComponent, FormReservationComponent } from '../../shared/components';
+import { CalendarComponent, FormProgrammingComponent, FormReservationComponent, TableClientsComponent } from '../../shared/components';
 
 @Component({
     selector: 'app-programming',
@@ -48,11 +48,14 @@ import { CalendarComponent, FormProgrammingComponent, FormReservationComponent }
         DropdownModule,
         CalendarComponent,
         FormProgrammingComponent,
-        FormReservationComponent
+        FormReservationComponent,
+        TableClientsComponent
     ],
-    providers: [ProgrammingService, PackageService, ResponsibleService, MeetingService, ReservationsService, MessageService, ConfirmationService]
+    providers: [ProfileService, ProgrammingService, PackageService, ResponsibleService, MeetingService, ReservationsService, MessageService, ConfirmationService]
 })
 export class ProgrammingPage implements OnInit {
+    authService = inject(AuthService);
+
     date: DateModel = new DateModel();
     dates: DateModel[] = [];
     meeting: MeetingModel = new MeetingModel();
@@ -69,6 +72,7 @@ export class ProgrammingPage implements OnInit {
     dialogType: 'programming' | 'reservation' | 'clients' = 'programming';
 
     constructor(
+        private profileService: ProfileService,
         private programmingService: ProgrammingService,
         private packageService: PackageService,
         private responsibleService: ResponsibleService,
@@ -79,11 +83,20 @@ export class ProgrammingPage implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.getAllDates();
+        this.profileService.getCurrentUser().subscribe({
+            next: (userData) => {
+                if (userData.idRole === 2) {
+                    this.getAllDatesByResponsible(userData.id);
+                } else {
+                    this.getAllDates();
+                    this.getAllResponsibles();
+                    this.getAllMeetings();
+                }
+            },
+            error: (error) => console.error(error)
+        });
         this.getAllPackages();
         this.getAllReservations();
-        this.getAllResponsibles();
-        this.getAllMeetings();
     }
 
     getAllDates() {
@@ -92,13 +105,17 @@ export class ProgrammingPage implements OnInit {
                 this.dates = dates;
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.log(e);
             }
+        });
+    }
+
+    getAllDatesByResponsible(idUser: number) {
+        this.programmingService.getAllByResponsible(idUser).subscribe({
+            next: (dates) => {
+                this.dates = dates;
+            },
+            error: (e) => console.log(e)
         });
     }
 
@@ -113,14 +130,7 @@ export class ProgrammingPage implements OnInit {
                     };
                 });
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -129,14 +139,7 @@ export class ProgrammingPage implements OnInit {
             next: (packages) => {
                 this.packages = packages;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -145,14 +148,7 @@ export class ProgrammingPage implements OnInit {
             next: (reservations) => {
                 this.reservations = reservations;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -164,14 +160,16 @@ export class ProgrammingPage implements OnInit {
                     fullName: `${responsible.name} ${responsible.surName}`
                 }));
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
+        });
+    }
+
+    getAllTravelers(idDate: number) {
+        this.reservationService.getTravelers(idDate).subscribe({
+            next: (reservations) => {
+                this.clients = reservations.map((r) => r.detailReservationTravelers).flat();
+            },
+            error: (e: any) => console.error(e)
         });
     }
 
@@ -193,7 +191,7 @@ export class ProgrammingPage implements OnInit {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Éxito',
-                            detail: `Programación ${updatedDate.id} actualizada`,
+                            detail: `Programación actualizada correctamente`,
                             life: 3000
                         });
                         this.createMeeting(updatedDate.id);
@@ -214,7 +212,7 @@ export class ProgrammingPage implements OnInit {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Éxito',
-                            detail: `Programación ${date.id} creada`,
+                            detail: `Programación creada correctamente`,
                             life: 3000
                         });
 
@@ -242,11 +240,11 @@ export class ProgrammingPage implements OnInit {
 
         if (this.meeting.id) {
             this.meetingService.update(this.meeting).subscribe({
-                next: (meeting) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `Encuentro actualizado con ID ${meeting.id}`,
+                        detail: `Encuentro actualizado correctamente`,
                         life: 3000
                     });
                     this.refresh();
@@ -262,11 +260,11 @@ export class ProgrammingPage implements OnInit {
             });
         } else {
             this.meetingService.create(this.meeting).subscribe({
-                next: (meeting) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `Encuentro creado con ID ${meeting.id}`,
+                        detail: `Encuentro creado correctamente`,
                         life: 3000
                     });
                     this.refresh();
@@ -293,8 +291,6 @@ export class ProgrammingPage implements OnInit {
         };
         this.meetingService.getByIdDate(date.id).subscribe({
             next: (meeting) => {
-                if (!meeting) this.meeting = new MeetingModel();
-
                 this.meeting = {
                     ...meeting,
                     hour: formatTime(meeting.hour)
@@ -323,7 +319,7 @@ export class ProgrammingPage implements OnInit {
                         this.messageService.add({
                             severity: getSeverity(d.status),
                             summary: 'Éxito',
-                            detail: `${d.id} ${d.status ? 'activado' : 'desactivado'}`,
+                            detail: `Programación ${d.status ? 'activada' : 'desactivada'}`,
                             life: 3000
                         });
                         this.refresh();
@@ -343,20 +339,34 @@ export class ProgrammingPage implements OnInit {
 
     clickDate(date: DateModel) {
         if (!date) return;
-        this.date = date;
-        this.dialogType = 'programming';
-        this.dialogVisible = true;
+
+        if (this.authService.hasRole([ROLE_IDS.ADMIN])) {
+            this.date = date;
+            this.dialogType = 'programming';
+            this.dialogVisible = true;
+        } else {
+            return;
+        }
     }
 
     clickProgramming(id: number) {
-        this.idDate = id;
-        this.dialogType = 'reservation';
-        this.dialogVisible = true;
+        if (!id) return;
+
+        const foundProgramming = this.dates.find((date) => date.id === id);
+        if (!foundProgramming || foundProgramming.status === false) return;
+
+        if (this.authService.hasRole([ROLE_IDS.ADMIN, ROLE_IDS.CLIENT])) {
+            this.idDate = id;
+            this.dialogType = 'reservation';
+            this.dialogVisible = true;
+        } else {
+            return;
+        }
     }
 
     toClients(id: number) {
         this.idDate = id;
-        this.clients = this.reservations.find((r) => r.idDate === this.idDate)?.detailReservationTravelers || [];
+        this.getAllTravelers(this.idDate);
         this.dialogType = 'clients';
         this.dialogVisible = true;
     }
@@ -381,7 +391,19 @@ export class ProgrammingPage implements OnInit {
         this.dialogVisible = false;
         this.submitted = false;
 
+        this.profileService.getCurrentUser().subscribe({
+            next: (userData) => {
+                if (userData.idRole === 2) {
+                    this.getAllDatesByResponsible(userData.id);
+                } else {
+                    this.getAllDates();
+                    this.getAllResponsibles();
+                    this.getAllMeetings();
+                }
+            },
+            error: (error) => console.error(error)
+        });
         this.getAllPackages();
-        this.getAllResponsibles();
+        this.getAllReservations();
     }
 }

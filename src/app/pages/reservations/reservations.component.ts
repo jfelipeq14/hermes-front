@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -16,7 +16,7 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { ClientsService, PackageService, ProgrammingService, ReservationsService } from '../../services';
+import { AuthService, ClientsService, PackageService, ProfileService, ProgrammingService, ReservationsService } from '../../services';
 
 import { DateModel, PackageModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../models';
 
@@ -30,9 +30,11 @@ import { getSeverity, getSeverityReservation, getValue, getValueReservation } fr
     templateUrl: './reservations.component.html',
     styleUrls: ['./reservations.component.scss'],
     imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, InputTextModule, InputIconModule, IconFieldModule, TagModule, ConfirmDialogModule, DropdownModule, CalendarComponent, FormReservationComponent],
-    providers: [ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
+    providers: [ProfileService, ReservationsService, ProgrammingService, PackageService, ClientsService, MessageService, ConfirmationService]
 })
 export class ReservationsPage implements OnInit {
+    authService = inject(AuthService);
+
     reservations: ReservationModel[] = [];
     dates: DateModel[] = [];
     clients: UserModel[] = [];
@@ -52,7 +54,10 @@ export class ReservationsPage implements OnInit {
     dialogVisible = false;
     dialogType: 'calendar' | 'reservation' = 'calendar';
 
+    disabled = false;
+
     constructor(
+        private profileService: ProfileService,
         private reservationService: ReservationsService,
         private programmingService: ProgrammingService,
         private packageService: PackageService,
@@ -62,10 +67,25 @@ export class ReservationsPage implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.getAllReservations();
+        this.profileService.getCurrentUser().subscribe({
+            next: (userData) => {
+                if (userData.idRole === 3) {
+                    this.getAllReservationsByUser(userData.id);
+                    this.clients = [userData];
+                    this.disabled = true;
+                } else {
+                    this.getAllReservations();
+                    this.getAllClients();
+                    this.disabled = false;
+                }
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+
         this.getAllDates();
         this.getAllPackages();
-        this.getAllClients();
     }
 
     getAllReservations() {
@@ -74,12 +94,18 @@ export class ReservationsPage implements OnInit {
                 this.reservations = reservations;
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
+            }
+        });
+    }
+
+    getAllReservationsByUser(idUser: number) {
+        this.reservationService.getAllByUser(idUser).subscribe({
+            next: (reservations) => {
+                this.reservations = reservations;
+            },
+            error: (e) => {
+                console.error(e);
             }
         });
     }
@@ -87,15 +113,10 @@ export class ReservationsPage implements OnInit {
     getAllDates() {
         this.programmingService.getAll().subscribe({
             next: (dates) => {
-                this.dates = dates;
+                this.dates = dates.filter((d) => d.status === true);
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
@@ -103,15 +124,10 @@ export class ReservationsPage implements OnInit {
     getAllPackages() {
         this.packageService.getAll().subscribe({
             next: (packages) => {
-                this.packages = packages;
+                this.packages = packages.filter((r) => r.status === true);
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
@@ -119,15 +135,10 @@ export class ReservationsPage implements OnInit {
     getAllClients() {
         this.clientsService.getAll().subscribe({
             next: (clients) => {
-                this.clients = clients;
+                this.clients = clients.filter((c) => c.status === true);
             },
             error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
+                console.error(e);
             }
         });
     }
@@ -137,15 +148,22 @@ export class ReservationsPage implements OnInit {
     }
 
     onRowExpand(event: any) {
-        if (!event) return;
+        if (!event.data.detailReservationTravelers) {
+            return;
+        }
+
+        this.expandedRows = {};
+        this.expandedRows[event.data.id] = true;
     }
 
-    getInfoUser(idUser: number): UserModel {
-        const traveler = this.clients.find((c) => c.id === idUser);
+    getInfoUser(idUser: number) {
+        if (idUser === 0) return;
 
-        if (!traveler) return new UserModel();
+        const user = this.clients.find((c) => c.id === idUser);
 
-        return traveler;
+        if (!user) return;
+
+        return user;
     }
 
     getInfoPackage(idDate: number): PackageModel {
@@ -158,6 +176,16 @@ export class ReservationsPage implements OnInit {
     }
 
     changeStatusReservation(reservation: ReservationModel) {
+        // validar el rol
+        if (this.authService.hasRole([3])) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No tienes permisos para cambiar el estado de los pagos',
+                life: 3000
+            });
+            return;
+        }
         this.confirmationService.confirm({
             message: '¿Está seguro de que desea cambiar el estado de ' + reservation.id + '?',
             header: 'Confirmar',
@@ -186,9 +214,6 @@ export class ReservationsPage implements OnInit {
                         });
                     }
                 });
-            },
-            reject: () => {
-                this.refresh();
             }
         });
     }

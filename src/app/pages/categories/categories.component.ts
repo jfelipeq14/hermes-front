@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { CategoryService } from '../../services';
 import { CategoryModel } from '../../models';
 import { InputTextModule } from 'primeng/inputtext';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     selector: 'app-categories',
@@ -31,6 +32,7 @@ export class CategoriesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
+    pattern = PATTERNS;
 
     constructor(
         private categoryService: CategoryService,
@@ -51,14 +53,7 @@ export class CategoriesPage implements OnInit {
             next: (categories) => {
                 this.categories = categories;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'info',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -66,13 +61,14 @@ export class CategoriesPage implements OnInit {
         this.submitted = true;
         if (!this.category.id) {
             this.categoryService.create(this.category).subscribe({
-                next: (c) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${c.name} creado`,
+                        detail: `Categoria creada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -83,16 +79,16 @@ export class CategoriesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.categoryService.update(this.category).subscribe({
-                next: (c) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${c.name} actualizado`,
+                        detail: `Categoria actualizada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -103,9 +99,7 @@ export class CategoriesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editCategory(category: CategoryModel) {
@@ -128,7 +122,7 @@ export class CategoriesPage implements OnInit {
                         this.messageService.add({
                             severity: this.getSeverity(c.status),
                             summary: 'Éxito',
-                            detail: `${c.name} ${c.status ? 'activado' : 'desactivado'}`,
+                            detail: `Categoria ${c.status ? 'activada' : 'desactivada'}`,
                             life: 3000
                         });
                         this.refresh();
@@ -142,9 +136,12 @@ export class CategoriesPage implements OnInit {
                         });
                     }
                 });
-                this.refresh();
             }
         });
+    }
+
+    validateCategory(): boolean {
+        return this.category.name ? false : true;
     }
 
     showPopup() {
@@ -159,9 +156,12 @@ export class CategoriesPage implements OnInit {
     }
 
     refresh() {
-        this.getAllCategories();
-        this.closePopup();
+        this.categories = [];
+        this.category = new CategoryModel();
+        this.categoryDialog = false;
         this.submitted = false;
+
+        this.getAllCategories();
     }
 
     getSeverity(status: boolean): 'success' | 'danger' {

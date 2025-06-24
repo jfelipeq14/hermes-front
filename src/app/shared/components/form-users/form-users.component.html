@@ -1,0 +1,99 @@
+<div class="container flex flex-col gap-4 p-4">
+    <div class="flex flex-row gap-4">
+        <div class="flex flex-col flex-1">
+            <label for="idRole" class="required">Rol</label>
+            <p-dropdown id="idRole" [options]="roles" [(ngModel)]="user.idRole" [showClear]="true" name="idRole" optionLabel="name" optionValue="id" placeholder="Seleccione un rol" [pattern]="patterns.ID" required></p-dropdown>
+            <small *ngIf="!user.idRole?.toString()?.match(patterns.ID)" class="text-red-600">El rol es obligatorio.</small>
+        </div>
+    </div>
+
+    <div class="flex flex-row gap-4">
+        <div class="flex flex-col flex-1">
+            <label for="typeDocument" class="required">Tipo de Documento</label>
+            <p-dropdown
+                id="typeDocument"
+                [options]="typesDocument"
+                [(ngModel)]="user.typeDocument"
+                name="typeDocument"
+                optionLabel="name"
+                optionValue="value"
+                placeholder="Seleccione un tipo de documento"
+                [pattern]="patterns.DOCUMENT_TYPE"
+                required
+            ></p-dropdown>
+            <small *ngIf="!user.typeDocument?.match(patterns.DOCUMENT_TYPE)" class="text-red-600">Debe seleccionar el tipo documento</small>
+        </div>
+
+        <div class="flex flex-col flex-1">
+            <label for="document" class="required">Número de Documento</label>
+            <input pInputText type="text" id="document" [(ngModel)]="user.document" required />
+            <small *ngIf="!user.document" class="text-red-600">Debe ingresar mínimo 5 caracteres entre letras y números</small>
+        </div>
+    </div>
+
+    <div class="flex flex-row gap-4">
+        <div class="flex flex-col flex-1">
+            <label for="name" class="required">Nombres</label>
+            <input type="text" pInputText id="name" [(ngModel)]="user.name" [pattern]="patterns.NAME" required />
+            <small *ngIf="!user.name?.match(patterns.NAME)" class="text-red-600">El nombre solo puede contener letras y debe llevar como mínimo 3 caracteres</small>
+        </div>
+
+        <div class="flex flex-col flex-1">
+            <label for="surName" class="required">Apellidos</label>
+            <input type="text" pInputText id="surName" [(ngModel)]="user.surName" [pattern]="patterns.NAME" required />
+            <small *ngIf="!user.surName?.match(patterns.NAME)" class="text-red-600">El apellido solo puede contener letras y debe contener mínimo 3 caracteres</small>
+        </div>
+    </div>
+
+    <div class="flex flex-row gap-4">
+        <div class="flex flex-col flex-1">
+            <label for="idMunicipality" class="required">Municipio</label>
+            <p-dropdown
+                id="idMunicipality"
+                [options]="municipalities"
+                [(ngModel)]="user.idMunicipality"
+                name="idMunicipality"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Seleccione un municipio"
+                [showClear]="true"
+                [pattern]="patterns.ID"
+                required
+            ></p-dropdown>
+            <small *ngIf="!user.idMunicipality.toString().match(patterns.ID)" class="text-red-600">Debe seleccionar un municipio</small>
+        </div>
+
+        <div class="flex flex-col flex-1">
+            <label for="phone" class="required">Teléfono</label>
+            <input type="tel" pInputText id="phone" [(ngModel)]="user.phone" [pattern]="patterns.PHONE" required />
+            <small *ngIf="!user.phone?.match(patterns.PHONE)" class="text-red-600">El teléfono solo puede contener números y mínimo debe llevar 7 números</small>
+        </div>
+    </div>
+
+    <div class="flex flex-row gap-4">
+        <div class="flex flex-col flex-1">
+            <label for="dateBirth" class="required">Fecha de nacimiento</label>
+            <p-datepicker [(ngModel)]="user.dateBirth" inputId="start" dateFormat="yy-mm-dd" [dataType]="'date'" [appendTo]="'body'" [maxDate]="maxDate" required></p-datepicker>
+            <small *ngIf="!user.dateBirth" class="text-red-600">La fecha de nacimiento es obligatoria y debe ser mayor de 18 años</small>
+        </div>
+    </div>
+
+    <div class="flex flex-row gap-4">
+        <div class="flex flex-col flex-1">
+            <label for="email" class="required">Correo Electrónico</label>
+            <input type="email" pInputText id="email" [(ngModel)]="user.email" [pattern]="patterns.EMAIL" [disabled]="isFormDisabled" required />
+            <small *ngIf="!user.email?.match(patterns.EMAIL)" class="text-red-600">El correo es obligatorio</small>
+        </div>
+
+        <div class="flex flex-col flex-1">
+            <label for="password" class="required">Contraseña</label>
+            <input type="password" pInputText id="password" [(ngModel)]="user.password" [pattern]="patterns.PASSWORD" [disabled]="isFormDisabled" required />
+            <small *ngIf="!isFormDisabled && !user.password?.match(patterns.PASSWORD)" class="text-red-600">La contraseña debe contener mínimo una mayúscula, un carácter especial y un número</small>
+        </div>
+    </div>
+
+    <div class="flex gap-2 my-2 justify-content-end">
+        <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="onClosePopup()" [text]="true"></p-button>
+        <p-button label="Guardar" icon="pi pi-check" (click)="onSubmit()"></p-button>
+    </div>
+</div>

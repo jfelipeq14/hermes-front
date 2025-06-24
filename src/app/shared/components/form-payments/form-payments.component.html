@@ -1,21 +1,24 @@
-<div class="field">
-    <label for="idReservation">Reserva</label>
-    <input type="text" pInputText id="idReservation" [(ngModel)]="payment.idReservation" [disabled]="true" />
-</div>
+<app-payment-methods />
 
-<div class="field">
-    <label for="date">Fecha *</label>
-    <p-calendar id="date" [(ngModel)]="payment.date" [showIcon]="true" dateFormat="dd/mm/yy" [disabled]="true"></p-calendar>
-    <small class="p-error" *ngIf="submitted && !payment.date"> La fecha es obligatoria. </small>
-</div>
+<div class="container flex flex-col gap-4">
+    <div class="flex flex-col">
+        <label for="price" class="required">Precio</label>
+        <p-inputNumber id="price" [(ngModel)]="payment.total" mode="currency" currency="COP" locale="es-CO" [disabled]="true"></p-inputNumber>
+        <small class="p-error" *ngIf="submitted && !payment.total"> El precio es obligatorio. </small>
+    </div>
 
-<div class="field">
-    <label for="price">Precio *</label>
-    <input type="number" pInputText id="price" [(ngModel)]="payment.price" required />
-    <small class="p-error" *ngIf="submitted && !payment.price"> El precio es obligatorio. </small>
-</div>
+    <div class="flex flex-col">
+        <label for="pay" class="required">Valor a pagar (50%)</label>
+        <p-inputNumber id="pay" [(ngModel)]="payment.pay" mode="currency" currency="COP" locale="es-CO" [disabled]="isPayFixed"></p-inputNumber>
+        <!-- <input pInputText type="number" id="pay" [(ngModel)]="payment.pay" name="pay" [disabled]="isPayFixed" /> -->
+    </div>
 
-<div class="field">
-    <label for="voucher">Comprobante</label>
-    <input type="text" pInputText id="voucher" [(ngModel)]="payment.voucher" />
+    <div class="flex flex-col">
+        <app-upload-image (uploadImage)="uploadImage($event)" />
+    </div>
+
+    <div class="flex gap-2 my-2 justify-content-end" *ngIf="visible">
+        <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="onCancel()"></p-button>
+        <p-button label="Guardar" icon="pi pi-check" (click)="onSave()"></p-button>
+    </div>
 </div>

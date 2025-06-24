@@ -9,12 +9,11 @@
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
 >
     <ng-template pTemplate="caption">
-        <h3 class="p-0 m-0 text-center">Clientes</h3>
+        <h3 class="p-0 m-0 text-center">Viajeros</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Reservar" icon="pi pi-plus" severity="secondary" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
@@ -24,19 +23,19 @@
 
     <ng-template #header>
         <tr>
-            <th pSortableColumn="id" style="min-width: 12rem">
-                Identificación
+            <th pSortableColumn="id">
+                Documento
                 <p-sortIcon field="id" />
             </th>
-            <th pSortableColumn="name" style="min-width: 16rem">
+            <th pSortableColumn="name">
                 Nombre
                 <p-sortIcon field="name" />
             </th>
-            <th pSortableColumn="status" style="min-width: 12rem">
+            <th pSortableColumn="status">
                 Estado
                 <p-sortIcon field="status" />
             </th>
-            <th style="min-width: 12rem"></th>
+            <th></th>
         </tr>
     </ng-template>
 
@@ -49,8 +48,8 @@
                 <p-tag [value]="traveler.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(traveler.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined />
+                <p-button [icon]="traveler.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="traveler.status ? 'danger' : 'success'" rounded outlined />
             </td>
         </tr>
     </ng-template>

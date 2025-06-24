@@ -19,12 +19,30 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivityModel, DateModel, MunicipalityModel, PackageModel, PackageServiceModel, ServiceModel } from '../../models';
 import { ActivityService, MunicipalityService, PackageService, ProgrammingService, ServiceService } from '../../services';
 import { levels } from '../../shared/constants';
+import { PATTERNS } from '../../shared/helpers';
+import { UploadImageComponent } from '../../shared/components/upload-image/upload-image.component';
 
 @Component({
     selector: 'app-packages',
     templateUrl: './packages.component.html',
     styleUrls: ['./packages.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule, InputNumberModule, TextareaModule, TagModule, ConfirmDialogModule],
+    imports: [
+        CommonModule,
+        TableModule,
+        FormsModule,
+        ButtonModule,
+        ToastModule,
+        DialogModule,
+        DropdownModule,
+        InputTextModule,
+        InputIconModule,
+        IconFieldModule,
+        InputNumberModule,
+        TextareaModule,
+        TagModule,
+        ConfirmDialogModule,
+        UploadImageComponent
+    ],
     providers: [PackageService, ServiceService, ActivityService, MunicipalityService, ProgrammingService, MessageService, ConfirmationService]
 })
 export class PackagesPage implements OnInit {
@@ -42,6 +60,7 @@ export class PackagesPage implements OnInit {
     submitted = false;
     expandedRows: Record<string, boolean> = {};
     levels = levels;
+    pattern = PATTERNS;
 
     constructor(
         private packageService: PackageService,
@@ -68,23 +87,18 @@ export class PackagesPage implements OnInit {
     getAllPackages() {
         this.packageService.getAll().subscribe({
             next: (packages) => {
-                this.packages = packages;
+                this.packages = packages.map((pkg) => {
+                    return {
+                        ...pkg,
+                        price: +pkg.price,
+                        reserve: +pkg.reserve
+                    };
+                });
                 this.packages.forEach((pkg) => {
-                    this.packageService.getServicePackages(pkg.id).subscribe({
-                        next: (services) => {
-                            this.packageServices = [...this.packageServices, ...services];
-                        }
-                    });
+                    this.packageServices = pkg.detailPackagesServices;
                 });
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -93,14 +107,7 @@ export class PackagesPage implements OnInit {
             next: (services) => {
                 this.services = services;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -109,14 +116,7 @@ export class PackagesPage implements OnInit {
             next: (activities) => {
                 this.activities = activities;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -125,14 +125,7 @@ export class PackagesPage implements OnInit {
             next: (municipalities) => {
                 this.municipalities = municipalities;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -141,14 +134,7 @@ export class PackagesPage implements OnInit {
             next: (dates) => {
                 this.dates = dates;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -176,71 +162,82 @@ export class PackagesPage implements OnInit {
     }
 
     onRowExpand(event: any) {
-        const packageId = event.data.id;
-        if (!event.data.services) {
-            this.packageService.getServicePackages(packageId).subscribe({
-                next: (services) => {
-                    event.data.services = services;
-                }
-            });
+        if (!event.data.detailPackagesServices) {
+            return;
         }
+
+        this.packageServices = event.data.detailPackagesServices;
     }
 
     getSeverity(status: boolean): 'success' | 'danger' {
         return status ? 'success' : 'danger';
     }
 
+    uploadImage(filePath: string) {
+        this.package.image = filePath;
+        console.log('Imagen subida:', this.package.image);
+    }
+
     savePackage() {
         this.submitted = true;
 
-        if (!this.package.name?.trim()) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'El nombre del paquete es requerido',
-                life: 3000
-            });
+        // Convertir los precios y valores de precio como reserve a int
+        this.package.price = Math.max(1, Math.floor(Number(this.package.price)));
+        this.package.reserve = Math.max(1, Math.floor(Number(this.package.reserve)));
+        this.package.detailPackagesServices = this.package.detailPackagesServices.map((service) => ({
+            idService: service.idService,
+            quantity: Math.max(1, Math.floor(Number(service.quantity))),
+            price: Math.max(1, Math.floor(Number(service.price)))
+        }));
+        this.package.level = this.package.level ? this.package.level : 0;
+
+        if (!this.package.image) {
+            console.log('No se ha seleccionado una imagen');
+
             return;
         }
 
-        if (!this.package.detailPackagesServices.some((service) => service.quantity > 0)) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Debe agregar al menos un servicio al paquete',
-                life: 3000
+        if (this.package.id) {
+            this.packageService.update(this.package).subscribe({
+                next: () => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: `Paquete actualizado correctamente`,
+                        life: 3000
+                    });
+                    this.refresh();
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                }
             });
-            return;
+        } else {
+            this.packageService.create(this.package).subscribe({
+                next: () => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: `Paquete creado correctamente`,
+                        life: 3000
+                    });
+                    this.refresh();
+                },
+                error: (e) => {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: e.error.message,
+                        life: 3000
+                    });
+                }
+            });
         }
-
-        // Convert prices to integers
-        this.package.price = Math.round(this.package.price);
-        this.package.reserve = Math.round(this.package.reserve);
-        this.package.detailPackagesServices.forEach((service) => {
-            service.price = Math.round(service.price);
-        });
-
-        const savePackage$ = this.package.id ? this.packageService.update(this.package) : this.packageService.create(this.package);
-
-        savePackage$.subscribe({
-            next: (pkg) => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Éxito',
-                    detail: `${pkg.name} ${this.package.id ? 'actualizado' : 'creado'} correctamente`,
-                    life: 3000
-                });
-                this.refresh();
-            },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
-        });
     }
 
     changeStatusPackage(pkg: PackageModel): void {
@@ -258,7 +255,7 @@ export class PackagesPage implements OnInit {
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Éxito',
-                            detail: `Paquete ${updatedPackage.name} ${updatedPackage.status ? 'activado' : 'desactivado'}`,
+                            detail: `Paquete ${updatedPackage.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
                         this.refresh();
@@ -272,7 +269,6 @@ export class PackagesPage implements OnInit {
                         });
                     }
                 });
-                this.refresh();
             }
         });
     }
@@ -280,14 +276,12 @@ export class PackagesPage implements OnInit {
     editPackage(pkg: PackageModel): void {
         this.package = { ...pkg };
 
-        // Asegúrate de que detailPackagesServices esté inicializado
         this.package.detailPackagesServices = pkg.detailPackagesServices.map((service) => ({
             idService: service.idService,
             quantity: service.quantity,
-            price: Math.round(service.price) // Asegúrate de que el precio sea un entero
+            price: service.price
         }));
 
-        // Asigna el nivel correspondiente al valor del dropdown
         const selectedLevel = this.levels.find((level) => level.value === pkg.level);
         this.package.level = selectedLevel ? selectedLevel.value : 0;
 
@@ -320,7 +314,7 @@ export class PackagesPage implements OnInit {
             this.package.detailPackagesServices.push({
                 idService: serviceFound.id,
                 quantity: 1,
-                price: serviceFound.price
+                price: Math.max(1, Math.floor(Number(serviceFound.price))) // Asegura entero positivo
             });
         }
     }
@@ -331,6 +325,20 @@ export class PackagesPage implements OnInit {
         if (serviceIndex !== -1) {
             this.package.detailPackagesServices.splice(serviceIndex, 1);
         }
+    }
+
+    validatePackage(): boolean {
+        return this.package.name &&
+            this.package.idActivity > 0 &&
+            this.package.idMunicipality > 0 &&
+            this.package.level >= 0 &&
+            this.package.price > 0 &&
+            this.package.reserve > 0 &&
+            this.package.description &&
+            this.package.image &&
+            this.package.detailPackagesServices.length > 0
+            ? false
+            : true;
     }
 
     showPopup() {

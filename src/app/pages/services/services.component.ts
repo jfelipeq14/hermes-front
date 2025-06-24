@@ -13,15 +13,17 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CategoryModel, ServiceModel } from '../../models';
 import { CategoryService, ServiceService } from '../../services';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     standalone: true,
     selector: 'app-services',
     templateUrl: './services.component.html',
     styleUrls: ['./services.component.scss'],
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule, ConfirmDialogModule, TagModule],
+    imports: [CommonModule, TableModule, FormsModule, ButtonModule, ToastModule, DialogModule, DropdownModule, InputTextModule, InputNumberModule, InputIconModule, IconFieldModule, ConfirmDialogModule, TagModule],
     providers: [ServiceService, CategoryService, MessageService, ConfirmationService]
 })
 export class ServicesPage implements OnInit {
@@ -34,6 +36,7 @@ export class ServicesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
+    pattern = PATTERNS;
 
     constructor(
         private serviceService: ServiceService,
@@ -56,14 +59,7 @@ export class ServicesPage implements OnInit {
             next: (categories) => {
                 this.categories = categories;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -72,14 +68,7 @@ export class ServicesPage implements OnInit {
             next: (services) => {
                 this.services = services;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -88,13 +77,14 @@ export class ServicesPage implements OnInit {
 
         if (!this.service.id) {
             this.serviceService.create(this.service).subscribe({
-                next: (s) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${s.name} creado`,
+                        detail: `Servicio creado correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -105,16 +95,16 @@ export class ServicesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.serviceService.update(this.service).subscribe({
-                next: (s) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${s.name} actualizado`,
+                        detail: `Servicio actualizado correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -125,9 +115,7 @@ export class ServicesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editService(service: ServiceModel) {
@@ -150,9 +138,10 @@ export class ServicesPage implements OnInit {
                         this.messageService.add({
                             severity: this.getSeverity(s.status),
                             summary: 'Éxito',
-                            detail: `${s.name} ${s.status ? 'activado' : 'desactivado'}`,
+                            detail: `Servicio ${s.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
+                        this.refresh();
                     },
                     error: (e) => {
                         this.messageService.add({
@@ -163,9 +152,12 @@ export class ServicesPage implements OnInit {
                         });
                     }
                 });
-                this.refresh();
             }
         });
+    }
+
+    validateService(): boolean {
+        return this.service.idCategoryServices > 0 && this.service.name && this.service.price > 0 ? false : true;
     }
 
     showPopup() {
@@ -180,13 +172,17 @@ export class ServicesPage implements OnInit {
     }
 
     refresh() {
-        this.getAllCategories();
-        this.getAllServices();
-        this.closePopup();
+        this.service = new ServiceModel();
+        this.services = [];
+        this.categories = [];
+        this.serviceDialog = false;
         this.submitted = false;
+
+        this.getAllServices();
+        this.getAllCategories();
     }
 
-    getSeverity(status: boolean): 'success' | 'error' {
-        return status ? 'success' : 'error';
+    getSeverity(status: boolean): 'success' | 'danger' {
+        return status ? 'success' : 'danger';
     }
 }

@@ -17,9 +17,9 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-
 import { PermitModel, PrivilegeModel, RoleModel, RolePrivilegeModel } from '../../models';
 import { PermitsService, PrivilegeService, RolesService } from '../../services';
+import { PATTERNS } from '../../shared/helpers';
 
 type PermitPrivilegeMatrix = Record<
     string,
@@ -35,6 +35,8 @@ type PermitPrivilegeMatrix = Record<
         privilegeCount: number;
     }
 >;
+
+const ADMIN_ROLE_ID = 1;
 
 @Component({
     selector: 'app-roles',
@@ -54,6 +56,8 @@ export class RolesPage implements OnInit {
     privileges: PrivilegeModel[] = [];
     permitPrivilegeMatrix: PermitPrivilegeMatrix = {};
     privilegeNames: string[] = [];
+
+    patterns = PATTERNS;
 
     constructor(
         private roleService: RolesService,
@@ -166,6 +170,16 @@ export class RolesPage implements OnInit {
     }
 
     editRole(role: RoleModel) {
+        if (role.id === ADMIN_ROLE_ID) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'El rol Administrador no puede ser modificado',
+                life: 3000
+            });
+            return;
+        }
+
         this.role = { ...role };
         this.submitted = false;
         this.roleDialog = true;
@@ -289,6 +303,39 @@ export class RolesPage implements OnInit {
             return;
         }
 
+        if (this.role.name.length < 3) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'El nombre debe tener al menos 3 caracteres',
+                life: 3000
+            });
+            return;
+        }
+
+        if (this.role.name.length > 30) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'El nombre no puede tener más de 30 caracteres',
+                life: 3000
+            });
+            return;
+        }
+
+        // Validación de nombre duplicado
+        const isDuplicateName = this.roles.some((existingRole) => existingRole.name.toLowerCase() === this.role.name.toLowerCase() && existingRole.id !== this.role.id);
+
+        if (isDuplicateName) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Ya existe un rol con este nombre',
+                life: 3000
+            });
+            return;
+        }
+
         if (!this.hasSelectedPrivileges()) {
             this.messageService.add({
                 severity: 'error',
@@ -313,10 +360,18 @@ export class RolesPage implements OnInit {
                 this.hideDialog();
             },
             error: (error: HttpErrorResponse) => {
+                let errorMessage = 'No se pudo guardar el rol';
+
+                if (error.error?.message?.includes('duplicate')) {
+                    errorMessage = 'Ya existe un rol con este nombre';
+                } else if (error.error?.message) {
+                    errorMessage = error.error.message;
+                }
+
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: error.error.message || 'No se pudo guardar el rol',
+                    detail: errorMessage,
                     life: 3000
                 });
             }
@@ -324,6 +379,16 @@ export class RolesPage implements OnInit {
     }
 
     changeRoleStatus(role: RoleModel) {
+        if (role.id === ADMIN_ROLE_ID) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'El estado del rol Administrador no puede ser modificado',
+                life: 3000
+            });
+            return;
+        }
+
         this.confirmationService.confirm({
             message: `¿Está seguro que desea ${role.status ? 'desactivar' : 'activar'} el rol "${role.name}"?`,
             header: 'Confirmar',

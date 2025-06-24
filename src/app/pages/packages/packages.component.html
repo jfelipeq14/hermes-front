@@ -9,14 +9,14 @@
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} paquetes"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
     [expandedRowKeys]="expandedRows"
     (onRowExpand)="onRowExpand($event)"
 >
     <ng-template pTemplate="caption">
-        <h3 class="m-0 p-0 text-center">Paquetes</h3>
+        <h3 class="p-0 m-0 text-center">Paquetes</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="showPopup()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
@@ -41,11 +41,11 @@
     <ng-template pTemplate="body" let-package let-expanded="expanded">
         <tr>
             <td>
-                <p-button type="button" pRipple [pRowToggler]="package" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                <p-button type="button" pRipple [pRowToggler]="package" [text]="true" rounded outlined [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
             <td>{{ package.name }}</td>
             <td>
-                <img [src]="package.image ? package.image : 'https://primefaces.org/cdn/primeng/images/demo/product/default.jpg'" [alt]="package.name" width="50" class="shadow-lg" />
+                <img [src]="'http://localhost:3000' + package.image" [alt]="package.name" width="50" class="shadow-lg" />
             </td>
             <td>{{ package.price | currency: 'COP' }}</td>
             <td>{{ getMunicipalityName(package.idMunicipality) }}</td>
@@ -55,8 +55,8 @@
                 <p-tag [value]="package.status ? 'Activo' : 'Inactivo'" [severity]="getSeverity(package.status)" />
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editPackage(package)" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" (click)="changeStatusPackage(package)" />
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editPackage(package)" />
+                <p-button [icon]="package.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="package.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusPackage(package)" />
             </td>
         </tr>
     </ng-template>
@@ -80,7 +80,9 @@
                                     {{ getServiceName(service.idService) }}
                                 </td>
                                 <td>{{ service.quantity }}</td>
-                                <td>{{ service.price | currency: 'COP' }}</td>
+                                <td>
+                                    <p-inputNumber [(ngModel)]="service.price" [min]="1" [max]="9999999999999" [step]="1" [showButtons]="true" [useGrouping]="false" [disabled]="true"></p-inputNumber>
+                                </td>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">
@@ -97,60 +99,73 @@
 
 <p-dialog [(visible)]="packageDialog" [style]="{ width: '800px' }" header="Paquete" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="flex justify-content-between">
-            <div>
-                <div class="field flex flex-col">
+        <div class="flex gap-4 justify-content-between">
+            <div class="container flex flex-col gap-4">
+                <div class="flex flex-col">
                     <label for="name" class="required">Nombre</label>
-                    <input id="name" type="text" [(ngModel)]="package.name" pInputText required />
-                    <small class="p-error" *ngIf="submitted && !package.name"> El nombre es obligatorio. </small>
+                    <input pInputText type="text" id="name" [(ngModel)]="package.name" [minLength]="3" [maxlength]="60" [pattern]="pattern.NAME" required />
+                    <small *ngIf="!package.name?.match(pattern.NAME)" class="text-red-600">El nombre solo puede contener letras y espacios.</small>
                 </div>
 
-                <div class="field flex flex-col">
-                    <label for="idActivity" class="required">Actividades</label>
-                    <p-dropdown id="idActivity" [options]="activities" [(ngModel)]="package.idActivity" optionLabel="name" optionValue="id" placeholder="Seleccione una actividad" required></p-dropdown>
-                    <small class="p-error" *ngIf="submitted && !package.idActivity"> La actividad es obligatoria. </small>
+                <div class="flex flex-col">
+                    <label for="idActivity" class="required">Actividad</label>
+                    <p-dropdown id="idActivity" [(ngModel)]="package.idActivity" [options]="activities" [showClear]="true" optionLabel="name" optionValue="id" placeholder="Seleccione una actividad" [appendTo]="'body'" required></p-dropdown>
+                    <small *ngIf="!package.idActivity.toString().match(pattern.ID)" class="text-red-600">Debe seleccionar una actividad</small>
                 </div>
 
-                <div class="field flex flex-col">
+                <div class="flex flex-col">
                     <label for="idMunicipality" class="required">Municipio</label>
-                    <p-dropdown id="idMunicipality" [options]="municipalities" [(ngModel)]="package.idMunicipality" optionLabel="name" optionValue="id" placeholder="Seleccione un municipio" [showClear]="true" required></p-dropdown>
-                    <small class="p-error" *ngIf="submitted && !package.idMunicipality"> El municipio es obligatorio. </small>
+                    <p-dropdown
+                        id="idMunicipality"
+                        [(ngModel)]="package.idMunicipality"
+                        [options]="municipalities"
+                        [showClear]="true"
+                        optionLabel="name"
+                        optionValue="id"
+                        placeholder="Seleccione un municipio"
+                        [appendTo]="'body'"
+                        required
+                    ></p-dropdown>
+                    <small *ngIf="!package.idMunicipality.toString().match(pattern.ID)" class="text-red-600">Debe seleccionar un municipio</small>
                 </div>
 
-                <div class="field flex flex-col">
-                    <label for="idService">Servicios</label>
+                <div class="flex flex-col">
                     <p-dropdown id="idService" [options]="services" optionLabel="name" optionValue="id" placeholder="Seleccione un servicio" (onChange)="addServiceToSelection($event)"></p-dropdown>
+                    <small *ngIf="package.detailPackagesServices.length === 0" class="text-red-600">Debe seleccionar un servicio</small>
                 </div>
 
-                <div class="field flex flex-col">
+                <div class="flex flex-col">
                     <label for="level" class="required">Nivel</label>
-                    <p-dropdown id="level" [options]="levels" [(ngModel)]="package.level" optionLabel="name" optionValue="value" placeholder="Seleccione un nivel" [showClear]="true" required></p-dropdown>
+                    <p-dropdown id="level" [options]="levels" [(ngModel)]="package.level" optionLabel="name" optionValue="value" placeholder="Seleccione un nivel" [showClear]="true" [appendTo]="'body'" required></p-dropdown>
+                    <small *ngIf="!package.level.toString().match(pattern.LEVEL)" class="text-red-600">Debe seleccionar un nivel</small>
                 </div>
 
-                <div class="field flex flex-col">
-                    <label for="description">Descripción</label>
-                    <textarea id="description" [(ngModel)]="package.description" pTextarea placeholder="Descripción" [autoResize]="true" rows="3" cols="30"></textarea>
+                <div class="flex flex-col">
+                    <label for="description" class="required">Descripción</label>
+                    <textarea pTextarea id="description" [(ngModel)]="package.description" placeholder="Descripción" [autoResize]="true" rows="3" cols="30" [minLength]="3" [maxLength]="255" required></textarea>
+                    <small *ngIf="!package.description" class="text-red-600">Debe agregar una descripción</small>
                 </div>
 
-                <div class="field flex flex-col">
-                    <label for="image">Imagen</label>
-                    <input id="image" type="text" [(ngModel)]="package.image" pInputText />
+                <div class="flex flex-col">
+                    <label for="image" class="required">Imagen</label>
+                    <app-upload-image (uploadImage)="uploadImage($event)" />
+                    <small *ngIf="!package.image" class="text-red-600">Debe agregar una imagen</small>
                 </div>
 
-                <div class="field flex flex-col">
+                <div class="flex flex-col">
                     <label for="price" class="required">Precio</label>
-                    <p-inputNumber id="price" [(ngModel)]="package.price" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
-                    <small class="p-error" *ngIf="submitted && !package.price"> El precio es obligatorio. </small>
+                    <p-inputNumber id="price" [(ngModel)]="package.price" mode="currency" currency="COP" locale="es-CO" [min]="1" [max]="9999999999999" required></p-inputNumber>
+                    <small *ngIf="!package.price" class="text-red-600">El precio debe ser correcto.</small>
                 </div>
 
-                <div class="field flex flex-col">
+                <div class="flex flex-col">
                     <label for="reserve" class="required">Reserva</label>
-                    <p-inputNumber id="reserve" [(ngModel)]="package.reserve" mode="currency" currency="COP" locale="es-CO" required></p-inputNumber>
-                    <small class="p-error" *ngIf="submitted && !package.reserve"> El precio de reserva es obligatorio. </small>
+                    <p-inputNumber id="reserve" [(ngModel)]="package.reserve" mode="currency" currency="COP" locale="es-CO" [min]="1" [max]="9999999999999" required></p-inputNumber>
+                    <small *ngIf="!package.reserve" class="text-red-600">El precio debe ser correcto.</small>
                 </div>
             </div>
 
-            <p-table [value]="package.detailPackagesServices">
+            <p-table [value]="package.detailPackagesServices" class="container">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Servicio</th>
@@ -167,13 +182,13 @@
                             {{ service.price | currency: 'COP' : 'symbol' : '1.0-0' }}
                         </td>
                         <td>
-                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [text]="true" (onClick)="removeServiceFromSelection(service.idService)"></p-button>
+                            <p-button icon="pi pi-trash" severity="danger" rounded outlined [text]="true" (onClick)="removeServiceFromSelection(service.idService)"></p-button>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="4" class="text-center">No se han agregado servicios</td>
+                        <td colspan="4">No se han agregado servicios</td>
                     </tr>
                 </ng-template>
             </p-table>
@@ -181,9 +196,9 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <div class="flex justify-content-end">
+        <div class="flex gap-2 my-2 justify-content-end">
             <p-button label="Cancelar" icon="pi pi-times" severity="danger" (onClick)="closePopup()" text />
-            <p-button label="Guardar" icon="pi pi-check" (onClick)="savePackage()" autofocus />
+            <p-button label="Guardar" icon="pi pi-check" [disabled]="validatePackage()" (onClick)="savePackage()" autofocus />
         </div>
     </ng-template>
 </p-dialog>

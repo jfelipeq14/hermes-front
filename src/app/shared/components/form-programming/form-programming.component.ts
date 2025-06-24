@@ -12,6 +12,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TextareaModule } from 'primeng/textarea';
 import { DateModel, MeetingModel, PackageModel, UserModel } from '../../../models';
 import { ZONE } from '../../constants';
+import { PATTERNS } from '../../helpers';
 
 @Component({
     selector: 'app-form-programming',
@@ -32,12 +33,35 @@ export class FormProgrammingComponent {
     @Output() toSave = new EventEmitter<void>();
     @Output() toCancel = new EventEmitter<void>();
 
-    onChangeResponsible(event: any) {
-        if (!event.value) return;
+    today: Date = new Date();
 
-        this.meeting.responsibles = event.value.map((id: number) => ({
-            idUser: id
-        }));
+    pattern = PATTERNS;
+
+    validateProgramming() {
+        return this.date.idPackage > 0 &&
+            this.date.amount > 0 &&
+            this.date.start &&
+            this.date.end &&
+            this.date.startRegistration &&
+            this.date.endRegistration &&
+            this.meeting.zone &&
+            this.meeting.hour &&
+            this.meeting.description &&
+            this.meeting.responsibles.length > 0
+            ? false
+            : true;
+    }
+
+    onChangeResponsible(event: any) {
+        if (!event.itemValue) return;
+
+        const foundResponsible = this.meeting.responsibles.find((responsible) => responsible.idUser === event.itemValue.id);
+
+        if (foundResponsible) {
+            this.meeting.responsibles = this.meeting.responsibles.filter((responsible) => responsible.idUser !== foundResponsible.idUser);
+        } else {
+            this.meeting.responsibles.push({ idUser: event.itemValue.id });
+        }
     }
 
     onCreateDate(date: DateModel) {

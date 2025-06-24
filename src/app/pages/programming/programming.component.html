@@ -1,13 +1,24 @@
 <app-calendar [packages]="packages" (clickDate)="clickDate($event)" (clickProgramming)="clickProgramming($event)" (editProgramming)="editProgramming($event)" (changeStatusDate)="changeStatusDate($event)" (toClients)="toClients($event)" />
 
 <!-- Modal -->
-<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="true" class="min-h-fit min-w-fit">
+<p-dialog
+    [(visible)]="dialogVisible"
+    [modal]="true"
+    class="min-h-fit min-w-fit"
+    [header]="dialogType === 'programming' ? 'Programación' : dialogType === 'reservation' ? 'Reservación' : 'Clientes'"
+    [style]="{ width: '80vw', maxWidth: '800px' }"
+    (onHide)="closePopup()"
+>
     <ng-container *ngIf="dialogType === 'programming'">
         <app-form-programming [date]="date" [meeting]="meeting" [packages]="packages" [responsibles]="responsibles" [zones]="zones" [submitted]="submitted" (toSave)="createDate()" (toCancel)="closePopup()" />
     </ng-container>
 
     <ng-container *ngIf="dialogType === 'reservation'">
-        <app-form-reservation [idDate]="idDate" />
+        <app-form-reservation [idDate]="idDate" (toCancel)="closePopup()" />
+    </ng-container>
+
+    <ng-container *ngIf="dialogType === 'clients'">
+        <app-table-clients [travelers]="clients" (toCancel)="closePopup()" />
     </ng-container>
 </p-dialog>
 

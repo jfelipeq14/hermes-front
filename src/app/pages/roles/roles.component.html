@@ -14,9 +14,9 @@
     [rowsPerPageOptions]="[10, 25, 50]"
 >
     <ng-template pTemplate="caption">
-        <h3 class="m-0 p-0 text-center">Roles</h3>
+        <h3 class="p-0 m-0 text-center">Roles</h3>
         <div class="flex justify-content-between align-items-center">
-            <p-button label="Crear" icon="pi pi-plus" severity="secondary" (onClick)="openNew()" />
+            <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="openNew()" />
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
@@ -32,21 +32,37 @@
     </ng-template>
     <ng-template pTemplate="body" let-role>
         <tr>
-            <td class="cursor-pointer" (click)="editRole(role)">{{ role.name }}</td>
-            <td>
-                <p-tag [value]="role.status ? 'Activo' : 'Inactivo'" [severity]="role.status ? 'success' : 'danger'"></p-tag>
+            <td class="cursor-pointer" [class.cursor-not-allowed]="role.id === 1" (click)="role.id !== 1 && editRole(role)">
+                {{ role.name }}
             </td>
             <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)"></p-button>
+                <p-tag [value]="role.status ? 'Activo' : 'Inactivo'" [severity]="role.status ? 'success' : 'danger'"> </p-tag>
+            </td>
+            <td>
+                <p-button
+                    icon="pi pi-pencil"
+                    class="mr-2"
+                    severity="info"
+                    class="mr-2"
+                    rounded
+                    outlined
+                    [disabled]="role.id === 1"
+                    (click)="editRole(role)"
+                    [pTooltip]="role.id === 1 ? 'No se puede editar el rol Administrador' : ''"
+                    tooltipPosition="top"
+                >
+                </p-button>
                 <p-button
                     [icon]="role.status ? 'pi pi-ban' : 'pi pi-check'"
-                    [rounded]="true"
-                    [outlined]="true"
                     [severity]="role.status ? 'danger' : 'success'"
+                    [disabled]="role.id === 1"
+                    rounded
+                    outlined
                     (click)="changeRoleStatus(role); $event.stopPropagation()"
-                    [pTooltip]="role.status ? 'Desactivar' : 'Activar'"
+                    [pTooltip]="role.id === 1 ? 'No se puede modificar el estado del rol Administrador' : role.status ? 'Desactivar' : 'Activar'"
                     tooltipPosition="top"
-                ></p-button>
+                >
+                </p-button>
             </td>
         </tr>
     </ng-template>
@@ -55,45 +71,61 @@
 <!-- Role Dialog -->
 <p-dialog [(visible)]="roleDialog" [style]="{ width: '700px' }" header="Detalles del Rol" [modal]="true" class="p-fluid">
     <ng-template pTemplate="content">
-        <div class="field mb-4">
-            <label for="name" class="font-bold required">Nombre</label>
-            <input type="text" pInputText id="name" [(ngModel)]="role.name" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !role.name }" />
-            <small class="p-error" *ngIf="submitted && !role.name">El nombre es requerido.</small>
-        </div>
+        <div class="role-dialog-content">
+            <!-- Name Input Section -->
+            <div class="name-section">
+                <label for="name" class="font-bold required">Nombre</label>
+                <input
+                    type="text"
+                    id="name"
+                    pInputText
+                    [(ngModel)]="role.name"
+                    [pattern]="patterns.NAME"
+                    minlength="3"
+                    maxlength="30"
+                    [ngClass]="{ 'ng-invalid ng-dirty': submitted && (!role.name || role.name.length < 3 || role.name.length > 30) }"
+                    required
+                />
+                <small class="text-red-600" *ngIf="submitted && !role.name"> El nombre es requerido. </small>
+                <small class="text-red-600" *ngIf="submitted && role.name && role.name.length < 3"> El nombre debe tener al menos 3 caracteres. </small>
+                <small class="text-red-600" *ngIf="submitted && role.name && role.name.length > 30"> El nombre no puede tener más de 30 caracteres. </small>
+                <small class="text-red-600" *ngIf="submitted && role.name && !role.name.match(patterns.NAME)"> El nombre solo puede contener letras y espacios. </small>
+            </div>
 
-        <!-- Privileges Section -->
-        <div class="field">
-            <div class="border-1 border-round border-300">
-                <!-- Header row with privilege names -->
-                <div class="grid border-bottom-1 border-300 bg-gray-100 p-2 m-0">
-                    <div class="col-4 font-bold">Módulo</div>
-                    <div *ngFor="let privilegeName of privilegeNames" class="col font-bold">
-                        {{ privilegeName }}
+            <!-- Privileges Grid Section -->
+            <div class="privileges-grid">
+                <!-- Header -->
+                <div class="grid-header">
+                    <div class="module-cell">Módulos</div>
+                    <div class="privileges-header">
+                        <div *ngFor="let privilegeName of privilegeNames">{{ privilegeName }}</div>
                     </div>
                 </div>
 
-                <!-- Permit rows -->
-                <div *ngFor="let permit of permits" class="grid border-bottom-1 border-300 p-2 m-0" [ngClass]="{ 'text-gray-500': !hasPrivilegesForPermit(permit) }">
-                    <div class="col-4 font-bold">
-                        {{ permit.name }}
-                        <span *ngIf="!hasPrivilegesForPermit(permit)" class="ml-2 text-sm text-gray-500"> (Sin privilegios disponibles) </span>
-                    </div>
-
-                    <!-- Privilege checkboxes -->
-                    <div *ngFor="let privilegeName of privilegeNames" class="col text-center">
-                        <p-checkbox *ngIf="hasPrivilegesForPermit(permit)" [binary]="true" [ngModel]="getPrivilegeSelected(permit.name, privilegeName)" (ngModelChange)="togglePrivilege(permit.name, privilegeName)"></p-checkbox>
-                        <span *ngIf="!hasPrivilegesForPermit(permit)" class="text-gray-500"> - </span>
+                <!-- Rows -->
+                <div class="grid-rows">
+                    <div *ngFor="let permit of permits" class="permit-row" [class.disabled]="!hasPrivilegesForPermit(permit)">
+                        <div class="module-cell">
+                            {{ permit.name }}
+                            <span *ngIf="!hasPrivilegesForPermit(permit)" class="unavailable"> (Sin privilegios disponibles) </span>
+                        </div>
+                        <div class="privileges-cells">
+                            <div *ngFor="let privilegeName of privilegeNames" class="privilege-cell">
+                                <p-checkbox *ngIf="hasPrivilegesForPermit(permit)" [binary]="true" [ngModel]="getPrivilegeSelected(permit.name, privilegeName)" (ngModelChange)="togglePrivilege(permit.name, privilegeName)"> </p-checkbox>
+                                <span *ngIf="!hasPrivilegesForPermit(permit)" class="disabled-mark">-</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <small class="p-error block mt-2" *ngIf="submitted && !hasSelectedPrivileges()"> Debe seleccionar al menos un privilegio. </small>
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <p-button label="Cancelar" icon="pi pi-times" severity="danger" [rounded]="true" [outlined]="true" (click)="hideDialog()"></p-button>
-        <p-button icon="pi pi-check" (click)="saveRole()" [disabled]="loading"></p-button>
+        <div class="flex gap-2 my-2 justify-content-end">
+            <p-button label="Cancelar" icon="pi pi-times" severity="danger" styleClass="p-button-text" (click)="hideDialog()"></p-button>
+            <p-button label="Guardar" icon="pi pi-check" (click)="saveRole()"></p-button>
+        </div>
     </ng-template>
 </p-dialog>
 <p-toast></p-toast>

@@ -4,26 +4,23 @@
 
     <div class="flex flex-col w-full gap-4">
         <div class="flex flex-col gap-2">
-            <label for="email" class="text-sm font-medium text-gray-700">Correo</label>
-            <input pInputText type="email" id="email" [(ngModel)]="user.email" placeholder="Correo electrónico" required />
-            <small class="text-red-500" *ngIf="submitted && !user.email">Email is required.</small>
+            <label for="email" class="required">Correo</label>
+            <input pInputText id="email" type="email" [(ngModel)]="user.email" placeholder="Correo electrónico" [pattern]="patterns.EMAIL" (keypress)="onKeyPress($event)" required />
+
+            <small class="text-red-600" *ngIf="submitted && !user.email.match(patterns.EMAIL)">El correo electrónico es obligatorio</small>
         </div>
 
         <div class="flex flex-col gap-2">
-            <label for="password" class="text-sm font-medium text-gray-700">Contraseña</label>
-            <input pInputText type="password" id="password" [(ngModel)]="user.password" placeholder="Contraseña" required />
-            <small class="text-red-500" *ngIf="submitted && !user.password">Password is required.</small>
+            <label for="password" class="required">Contraseña</label>
+            <input pInputText type="password" id="password" [(ngModel)]="user.password" [pattern]="patterns.PASSWORD" placeholder="Contraseña" (keypress)="onKeyPress($event)" required />
+            <small class="text-red-600" *ngIf="submitted && !user.password.match(patterns.PASSWORD)">La contraseña es obligatoria</small>
         </div>
     </div>
 
-    <div class="flex flex-col items-center justify-center gap-4 w-full my-5">
+    <div class="flex flex-col items-center justify-center w-full gap-4 my-5">
         <p-button label="Ingresar" icon="pi pi-user" severity="primary" (click)="onSubmit()" />
-        <p-button label="Restablecer contraseña" severity="secondary" class="p-button-text" (click)="openResetPasswordPopup()" />
+        <p-button label="Restablecer contraseña" severity="secondary" class="p-button-text" (click)="onOpenPopup()" />
     </div>
 </section>
 
-<p-toast></p-toast>
-
-<p-dialog [(visible)]="resetPasswordDialog" [modal]="true" [closable]="true" [dismissableMask]="true" header="Recuperar cuenta">
-    <app-reset-password [resetPasswordDialog]="resetPasswordDialog" [submitted]="submitted" [user]="user"></app-reset-password>
-</p-dialog>
+<p-toast class="z-10 fixed right-0 top-0"></p-toast>

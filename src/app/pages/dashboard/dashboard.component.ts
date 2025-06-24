@@ -5,142 +5,115 @@ import { Component, OnInit } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
-import { MessageService } from 'primeng/api';
-import { MockDataService } from '../../services';
+import { DashboardService } from '../../services';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
-    imports: [CommonModule, TableModule, ButtonModule, RippleModule, ChartModule],
-    providers: [MessageService]
+    imports: [CommonModule, ButtonModule, RippleModule, ChartModule],
+    providers: [DashboardService]
 })
 export class DashboardPage implements OnInit {
-    topClients: any[] = [];
-    sales: any = { total: '$0', growth: 0 };
-    packages: any[] = [];
-
-    // Chart data and options
     dataPackages: any;
     barOptions: any;
+    salesChartData: any;
+    pieOptions: any;
+    clietData: any;
 
-    constructor(
-        private mockDataService: MockDataService,
-        private messageService: MessageService
-    ) {}
+    constructor(private dashboardService: DashboardService) {}
 
     ngOnInit(): void {
         this.getSales();
-        this.getClients();
         this.getPackages();
+        this.getClients();
     }
 
     getSales() {
-        this.mockDataService.getMockSales().subscribe({
+        this.dashboardService.getSales().subscribe({
             next: (data) => {
-                this.sales = data;
-
-                // Setup chart data for monthly sales
-                this.setupMonthlySalesChart();
+                this.setupMonthlySalesChart(data);
             },
-            error: () => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar datos de ventas',
-                    life: 3000
-                });
-            }
-        });
-    }
-
-    getClients() {
-        this.mockDataService.getMockTopClients().subscribe({
-            next: (data) => {
-                this.topClients = data;
-            },
-            error: () => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar datos de clientes',
-                    life: 3000
-                });
-            }
+            error: (error) => console.error(error)
         });
     }
 
     getPackages() {
-        this.mockDataService.getMockPackages().subscribe({
+        this.dashboardService.getPackages().subscribe({
             next: (data) => {
-                this.packages = data;
-
-                // Setup chart data for packages
-                this.setupPackagesChart();
+                this.setupPackagesChart(data);
             },
-            error: () => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error al cargar datos de paquetes',
-                    life: 3000
-                });
-            }
+            error: (error) => console.error(error)
         });
     }
 
-    setupPackagesChart() {
-        const packageNames = this.packages.map((p) => p.name);
-        const packageSales = this.packages.map((p) => p.sales);
+    getClients() {
+        this.dashboardService.getClients().subscribe({
+            next: (data) => {
+                this.clietData = data;
+            },
+            error: (error) => console.error(error)
+        });
+    }
 
+    setupPackagesChart(packages: any) {
         this.dataPackages = {
-            labels: packageNames,
-            datasets: [
-                {
-                    label: 'Ventas por paquete',
-                    backgroundColor: '#42A5F5',
-                    data: packageSales
-                }
-            ]
+            labels: packages.labels,
+            datasets: packages.datasets
         };
 
         this.barOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     labels: {
-                        color: 'yellow'
+                        color: '#495057'
                     }
                 }
             },
             scales: {
                 x: {
                     ticks: {
-                        color: 'green',
+                        color: '#495057',
                         font: {
                             weight: 500
                         }
                     },
                     grid: {
-                        display: false,
-                        drawBorder: false
+                        display: false
                     }
                 },
                 y: {
                     ticks: {
-                        color: 'grey'
+                        color: '#495057'
                     },
                     grid: {
-                        color: 'black',
-                        drawBorder: false
+                        color: '#ebedef'
                     }
                 }
             }
         };
     }
 
-    setupMonthlySalesChart() {
-        // Placeholder for monthly sales chart setup
+    setupMonthlySalesChart(sales: any) {
+        this.salesChartData = {
+            labels: sales.labels,
+            datasets: sales.datasets
+        };
+
+        this.pieOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#495057'
+                    }
+                }
+            }
+        };
     }
 }

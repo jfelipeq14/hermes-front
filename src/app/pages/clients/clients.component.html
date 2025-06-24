@@ -3,49 +3,54 @@
     [value]="clients"
     [rows]="10"
     [paginator]="true"
-    [globalFilterFields]="['document', 'email', 'status', 'name', 'surName']"
+    [globalFilterFields]="['document', 'name', 'email', 'status', 'name', 'surName']"
     [tableStyle]="{ 'min-width': '75rem' }"
     [rowHover]="true"
     dataKey="id"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 20, 30]"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [expandedRowKeys]="expandedRows"
+    (onRowExpand)="onRowExpand($event)"
 >
     <ng-template pTemplate="caption">
         <h3 class="p-0 m-0 text-center">Clientes</h3>
-        <p-iconfield>
-            <p-inputicon styleClass="pi pi-search" />
-            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
-        </p-iconfield>
+        <div class="flex justify-end">
+            <!-- <p-button class="flex-1" label="Crear" icon="pi pi-plus" (onClick)="showPopup()" /> -->
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." />
+            </p-iconfield>
+        </div>
     </ng-template>
 
     <ng-template pTemplate="header">
         <tr>
             <th style="width: 3rem"></th>
-            <th pSortableColumn="document" style="min-width: 14rem">
+            <th pSortableColumn="document">
                 Documento
                 <p-sortIcon field="document" />
             </th>
-            <th pSortableColumn="name" style="min-width: 16rem">
+            <th pSortableColumn="name">
                 Nombre Completo
                 <p-sortIcon field="name" />
             </th>
-            <th pSortableColumn="email" style="min-width: 18rem">
+            <th pSortableColumn="email">
                 Email
                 <p-sortIcon field="email" />
             </th>
-            <th pSortableColumn="status" style="min-width: 12rem">
+            <th pSortableColumn="status">
                 Estado
                 <p-sortIcon field="status" />
             </th>
-            <th style="min-width: 12rem"></th>
+            <!-- <th></th> -->
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-client let-expanded="expanded">
         <tr>
             <td>
-                <p-button type="button" pRipple [pRowToggler]="client" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                <p-button type="button" pRipple [pRowToggler]="client" [text]="true" rounded outlined [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
             </td>
             <td>{{ client.document }}</td>
             <td>{{ client.name }} {{ client.surName }}</td>
@@ -53,10 +58,10 @@
             <td>
                 <p-tag [value]="client.status ? 'Activo' : 'Inactivo'" [severity]="client.status ? 'success' : 'danger'" />
             </td>
-            <td>
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" />
-                <p-button icon="pi pi-sync" severity="info" [rounded]="true" [outlined]="true" />
-            </td>
+            <!-- <td>
+                <p-button icon="pi pi-pencil" class="mr-2" severity="info" rounded outlined (click)="editClient(client)" />
+                <p-button [icon]="client.status ? 'pi pi-ban' : 'pi pi-check'" [severity]="client.status ? 'danger' : 'success'" rounded outlined (click)="changeStatusClient(client)" />
+            </td> -->
         </tr>
     </ng-template>
 
@@ -65,7 +70,7 @@
             <td colspan="12">
                 <div class="p-2">
                     <h5>Reservas de {{ client.name }}</h5>
-                    <p-table [value]="getReservationsByClient(client.id)">
+                    <p-table [value]="reservations">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th>Paquete</th>
@@ -77,7 +82,7 @@
                         <ng-template pTemplate="body" let-reservation>
                             <tr>
                                 <td>
-                                    {{ reservation.idPackage }}
+                                    {{ getPackageInfo(reservation.idPackage)?.name }}
                                 </td>
                                 <td>{{ reservation.date | date: 'short' }}</td>
                                 <td>{{ reservation.price | currency: 'COP' }}</td>
@@ -97,3 +102,10 @@
         </tr>
     </ng-template>
 </p-table>
+
+<p-dialog [(visible)]="popupVisible" [modal]="true" class="min-h-fit min-w-fit" [style]="{ width: '80vw', maxWidth: '800px' }" (onHide)="closePopup()">
+    <app-form-users [user]="client" [isFormDisabled]="isFormDisabled" (closePopup)="closePopup()" (createUser)="createClient($event)" />
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

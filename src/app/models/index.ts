@@ -1,3 +1,4 @@
+export * from './activate';
 export * from './activity';
 export * from './category';
 export * from './country';
@@ -12,6 +13,7 @@ export * from './permit';
 export * from './privilege';
 export * from './reservation-traveler';
 export * from './reservation';
+export * from './reset';
 export * from './responsible';
 export * from './role-privilege';
 export * from './role';

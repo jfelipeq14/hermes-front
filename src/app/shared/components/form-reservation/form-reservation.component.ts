@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 import { FormClientsComponent, FormPaymentsComponent, FormTravelersComponent, PackageCardComponent } from '..';
 import { CommonModule } from '@angular/common';
-import { PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
+import { ActivateModel, DateModel, PackageModel, PaymentModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MessageService } from 'primeng/api';
-import { AuthService, ClientsService, PaymentService, ReservationsService } from '../../../services';
+import { AuthService, ClientsService, PackageService, PaymentService, ProgrammingService, ReservationsService } from '../../../services';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 
@@ -14,12 +14,14 @@ import { ToastModule } from 'primeng/toast';
     templateUrl: './form-reservation.component.html',
     styleUrl: './form-reservation.component.scss',
     imports: [CommonModule, ButtonModule, StepperModule, ToastModule, FormClientsComponent, FormTravelersComponent, FormPaymentsComponent, PackageCardComponent],
-    providers: [AuthService, ReservationsService, PaymentService, ClientsService, MessageService]
+    providers: [AuthService, ReservationsService, ProgrammingService, PackageService, PaymentService, ClientsService, MessageService]
 })
 export class FormReservationComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private reservationService: ReservationsService,
+        private programmingService: ProgrammingService,
+        private packageService: PackageService,
         private paymentService: PaymentService,
         private clientsService: ClientsService,
         private messageService: MessageService
@@ -27,9 +29,12 @@ export class FormReservationComponent implements OnInit {
 
     ngOnInit() {
         this.getAllClients();
+        this.getAllDates();
+        this.getAllPackages();
     }
 
     @Input() idDate = 0;
+    @Output() toCancel = new EventEmitter<void>();
 
     reservation: ReservationModel = new ReservationModel();
     payment: PaymentModel = new PaymentModel();
@@ -39,6 +44,10 @@ export class FormReservationComponent implements OnInit {
 
     client: UserModel = new UserModel();
     clients: UserModel[] = [];
+    activateModel: ActivateModel = new ActivateModel();
+
+    dates: DateModel[] = [];
+    packages: PackageModel[] = [];
 
     activeStepIndex = 0;
     steps = [
@@ -47,7 +56,7 @@ export class FormReservationComponent implements OnInit {
         { label: 'Pagar', value: 2 }
     ];
     submitted = false;
-    isPasswordDisable = false;
+    isFormDisabled = false;
 
     getAllClients() {
         this.clientsService.getAll().subscribe({
@@ -65,10 +74,39 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
+    getAllDates() {
+        this.programmingService.getAll().subscribe({
+            next: (dates) => {
+                this.dates = dates;
+            },
+            error: (e) => console.error(e)
+        });
+    }
+
+    getAllPackages() {
+        this.packageService.getAll().subscribe({
+            next: (packages) => {
+                this.packages = packages;
+            },
+            error: (e) => console.error(e)
+        });
+    }
+
+    getDateInfo(idDate: number) {
+        if (!idDate) return;
+        const dateInfo = this.dates.find((date) => date.id === idDate);
+        return dateInfo || new DateModel();
+    }
+
+    getPackageInfo(id: number) {
+        const packageInfo = this.packages.find((pack) => pack.id === id);
+        if (!packageInfo) return;
+
+        return packageInfo || new PackageModel();
+    }
+
     searchClient(document: string) {
-        if (!document) {
-            return;
-        }
+        if (!document) return;
 
         const clientFound = this.clients.find((u) => u.document === document);
 
@@ -79,79 +117,130 @@ export class FormReservationComponent implements OnInit {
                 detail: 'No se encontró el cliente',
                 life: 3000
             });
-            this.isPasswordDisable = false;
+            this.client = new UserModel();
+            // this.traveler = new UserModel();
+            this.client.document = document;
+            this.isFormDisabled = false; // Permitir nuevas búsquedas
+            return;
+        } else {
+            this.client = clientFound;
+            this.isFormDisabled = true; // Bloquear campos si se encuentra un cliente
         }
 
-        if (this.reservation.idUser !== 0 && clientFound) {
+        if (this.reservation.idUser !== 0) {
             this.traveler = clientFound;
-            this.isPasswordDisable = true;
-        }
-
-        if (this.reservation.idUser === 0 && clientFound) {
+        } else {
             this.client = clientFound;
             this.reservation.idUser = clientFound.id;
-            this.isPasswordDisable = true;
         }
+
+        if (this.client.id > 0 || this.traveler.id > 0) {
+            this.isFormDisabled = true;
+        } else {
+            this.isFormDisabled = false;
+        }
+    }
+
+    clearClient() {
+        this.client = new UserModel();
+        this.traveler = new UserModel();
+        this.isFormDisabled = false;
+        this.submitted = false;
     }
 
     handleTravel(travel: boolean) {
         this.travel = travel;
         if (travel) {
-            this.reservation.detailReservationTravelers.push({
-                idTraveler: this.client.id
-            });
+            // Si el cliente ya tiene id, agregarlo como viajero automáticamente
+            if (this.client && this.client.id > 0) {
+                // Solo agregar si no está ya en la lista
+                if (!this.reservation.detailReservationTravelers.some((t) => t.idTraveler === this.client.id)) {
+                    this.reservation.detailReservationTravelers.push({
+                        idTraveler: this.client.id
+                    });
+                }
+                // No limpiar los datos del cliente aquí, solo cuando se cree uno nuevo
+            }
         } else {
-            //remove traveler
             this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((traveler) => traveler.idTraveler !== this.client.id);
         }
     }
 
-    createClient(event: any) {
-        if (!event.value) {
-            return;
-        }
+    createClient(client: UserModel, isTraveler: boolean = false) {
+        if (!client) return;
 
-        if (this.submitted) {
-            this.authService.register(this.client).subscribe({
-                next: (client) => {
-                    if (this.reservation.idUser === 0 && !this.travel) {
-                        this.reservation.idUser = client.id;
-                    }
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: 'Client created successfully',
-                        life: 3000
-                    });
-                    this.reservation.detailReservationTravelers.push({
-                        idTraveler: client.id
-                    });
-                },
-                error: (e) => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: e.error.message,
-                        life: 3000
-                    });
+        client.idRole = 3;
+
+        this.authService.register(client).subscribe({
+            next: (response) => {
+                if (!response) return;
+
+                this.activateModel.email = response.email;
+                this.activateModel.activationUserToken = response.activationToken;
+
+                if (isTraveler) {
+                    this.traveler = response;
+                    this.addTraveler();
+                } else {
+                    this.client = response;
+                    this.reservation.idUser = response.id;
                 }
-            });
-        }
+
+                this.authService.activateAccount(this.activateModel).subscribe({
+                    next: () => {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Usuario creado y activado.',
+                            life: 3000
+                        });
+                        // Si es viajero, agregarlo a la reserva y limpiar formulario
+                        if (isTraveler) {
+                            // Asegura limpieza del formulario
+                            this.traveler = new UserModel();
+                        } else {
+                            this.activeStepIndex = 1;
+                            if (this.travel) {
+                                this.reservation.detailReservationTravelers.push({ idTraveler: this.client.id });
+                                if (!this.clients.some((c) => c.id === this.client.id)) {
+                                    this.clients.push(this.client);
+                                }
+                            }
+                            this.client = new UserModel();
+                            this.traveler = new UserModel();
+                            this.isFormDisabled = false;
+                        }
+                    },
+                    error: (e) => console.error(e)
+                });
+            },
+            error: (e) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: e.error.message,
+                    life: 3000
+                });
+                this.submitted = false;
+            }
+        });
     }
 
     saveReservation() {
-        if (this.reservation.idDate === 0 || this.reservation.idUser === 0 || this.reservation.detailReservationTravelers.length === 0) {
+        if (!this.reservation.price || this.reservation.price <= 0) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'Por favor, complete todos los campos requeridos',
+                detail: 'El precio de la reservación no puede ser cero o negativo',
                 life: 3000
             });
             return;
         }
 
         this.reservationService.create(this.reservation).subscribe({
-            next: () => {
+            next: (r) => {
+                this.payment.idReservation = r.id;
+
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Éxito',
@@ -171,21 +260,37 @@ export class FormReservationComponent implements OnInit {
     }
 
     addTraveler() {
-        if (!this.traveler.document) return;
-        this.travel = true;
-        this.reservation.detailReservationTravelers.push({
-            idTraveler: this.traveler.id
-        });
+        if (!this.traveler || !this.traveler.id || !this.traveler.document) return;
+        // Solo agregar si no está ya en la lista de viajeros
+        if (!this.reservation.detailReservationTravelers.some((t) => t.idTraveler === this.traveler.id)) {
+            this.reservation.detailReservationTravelers.push({ idTraveler: this.traveler.id });
+            // Agregar el viajero a la lista de clients si no está
+            if (!this.clients.some((c) => c.id === this.traveler.id)) {
+                this.clients.push({ ...this.traveler });
+            }
+        }
+        // Recalcular el precio total de la reserva
+        const dateInfo = this.getDateInfo(this.reservation.idDate);
+        const packageInfo = this.getPackageInfo(dateInfo && dateInfo.idPackage ? dateInfo.idPackage : 0);
+        const cantidadViajeros = this.reservation.detailReservationTravelers.length;
+        this.reservation.price = (packageInfo?.price || 0) * cantidadViajeros;
+        // Limpiar el formulario de viajero
+        this.traveler = new UserModel();
+        this.isFormDisabled = false; // Permitir nuevas búsquedas o adiciones
     }
 
     deleteTraveler(traveler: ReservationTravelerModel) {
         if (!traveler) return;
-
         this.reservation.detailReservationTravelers = this.reservation.detailReservationTravelers.filter((t) => t.idTraveler !== traveler.idTraveler);
+        // Recalcular el precio total de la reserva
+        const dateInfo = this.getDateInfo(this.reservation.idDate);
+        const packageInfo = this.getPackageInfo(dateInfo && dateInfo.idPackage ? dateInfo.idPackage : 0);
+        const cantidadViajeros = this.reservation.detailReservationTravelers.length;
+        this.reservation.price = (packageInfo?.price || 0) * cantidadViajeros;
     }
 
     payReservation() {
-        if (this.payment.idReservation === 0 || this.payment.price === 0) {
+        if (this.payment.idReservation === 0 || this.payment.total === 0) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -215,51 +320,86 @@ export class FormReservationComponent implements OnInit {
         });
     }
 
-    isStepValid(step: number): boolean {
-        switch (step) {
-            case 0:
-                return this.reservation.idUser > 0;
-            case 1:
-                return this.reservation.detailReservationTravelers.length > 0;
-            case 2:
-                return this.reservation.idUser > 0 && this.reservation.detailReservationTravelers.length > 0;
-            default:
-                return false;
-        }
-    }
+    validateStep(step: number) {
+        if (step === 0) {
+            if (this.client.id === 0) {
+                return this.createClient(this.client);
+            } else if (this.client.id > 0) {
+                this.reservation.idUser = this.client.id;
+            }
 
-    previousStep() {
-        if (this.activeStepIndex > 0) this.activeStepIndex--;
-    }
+            this.isFormDisabled = false; // Bloquear campos si se encuentra un cliente
 
-    nextStep() {
-        if (this.activeStepIndex === 1 && this.reservation.detailReservationTravelers.length > 0) {
             this.reservation.idDate = this.idDate;
 
-            this.reservationService.create(this.reservation).subscribe({
-                next: (r) => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Reservación creada correctamente',
-                        life: 3000
-                    });
-                    this.payment.idReservation = r.id;
-                    this.payment.price = r.detailReservationTravelers.length * r.price;
-                },
-                error: (e) => {
+            return this.reservation.idUser > 0 ? true : false;
+        } else if (step === 1) {
+            if (this.reservation.detailReservationTravelers.length > 0) {
+                this.reservation.price = this.getPackageInfo(this.getDateInfo(this.idDate)?.idPackage || 0)?.price || 0 * this.reservation.detailReservationTravelers.length;
+
+                // formato de int al precio
+                this.reservation.price = Math.round(this.reservation.price * this.reservation.detailReservationTravelers.length);
+
+                if (this.reservation.price <= 0) {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: e.error.message,
+                        detail: 'El precio de la reservación no puede ser cero o negativo',
                         life: 3000
                     });
+                    return false;
                 }
-            });
-        }
 
-        if (this.isStepValid(this.activeStepIndex) && this.activeStepIndex < this.steps.length - 1) {
-            this.activeStepIndex++;
+                this.saveReservation();
+
+                this.payment.idReservation = this.reservation.id;
+                this.payment.total = this.reservation.price;
+                this.payment.pay = this.payment.total / 2;
+
+                return true;
+            }
+            return false;
+        } else if (step === 2) {
+            if (this.payment.idReservation > 0 && this.payment.total > 0 && this.payment.pay > 0) {
+                this.payReservation();
+                return true;
+            }
+            return false;
         }
+        return false;
+    }
+
+    nextStep() {
+        if (this.activeStepIndex === 1) {
+            // Al pasar al paso de pago, aseguramos el 50% del total y deshabilitamos el campo
+            this.payment.pay = this.payment.total / 2;
+        }
+        if (this.validateStep(this.activeStepIndex)) {
+            this.activeStepIndex++;
+            if (this.activeStepIndex >= this.steps.length) {
+                setTimeout(() => {
+                    this.onClosePopup();
+                }, 3000);
+            }
+        }
+    }
+
+    onClosePopup() {
+        this.reservation = new ReservationModel();
+        this.payment = new PaymentModel();
+
+        this.traveler = new UserModel();
+        this.travel = false;
+
+        this.client = new UserModel();
+        this.clients = [];
+
+        this.activeStepIndex = 0;
+        this.submitted = false;
+        this.isFormDisabled = false;
+
+        this.getAllClients();
+
+        this.toCancel.emit();
     }
 }

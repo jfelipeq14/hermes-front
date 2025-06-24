@@ -13,12 +13,14 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { bloodTypes, epslist, sexlist, typesDocument } from '../../constants';
 import { MunicipalityModel, ReservationModel, ReservationTravelerModel, UserModel } from '../../../models';
 import { MunicipalityService } from '../../../services';
+import { DatePickerModule } from 'primeng/datepicker';
+import { PATTERNS } from '../../helpers';
 
 @Component({
     selector: 'app-form-clients',
     templateUrl: './form-clients.component.html',
     styleUrls: ['./form-clients.component.scss'],
-    imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule],
+    imports: [CommonModule, FormsModule, ButtonModule, DropdownModule, InputTextModule, InputIconModule, IconFieldModule, DatePickerModule],
     providers: [MunicipalityService, MessageService]
 })
 export class FormClientsComponent implements OnInit {
@@ -33,17 +35,19 @@ export class FormClientsComponent implements OnInit {
     @Input() clients: UserModel[] = [];
     @Input() client: UserModel = new UserModel();
     @Input() submitted = false;
-    @Input() isPasswordDisable = false;
+    @Input() isFormDisabled = false;
 
     @Output() searchClient = new EventEmitter<any>();
     @Output() createClient = new EventEmitter<any>();
     @Output() handleTravel = new EventEmitter<any>();
+    @Output() clearClient = new EventEmitter<any>();
 
     typesDocument = typesDocument;
     sexlist = sexlist;
     bloodTypes = bloodTypes;
     epslist = epslist;
     municipalities: MunicipalityModel[] = [];
+    pattern = PATTERNS;
 
     age = 0;
     maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
@@ -82,11 +86,16 @@ export class FormClientsComponent implements OnInit {
         this.handleTravel.emit(event.target.checked);
     }
 
-    onSearchClient(document: string) {
+    onCreateClient(user: UserModel) {
+        this.createClient.emit(user);
+    }
+
+    onSearchClient(document: any) {
+        if (!document) return;
         this.searchClient.emit(document);
     }
 
-    onCreateClient(user: UserModel) {
-        this.createClient.emit(user);
+    onClearClient() {
+        this.clearClient.emit();
     }
 }

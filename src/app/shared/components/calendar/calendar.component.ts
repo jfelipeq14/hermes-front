@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
@@ -13,8 +13,9 @@ import { ButtonModule } from 'primeng/button';
 import { MenuItem, MessageService } from 'primeng/api';
 import { SplitButtonModule } from 'primeng/splitbutton';
 
-import { ProgrammingService } from '../../../services';
+import { AuthService, ProgrammingService } from '../../../services';
 import { DateModel, PackageModel } from '../../../models';
+import { ROLE_IDS } from '../../constants';
 
 @Component({
     selector: 'app-calendar',
@@ -24,6 +25,8 @@ import { DateModel, PackageModel } from '../../../models';
     providers: [ProgrammingService, MessageService]
 })
 export class CalendarComponent implements OnInit {
+    authService = inject(AuthService);
+
     constructor(
         private programmingService: ProgrammingService,
         private messageService: MessageService
@@ -51,26 +54,30 @@ export class CalendarComponent implements OnInit {
             icon: 'pi pi-pencil',
             command: () => {
                 this.onEditProgramming();
-            }
+            },
+            visible: this.authService.hasRole([ROLE_IDS.ADMIN])
         },
         {
             label: 'Cambiar estado',
             icon: 'pi pi-fw pi-sync',
             command: () => {
                 this.onChangeStatusDate();
-            }
+            },
+            visible: this.authService.hasRole([ROLE_IDS.ADMIN])
         },
         {
             label: 'Ver clientes',
             icon: 'pi pi-fw pi-user',
             command: () => {
                 this.onClickClients();
-            }
+            },
+            visible: this.authService.hasRole([ROLE_IDS.ADMIN, ROLE_IDS.GUIDE])
         }
     ];
 
     calendarOptions = signal<CalendarOptions>({
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
+        locale: 'es',
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
@@ -137,6 +144,11 @@ export class CalendarComponent implements OnInit {
         this.programmingSelect = this.dates.find((date) => date.id === +selectEvent.id);
 
         this.clickProgramming.emit(this.programmingSelect.id);
+    }
+
+    clickPackage(selectPackage: any) {
+        if (!selectPackage) return;
+        this.programmingSelect = this.dates.find((date) => date.id === +selectPackage.id);
     }
 
     onEditProgramming() {

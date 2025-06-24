@@ -1,59 +1,149 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
-import { MunicipalityModel, UserModel } from '../../../models';
+import { ActivateModel, MunicipalityModel, UserModel } from '../../../models';
 import { AuthService } from '../../../services';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { typesDocument } from '../../constants';
 import { DropdownModule } from 'primeng/dropdown';
+import { DatePickerModule } from 'primeng/datepicker';
+import { PATTERNS } from '../../helpers';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, DropdownModule, ToastModule, RouterModule, RippleModule, CommonModule],
+    imports: [ButtonModule, FormsModule, CheckboxModule, InputTextModule, PasswordModule, DropdownModule, DatePickerModule, ToastModule, CommonModule],
     providers: [AuthService, MessageService]
 })
 export class RegisterComponent {
     constructor(
-        private router: Router,
         private authService: AuthService,
         private messageService: MessageService
     ) {}
 
-    @Input() registerDialog!: boolean;
-    @Input() submitted!: boolean;
+    @Input() activateModel: ActivateModel = new ActivateModel();
+    @Input() registerDialog: boolean = false;
+    @Input() submitted: boolean = false;
     @Input() user: UserModel = new UserModel();
     @Input() municipalities: MunicipalityModel[] = [];
-
-    // @Output() close = new EventEmitter<void>();
+    @Output() closePopup = new EventEmitter<void>();
 
     typesDocument = typesDocument;
+    patterns = PATTERNS; // Agregar los patrones
+    maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
 
-    onSubmit() {
+    // Función de validación similar a la del componente de usuarios
+    validateForm(): boolean {
         this.submitted = true;
+
+        if (!this.user.typeDocument || !this.user.document || !this.user.name || !this.user.surName || !this.user.idMunicipality || !this.user.phone || !this.user.dateBirth || !this.user.email || !this.user.password) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'Por favor complete todos los campos obligatorios',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.user.name.match(this.patterns.NAME)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'El nombre solo puede contener letras y debe tener mínimo 3 caracteres',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.user.surName.match(this.patterns.NAME)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'El apellido solo puede contener letras y debe tener mínimo 3 caracteres',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.user.email.match(this.patterns.EMAIL)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'El correo electrónico no es válido',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.user.phone.match(this.patterns.PHONE)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'El número de teléfono no es válido',
+                life: 3000
+            });
+            return false;
+        }
+
+        if (!this.user.password.match(this.patterns.PASSWORD)) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error de validación',
+                detail: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número',
+                life: 3000
+            });
+            return false;
+        }
+
+        return true;
+    }
+    onSubmit() {
+        if (!this.validateForm()) return;
+
         this.user.idRole = 3;
+        this.messageService.add({
+            severity: 'info',
+            summary: 'Procesando',
+            detail: 'Registrando usuario...',
+            life: 2000
+        });
+
         this.authService.register(this.user).subscribe({
             next: (response) => {
                 if (!response) return;
-                this.authService.login(this.user).subscribe({
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Registro Exitoso',
+                    detail: '¡Usuario registrado correctamente!',
+                    life: 2000
+                });
+
+                this.activateModel.email = response.email;
+                this.activateModel.activationUserToken = response.activationToken;
+
+                this.authService.activateAccount(this.activateModel).subscribe({
                     next: (response) => {
-                        if (!response && !response.accessToken) return;
-                        this.authService.setTokens(response.accessToken);
-                        this.router.navigate(['/home']);
+                        if (!response) return;
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Éxito',
+                            detail: 'Tu cuenta fue creada. Inicia sesión.',
+                            life: 3000
+                        });
+                        this.onClosePopup();
                     },
                     error: (e) => {
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Error',
-                            detail: e.error.message,
+                            detail: 'Error al activar la cuenta: ' + (e.error.message || 'Error desconocido'),
                             life: 3000
                         });
                     }
@@ -63,7 +153,7 @@ export class RegisterComponent {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: e.error.message,
+                    detail: e.error.message === 'User already exists' ? 'El correo electrónico ya existe, ingrese otro correo por favor' : 'Error al crear el usuario: ' + (e.error.message || 'Error desconocido'),
                     life: 3000
                 });
                 this.submitted = false;
@@ -71,9 +161,10 @@ export class RegisterComponent {
         });
     }
 
-    // onCancel() {
-    //   this.close.emit(); // Emite el evento al cancelar
-    //   this.submitted = false; // Reinicia el estado de enviado
-    //   this.user = new UserModel(); // Reinicia el modelo de usuario
-    // }
+    onClosePopup() {
+        this.registerDialog = false;
+        this.submitted = false;
+        this.user = new UserModel();
+        this.closePopup.emit();
+    }
 }

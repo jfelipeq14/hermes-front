@@ -14,6 +14,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { ActivityModel } from '../../models';
 import { ActivityService } from '../../services';
+import { PATTERNS } from '../../shared/helpers';
 
 @Component({
     selector: 'app-activities',
@@ -32,6 +33,7 @@ export class ActivitiesPage implements OnInit {
         { label: 'Activo', value: true },
         { label: 'Inactivo', value: false }
     ];
+    pattern = PATTERNS;
     //#endregion
 
     //#region constructor
@@ -55,14 +57,7 @@ export class ActivitiesPage implements OnInit {
             next: (activities) => {
                 this.activities = activities;
             },
-            error: (e) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: e.error.message,
-                    life: 3000
-                });
-            }
+            error: (e) => console.error(e)
         });
     }
 
@@ -70,13 +65,14 @@ export class ActivitiesPage implements OnInit {
         this.submitted = true;
         if (!this.activity.id) {
             this.activityService.create(this.activity).subscribe({
-                next: (a) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${a.name} creado`,
+                        detail: `Actividad creada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -87,16 +83,16 @@ export class ActivitiesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         } else {
             this.activityService.update(this.activity).subscribe({
-                next: (a) => {
+                next: () => {
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: `${a.name} atualizado`,
+                        detail: `Actividad atualizada correctamente`,
                         life: 3000
                     });
+                    this.refresh();
                 },
                 error: (e) => {
                     this.messageService.add({
@@ -107,9 +103,7 @@ export class ActivitiesPage implements OnInit {
                     });
                 }
             });
-            this.refresh();
         }
-        this.refresh();
     }
 
     editActivity(activity: ActivityModel) {
@@ -132,7 +126,7 @@ export class ActivitiesPage implements OnInit {
                         this.messageService.add({
                             severity: this.getSeverity(a.status),
                             summary: 'Éxito',
-                            detail: `${a.name} ${a.status ? 'activado' : 'desactivado'}`,
+                            detail: `Actividad ${a.status ? 'activado' : 'desactivado'}`,
                             life: 3000
                         });
                         this.refresh();
@@ -150,6 +144,14 @@ export class ActivitiesPage implements OnInit {
         });
     }
 
+    getSeverity(status: boolean): 'success' | 'danger' {
+        return status ? 'success' : 'danger';
+    }
+
+    validateActivity(): boolean {
+        return this.activity.name ? false : true;
+    }
+
     showPopup() {
         this.activity = new ActivityModel();
         this.submitted = false;
@@ -162,12 +164,11 @@ export class ActivitiesPage implements OnInit {
     }
 
     refresh() {
-        this.getAllActivities();
-        this.closePopup();
+        this.activities = [];
+        this.activity = new ActivityModel();
+        this.activityDialog = false;
         this.submitted = false;
-    }
 
-    getSeverity(status: boolean): 'success' | 'danger' {
-        return status ? 'success' : 'danger';
+        this.getAllActivities();
     }
 }

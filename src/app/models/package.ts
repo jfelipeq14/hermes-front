@@ -9,7 +9,7 @@ export class PackageModel {
     price = 0;
     reserve = 0;
     description = '';
-    image = null;
+    image = '';
     status = true;
     detailPackagesServices: PackageServiceModel[] = [];
 }
