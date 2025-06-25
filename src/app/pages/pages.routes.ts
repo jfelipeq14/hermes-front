@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { DashboardPage } from './dashboard/dashboard.component';
-import { RolesPage } from './roles/roles.component';
 import { UsersPage } from './users/users.component';
 import { CategoriesPage } from './categories/categories.component';
 import { ServicesPage } from './services/services.component';
@@ -27,11 +26,11 @@ export default [
         component: DashboardPage,
         canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
     },
-    {
-        path: 'roles',
-        component: RolesPage,
-        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
-    },
+    // {
+    //     path: 'roles',
+    //     component: RolesPage,
+    //     canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    // },
     {
         path: 'users',
         component: UsersPage,
