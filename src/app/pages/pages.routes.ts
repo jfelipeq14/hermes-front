@@ -27,11 +27,11 @@ export default [
         component: DashboardPage,
         canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
     },
-    {
-        path: 'roles',
-        component: RolesPage,
-        canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
-    },
+    // {
+    //     path: 'roles',
+    //     component: RolesPage,
+    //     canActivate: [() => hasRoleGuard([ROLE_IDS.ADMIN])]
+    // },
     {
         path: 'users',
         component: UsersPage,
