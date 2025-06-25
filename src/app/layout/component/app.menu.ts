@@ -35,10 +35,10 @@ export class AppMenuComponent implements OnInit {
                 visible: this.authService.hasRole([ROLE_IDS.ADMIN])
             },
 
-            {
-                items: [{ label: 'Roles', icon: 'pi pi-fw pi-users', routerLink: ['roles'] }],
-                visible: this.authService.hasRole([ROLE_IDS.ADMIN])
-            },
+            // {
+            //     items: [{ label: 'Roles', icon: 'pi pi-fw pi-users', routerLink: ['roles'] }],
+            //     visible: this.authService.hasRole([ROLE_IDS.ADMIN])
+            // },
 
             {
                 items: [
